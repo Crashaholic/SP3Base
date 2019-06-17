@@ -1,0 +1,23 @@
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/OpenGL/v15
+/Common/Debug
+/Common/Release
+/Common/x64/Debug
+/Debug/OpenGL.pdb
+/Debug/OpenGL.ilk
+/Debug/Common.pdb
+/Debug/OpenGL.exe
+/Debug/Common.lib
+/OpenGL/Debug
+/OpenGL/Release
+/OpenGL/x64/Debug
+/Release/OpenGL.pdb
+/Release/OpenGL.ipdb
+/Release/OpenGL.iobj
+/Release/Common.lib
+x64/Debug/Common.lib
+x64/Debug/Common.pdb
+*.exe
