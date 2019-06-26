@@ -9,24 +9,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1A35F4F2-3CEC-4AE4-836F-0B8A81781A1B}.Debug|x64.ActiveCfg = Debug|Win32
 		{1A35F4F2-3CEC-4AE4-836F-0B8A81781A1B}.Debug|x86.ActiveCfg = Debug|Win32
 		{1A35F4F2-3CEC-4AE4-836F-0B8A81781A1B}.Debug|x86.Build.0 = Debug|Win32
-		{1A35F4F2-3CEC-4AE4-836F-0B8A81781A1B}.Release|x64.ActiveCfg = Release|Win32
 		{1A35F4F2-3CEC-4AE4-836F-0B8A81781A1B}.Release|x86.ActiveCfg = Release|Win32
 		{1A35F4F2-3CEC-4AE4-836F-0B8A81781A1B}.Release|x86.Build.0 = Release|Win32
-		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Debug|x64.ActiveCfg = Debug|x64
-		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Debug|x64.Build.0 = Debug|x64
 		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Debug|x86.ActiveCfg = Debug|Win32
 		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Debug|x86.Build.0 = Debug|Win32
-		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Release|x64.ActiveCfg = Release|x64
-		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Release|x64.Build.0 = Release|x64
 		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Release|x86.ActiveCfg = Release|Win32
 		{E3905666-DB59-451D-9A8B-14D6F7BF370D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
