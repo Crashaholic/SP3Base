@@ -82,6 +82,12 @@
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\SceneGame.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\comg.frag" />
+    <None Include="Shader\comg.vert" />
+    <None Include="Shader\test.frag" />
+    <None Include="Shader\test.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

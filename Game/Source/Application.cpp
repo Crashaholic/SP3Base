@@ -43,8 +43,9 @@ void resize_callback(GLFWwindow* window, int w, int h)
 bool Application::IsKeyPressed(unsigned short key)
 {
     //return ((GetAsyncKeyState(key) & 0x8001) != 0);
-
+	return (glfwGetKey(m_window, key) == GLFW_PRESS);
 }
+
 bool Application::IsMousePressed(unsigned short key) //0 - Left, 1 - Right, 2 - Middle
 {
 	return glfwGetMouseButton(m_window, key) != 0;
@@ -128,7 +129,7 @@ void Application::Run()
 	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(GLFW_KEY_ESCAPE))
 	{
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();

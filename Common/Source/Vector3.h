@@ -70,4 +70,6 @@ struct Vector3
 	friend Vector3 operator*( float scalar, const Vector3& rhs ); //what is this for?
 };
 
+using vec3 = Vector3;
+
 #endif //VECTOR3_H

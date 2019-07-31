@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "Application.h"
 #include "Mtx44.h"
 
 Camera::Camera()

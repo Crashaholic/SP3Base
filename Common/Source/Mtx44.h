@@ -44,10 +44,13 @@ public:
 	void SetToLookAt(double eyeX, double eyeY, double eyeZ,
 				double centerX, double centerY, double centerZ,
 				double upX, double upY, double upZ);
+	void SetToLookAt(Vector3 Eye, Vector3 Centre, Vector3 Up);
 	void SetToPerspective(double fovy, double aspect, double zNear, double zFar);
 	void SetToOrtho(double left, double right, double bottom, double top, double nearVal, double farVal);
 
 	float a[16];
 };
+
+using mat4 = Mtx44;
 
 #endif //MTX_44_H

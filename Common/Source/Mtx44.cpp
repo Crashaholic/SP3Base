@@ -449,6 +449,13 @@ void Mtx44::SetToLookAt(double eyeX, double eyeY, double eyeZ,
 	*this = mat * tran;
 }
 
+void Mtx44::SetToLookAt(Vector3 Eye, Vector3 Centre, Vector3 Up)
+{
+	this->SetToLookAt(Eye.x, Eye.y, Eye.z,
+		Centre.x, Centre.y, Centre.z,
+		Up.x, Up.y, Up.z);
+}
+
 /******************************************************************************/
 /*!
 \brief Set matrix to be a perspective matrix 

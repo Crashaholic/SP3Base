@@ -37,8 +37,12 @@ struct Log
 	*/
 	void pLocation(const char* functionName, const char* fileName)
 	{
+#ifdef SHOW_LOC
 		std::cout << " at " << functionName << " in " << fileName << "\n";
 		SetConsoleTextAttribute(hConsole, 0x0f);
+#else
+		std::cout << '\n';
+#endif
 	}
 
 	/**
