@@ -1,8 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "shader.hpp"
-
 class Scene
 {
 public:

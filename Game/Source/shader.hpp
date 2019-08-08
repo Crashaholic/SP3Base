@@ -22,12 +22,14 @@ public:
 	Shader(std::string vertexFilePath, std::string fragmentFilePath);
 	~Shader();
 
-	void SetUniform(std::string uniformName, bool b);
-	void SetUniform(std::string uniformName, int i);
-	void SetUniform(std::string uniformName, float f);
+	void Init(std::string vertexFilePath, std::string fragmentFilePath);
 
-	void SetUniform(std::string uniformName, vec3 v);
-	void SetUniform(std::string uniformName, mat4 m);
+	void SetBool(std::string uniformName, bool b);
+	void SetInt(std::string uniformName, int i);
+	void SetFloat(std::string uniformName, float f);
+
+	void SetVec3(std::string uniformName, Vector3 v);
+	void SetMat4(std::string uniformName, Mtx44 m);
 };
 
 #endif

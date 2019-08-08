@@ -35,40 +35,12 @@ void SceneKinematics::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	m_programID = LoadShaders( "Shader//comg.vertexshader", "Shader//comg.fragmentshader" );
+	//m_programID = LoadShaders(  );
 	
-	// Get a handle for our uniform
-	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
-	//m_parameters[U_MODEL] = glGetUniformLocation(m_programID, "M");
-	//m_parameters[U_VIEW] = glGetUniformLocation(m_programID, "V");
-	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
-	m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE] = glGetUniformLocation(m_programID, "MV_inverse_transpose");
-	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
-	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
-	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
-	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
-	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-	m_parameters[U_LIGHT0_TYPE] = glGetUniformLocation(m_programID, "lights[0].type");
-	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
-	m_parameters[U_LIGHT0_COLOR] = glGetUniformLocation(m_programID, "lights[0].color");
-	m_parameters[U_LIGHT0_POWER] = glGetUniformLocation(m_programID, "lights[0].power");
-	m_parameters[U_LIGHT0_KC] = glGetUniformLocation(m_programID, "lights[0].kC");
-	m_parameters[U_LIGHT0_KL] = glGetUniformLocation(m_programID, "lights[0].kL");
-	m_parameters[U_LIGHT0_KQ] = glGetUniformLocation(m_programID, "lights[0].kQ");
-	m_parameters[U_LIGHT0_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[0].spotDirection");
-	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
-	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
-	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
-	// Get a handle for our "colorTexture" uniform
-	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
-	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
-	// Get a handle for our "textColor" uniform
-	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
-	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
+	m_programID.Init("Shader//comg.vertexshader", "Shader//comg.fragmentshader");
 	
 	// Use our shader
-	glUseProgram(m_programID);
+	m_programID.Use();
 
 	lights[0].type = Light::LIGHT_DIRECTIONAL;
 	lights[0].position.Set(0, 20, 0);
@@ -82,18 +54,18 @@ void SceneKinematics::Init()
 	lights[0].exponent = 3.f;
 	lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 	
-	glUniform1i(m_parameters[U_NUMLIGHTS], 0);
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	m_programID.SetInt("numLights", (int)0);
+	m_programID.SetBool("textEnabled", (bool)0);
 
-	glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &lights[0].color.r);
-	glUniform1f(m_parameters[U_LIGHT0_POWER], lights[0].power);
-	glUniform1f(m_parameters[U_LIGHT0_KC], lights[0].kC);
-	glUniform1f(m_parameters[U_LIGHT0_KL], lights[0].kL);
-	glUniform1f(m_parameters[U_LIGHT0_KQ], lights[0].kQ);
-	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], lights[0].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
-	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
+	m_programID.SetInt  ("lights[0].type"     ,lights[0].type);
+	m_programID.SetVec3 ("lights[0].color"    ,vec3{ lights[0].color.r, lights[0].color.g ,lights[0].color.b });
+	m_programID.SetFloat("lights[0].power"    ,lights[0].power);
+	m_programID.SetFloat("lights[0].kC"       ,lights[0].kC);
+	m_programID.SetFloat("lights[0].kL"       ,lights[0].kL);
+	m_programID.SetFloat("lights[0].kQ"       ,lights[0].kQ);
+	m_programID.SetFloat("lights[0].cosCutoff",lights[0].cosCutoff);
+	m_programID.SetFloat("lights[0].cosInner" ,lights[0].cosInner);
+	m_programID.SetFloat("lights[0].exponent" ,lights[0].exponent);
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -172,20 +144,6 @@ void SceneKinematics::Update(double dt)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
-		
-		//Exercise 4: spawn ball
-						
-		//Exercise 10: replace Exercise 4 code and use ghost to determine ball velocity
-
-		//Exercise 11: kinematics equation
-		//v = u + a * t
-		//t = (v - u ) / a
-
-		//v * v = u * u + 2 * a * s
-		//s = - (u * u) / (2 * a)
-						
-		//s = u * t + 0.5 * a * t * t
-		//(0.5 * a) * t * t + (u) * t + (-s) = 0
 	}
 	
 	static bool bRButtonState = false;
@@ -203,25 +161,6 @@ void SceneKinematics::Update(double dt)
 
 	//Physics Simulation Section
 	fps = (float)(1.f / dt);
-
-	//Exercise 11: update kinematics information
-	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if(go->active)
-		{
-			if(go->type == GameObject::GO_BALL)
-			{
-				//Exercise 2: implement equation 1 & 2
-				
-				//Exercise 12: replace Exercise 2 code and use average speed instead
-			}
-
-			//Exercise 8: check collision with GO_CUBE
-
-			//Exercise 5: unspawn ball when outside window
-		}
-	}
 }
 
 void SceneKinematics::RenderText(Mesh* mesh, std::string text, Color color)
@@ -230,24 +169,30 @@ void SceneKinematics::RenderText(Mesh* mesh, std::string text, Color color)
 		return;
 	
 	glDisable(GL_DEPTH_TEST);
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
-	glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
-	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	for(unsigned i = 0; i < text.length(); ++i)
+	//glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	//glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
+	//glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	//glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	//glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	m_programID.SetBool("textEnabled", true);
+	m_programID.SetBool("lightEnabled", false);
+	m_programID.SetBool("colorTextureEnabled", true);
+	m_programID.SetVec3("textColor", { color.r,color.g,color.b });
+	m_programID.SetInt ("colorTexture", 0);
+	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
-		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-	
+		//glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+		m_programID.SetMat4("MVP", MVP);
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	//glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	m_programID.SetBool("textEnabled", false);
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -267,24 +212,29 @@ void SceneKinematics::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
-	glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
-	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	//glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	//glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
+	//glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	//glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+	//glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	m_programID.SetBool("textEnabled", true);
+	m_programID.SetBool("lightEnabled", false);
+	m_programID.SetBool("colorTextureEnabled", true);
+	m_programID.SetVec3("textColor", { color.r,color.g,color.b });
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-	glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	m_programID.SetInt("colorTexture", 0);
 	for(unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
-		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+		m_programID.SetMat4("MVP", MVP);
 
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+	m_programID.SetBool("textEnabled", false);
 	modelStack.PopMatrix();
 	viewStack.PopMatrix();
 	projectionStack.PopMatrix();
@@ -296,35 +246,40 @@ void SceneKinematics::RenderMesh(Mesh *mesh, bool enableLight)
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
-	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	m_programID.SetMat4("MVP", MVP);
 	if(enableLight && bLightEnabled)
 	{
-		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
+		m_programID.SetBool("lightEnabled", true);
 		modelView = viewStack.Top() * modelStack.Top();
-		glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
+		m_programID.SetMat4("MV", modelView);
 		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
-		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE, &modelView.a[0]);
+		m_programID.SetMat4("MV_inverse_transpose", modelView_inverse_transpose);
 		
 		//load material
-		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
-		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
-		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
-		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
+		//glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
+		//glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
+		//glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
+		//glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
+
+		m_programID.SetVec3("material.kAmbient", {mesh->material.kAmbient.r, mesh->material.kAmbient.g, mesh->material.kAmbient.b, });
+		m_programID.SetVec3("material.kDiffuse", {mesh->material.kDiffuse.r, mesh->material.kDiffuse.g, mesh->material.kDiffuse.b });
+		m_programID.SetVec3("material.kSpecular", {mesh->material.kSpecular.r, mesh->material.kSpecular.g , mesh->material.kSpecular.b });
+		m_programID.SetFloat("material.kShininess", mesh->material.kShininess);
 	}
 	else
 	{	
-		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+		m_programID.SetBool("lightEnabled", false);
 	}
 	if(mesh->textureID > 0)
 	{
-		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+		m_programID.SetBool("colorTextureEnabled", true);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+		m_programID.SetInt("colorTexture", 0);
 	}
 	else
 	{
-		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+		m_programID.SetBool("colorTextureEnabled", false);
 	}
 	mesh->Render();
 	if(mesh->textureID > 0)
@@ -407,7 +362,7 @@ void SceneKinematics::Exit()
 		if(meshList[i])
 			delete meshList[i];
 	}
-	glDeleteProgram(m_programID);
+	//delete &m_programID;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	
 	//Cleanup GameObjects

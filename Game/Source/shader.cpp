@@ -51,6 +51,16 @@ Shader::Shader()
 
 Shader::Shader(std::string v, std::string f)
 {
+	Init(v, f);
+}
+
+Shader::~Shader()
+{
+	
+}
+
+void Shader::Init(std::string v, std::string f)
+{
 	std::string vCode, fCode;
 	std::ifstream vFile, fFile;
 	vFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -84,7 +94,7 @@ Shader::Shader(std::string v, std::string f)
 	const char* vCodeCStr = vCode.c_str();
 	const char* fCodeCStr = fCode.c_str();
 	unsigned int vert, frag;
-	
+
 	vert = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vert, 1, &vCodeCStr, NULL);
 	glCompileShader(vert);
@@ -105,37 +115,32 @@ Shader::Shader(std::string v, std::string f)
 	glDeleteShader(frag);
 }
 
-Shader::~Shader()
-{
-	
-}
-
 void Shader::Use()
 {
 	glUseProgram(ID);
 }
 
-void Shader::SetUniform(std::string uniformName, bool b)
+void Shader::SetBool(std::string uniformName, bool b)
 {
 	glUniform1i(glGetUniformLocation(ID, uniformName.c_str()), b);
 }
 
-void Shader::SetUniform(std::string uniformName, int i)
+void Shader::SetInt(std::string uniformName, int i)
 {
 	glUniform1i(glGetUniformLocation(ID, uniformName.c_str()), i);
 }
 
-void Shader::SetUniform(std::string uniformName, float f)
+void Shader::SetFloat(std::string uniformName, float f)
 {
 	glUniform1f(glGetUniformLocation(ID, uniformName.c_str()), f);
 }
 
-void Shader::SetUniform(std::string uniformName, vec3 v)
+void Shader::SetVec3(std::string uniformName, Vector3 v)
 {
 	glUniform3fv(glGetUniformLocation(ID, uniformName.c_str()), 1, &v.x);
 }
 
-void Shader::SetUniform(std::string uniformName, mat4 m)
+void Shader::SetMat4(std::string uniformName, Mtx44 m)
 {
 	glUniformMatrix4fv(glGetUniformLocation(ID, uniformName.c_str()), 1, GL_FALSE, &m.a[0]);
 }

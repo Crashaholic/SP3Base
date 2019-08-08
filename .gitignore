@@ -17,3 +17,5 @@
 *.exe
 /Game/Debug
 /.vs/SP3Base/v15
+/.vs/Game/v15
+/SP3Base.rar
