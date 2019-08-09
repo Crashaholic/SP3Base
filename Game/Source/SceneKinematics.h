@@ -37,7 +37,7 @@ public:
 private:
 	unsigned m_vertexArrayID;
 	Mesh* meshList[NUM_GEOMETRY];
-	Shader m_programID;
+	Shader defaultShader;
 
 	Camera camera;
 
