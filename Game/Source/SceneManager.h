@@ -1,3 +1,4 @@
+// Ryan
 #pragma once
 #include "Scene.h"
 #include <unordered_map>
@@ -10,12 +11,17 @@ private:
 	unordered_map<string, Scene*>sceneList;
 	Scene* activeScene;
 
+	SceneManager();											// prevent multiple
+	SceneManager(const SceneManager& manager);				// prevent copy
+	SceneManager& operator=(const SceneManager& manager);	// prevent assign
+
 public:
-	SceneManager();
 	~SceneManager();
 
-	void switchToScene(string name);
+	void firstScene(string name);
+	void switchToScene(string name, Scene* curr);
 	void addScene(string name, Scene* scene);
-
+	static SceneManager& getSceneManager();
+	Scene* getActiveScene();
 };
 

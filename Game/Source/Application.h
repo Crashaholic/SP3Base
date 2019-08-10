@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "SceneManager.h"
 #include "SceneGame.h"
 #include "SceneMenu.h"
 
@@ -33,6 +34,8 @@ private:
 
 	//Declare a window object
 	StopWatch m_timer;
+
+	SceneManager* manager;
 };
 
 #endif

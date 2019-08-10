@@ -8,6 +8,8 @@
 #include "LoadTGA.h"
 #include <sstream>
 
+#include "SceneManager.h"
+
 SceneMenu::SceneMenu()
 {
 }
@@ -114,6 +116,12 @@ void SceneMenu::Update(double dt)
 	}
 	if (Application::IsKeyPressed('v'))
 	{
+	}
+
+	// Switch scene=
+	if (Application::IsKeyPressed('6'))
+	{
+		SceneManager::getSceneManager().switchToScene("Game", this);
 	}
 
 	//Mouse Section
