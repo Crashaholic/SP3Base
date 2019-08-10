@@ -7,7 +7,7 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include <sstream>
-// Test
+
 SceneKinematics::SceneKinematics()
 {
 }
