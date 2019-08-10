@@ -1,8 +1,14 @@
-
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
 #include "timer.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "SceneGame.h"
+#include "SceneMenu.h"
 
 class Application
 {

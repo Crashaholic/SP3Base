@@ -1,5 +1,5 @@
-#ifndef SCENE_KINEMATICS_H
-#define SCENE_KINEMATICS_H
+#ifndef SCENE_MENU_H
+#define SCENE_MENU_H
 
 #include "Scene.h"
 #include "Mtx44.h"
@@ -11,7 +11,7 @@
 #include "shader.hpp"
 #include <vector>
 
-class SceneKinematics : public Scene
+class SceneMenu : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -21,9 +21,10 @@ class SceneKinematics : public Scene
 		GEO_CUBE,
 		NUM_GEOMETRY,
 	};
+
 public:
-	SceneKinematics();
-	~SceneKinematics();
+	SceneMenu();
+	~SceneMenu();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -34,6 +35,7 @@ public:
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMesh(Mesh *mesh, bool enableLight);
 	void RenderGO(GameObject *go);
+
 private:
 	unsigned m_vertexArrayID;
 	Mesh* meshList[NUM_GEOMETRY];

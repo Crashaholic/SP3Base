@@ -1,4 +1,4 @@
-#include "SceneKinematics.h"
+#include "SceneMenu.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -8,22 +8,22 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneKinematics::SceneKinematics()
+SceneMenu::SceneMenu()
 {
 }
 
-SceneKinematics::~SceneKinematics()
+SceneMenu::~SceneMenu()
 {
 }
 
-void SceneKinematics::Init()
+void SceneMenu::Init()
 {
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS); 
-	
+	glDepthFunc(GL_LESS);
+
 	glEnable(GL_CULL_FACE);
-	
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glEnable(GL_BLEND);
@@ -32,9 +32,9 @@ void SceneKinematics::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	
+
 	defaultShader.Init("Shader//comg.vert", "Shader//comg.frag");
-	
+
 	// Use our shader
 	defaultShader.Use();
 
@@ -49,23 +49,23 @@ void SceneKinematics::Init()
 	lights[0].cosInner = cos(Math::DegreeToRadian(30));
 	lights[0].exponent = 3.f;
 	lights[0].spotDirection.Set(0.f, 1.f, 0.f);
-	
+
 	defaultShader.SetInt("numLights", (int)0);
 	defaultShader.SetBool("textEnabled", (bool)0);
 
-	defaultShader.SetInt  ("lights[0].type"     ,lights[0].type);
-	defaultShader.SetVec3 ("lights[0].color"    ,vec3{ lights[0].color.r, lights[0].color.g ,lights[0].color.b });
-	defaultShader.SetFloat("lights[0].power"    ,lights[0].power);
-	defaultShader.SetFloat("lights[0].kC"       ,lights[0].kC);
-	defaultShader.SetFloat("lights[0].kL"       ,lights[0].kL);
-	defaultShader.SetFloat("lights[0].kQ"       ,lights[0].kQ);
-	defaultShader.SetFloat("lights[0].cosCutoff",lights[0].cosCutoff);
-	defaultShader.SetFloat("lights[0].cosInner" ,lights[0].cosInner);
-	defaultShader.SetFloat("lights[0].exponent" ,lights[0].exponent);
+	defaultShader.SetInt("lights[0].type", lights[0].type);
+	defaultShader.SetVec3("lights[0].color", vec3{ lights[0].color.r, lights[0].color.g ,lights[0].color.b });
+	defaultShader.SetFloat("lights[0].power", lights[0].power);
+	defaultShader.SetFloat("lights[0].kC", lights[0].kC);
+	defaultShader.SetFloat("lights[0].kL", lights[0].kL);
+	defaultShader.SetFloat("lights[0].kQ", lights[0].kQ);
+	defaultShader.SetFloat("lights[0].cosCutoff", lights[0].cosCutoff);
+	defaultShader.SetFloat("lights[0].cosInner", lights[0].cosInner);
+	defaultShader.SetFloat("lights[0].exponent", lights[0].exponent);
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
 		meshList[i] = NULL;
 	}
@@ -79,7 +79,7 @@ void SceneKinematics::Init()
 	bLightEnabled = true;
 
 	m_speed = 1.f;
-	
+
 	m_gravity.Set(0, -9.8f, 0); //init gravity as 9.8ms-2 downwards
 	Math::InitRNG();
 
@@ -88,42 +88,42 @@ void SceneKinematics::Init()
 	m_ghost->active = true;
 }
 
-void SceneKinematics::Update(double dt)
+void SceneMenu::Update(double dt)
 {
 	//Keyboard Section
-	if(Application::IsKeyPressed('1'))
+	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('2'))
+	if (Application::IsKeyPressed('2'))
 		glDisable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('3'))
+	if (Application::IsKeyPressed('3'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(Application::IsKeyPressed('4'))
+	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	if(Application::IsKeyPressed('+'))
+
+	if (Application::IsKeyPressed('+'))
 	{
 	}
-	if(Application::IsKeyPressed('-'))
+	if (Application::IsKeyPressed('-'))
 	{
 	}
-	if(Application::IsKeyPressed('c'))
+	if (Application::IsKeyPressed('c'))
 	{
 	}
-	if(Application::IsKeyPressed(' '))
+	if (Application::IsKeyPressed(' '))
 	{
 	}
-	if(Application::IsKeyPressed('v'))
+	if (Application::IsKeyPressed('v'))
 	{
 	}
 
 	//Mouse Section
 	static bool bLButtonState = false;
 	//Exercise 10: ghost code here
-	if(!bLButtonState && Application::IsMousePressed(0))
+	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-		
+
 		double x, y;
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
@@ -131,19 +131,19 @@ void SceneKinematics::Update(double dt)
 
 		//Exercise 10: spawn ghost ball
 	}
-	else if(bLButtonState && !Application::IsMousePressed(0))
+	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 	}
-	
+
 	static bool bRButtonState = false;
-	if(!bRButtonState && Application::IsMousePressed(1))
+	if (!bRButtonState && Application::IsMousePressed(1))
 	{
 		bRButtonState = true;
 		std::cout << "RBUTTON DOWN" << std::endl;
 	}
-	else if(bRButtonState && !Application::IsMousePressed(1))
+	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
@@ -153,11 +153,11 @@ void SceneKinematics::Update(double dt)
 	fps = (float)(1.f / dt);
 }
 
-void SceneKinematics::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneMenu::RenderText(Mesh* mesh, std::string text, Color color)
 {
-	if(!mesh || mesh->textureID <= 0)
+	if (!mesh || mesh->textureID <= 0)
 		return;
-	
+
 	glDisable(GL_DEPTH_TEST);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
@@ -170,7 +170,7 @@ void SceneKinematics::RenderText(Mesh* mesh, std::string text, Color color)
 	defaultShader.SetBool("lightEnabled", false);
 	defaultShader.SetBool("colorTextureEnabled", true);
 	defaultShader.SetVec3("textColor", { color.r,color.g,color.b });
-	defaultShader.SetInt ("colorTexture", 0);
+	defaultShader.SetInt("colorTexture", 0);
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
@@ -186,9 +186,9 @@ void SceneKinematics::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneKinematics::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneMenu::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
-	if(!mesh || mesh->textureID <= 0)
+	if (!mesh || mesh->textureID <= 0)
 		return;
 
 	glDisable(GL_DEPTH_TEST);
@@ -209,7 +209,7 @@ void SceneKinematics::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
 	defaultShader.SetInt("colorTexture", 0);
-	for(unsigned i = 0; i < text.length(); ++i)
+	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
@@ -226,31 +226,31 @@ void SceneKinematics::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneKinematics::RenderMesh(Mesh *mesh, bool enableLight)
+void SceneMenu::RenderMesh(Mesh *mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
-	
+
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	defaultShader.SetMat4("MVP", MVP);
-	if(enableLight && bLightEnabled)
+	if (enableLight && bLightEnabled)
 	{
 		defaultShader.SetBool("lightEnabled", true);
 		modelView = viewStack.Top() * modelStack.Top();
 		defaultShader.SetMat4("MV", modelView);
 		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
 		defaultShader.SetMat4("MV_inverse_transpose", modelView_inverse_transpose);
-		
+
 		//load material
-		defaultShader.SetVec3("material.kAmbient", {mesh->material.kAmbient.r, mesh->material.kAmbient.g, mesh->material.kAmbient.b, });
-		defaultShader.SetVec3("material.kDiffuse", {mesh->material.kDiffuse.r, mesh->material.kDiffuse.g, mesh->material.kDiffuse.b });
-		defaultShader.SetVec3("material.kSpecular", {mesh->material.kSpecular.r, mesh->material.kSpecular.g , mesh->material.kSpecular.b });
+		defaultShader.SetVec3("material.kAmbient", { mesh->material.kAmbient.r, mesh->material.kAmbient.g, mesh->material.kAmbient.b, });
+		defaultShader.SetVec3("material.kDiffuse", { mesh->material.kDiffuse.r, mesh->material.kDiffuse.g, mesh->material.kDiffuse.b });
+		defaultShader.SetVec3("material.kSpecular", { mesh->material.kSpecular.r, mesh->material.kSpecular.g , mesh->material.kSpecular.b });
 		defaultShader.SetFloat("material.kShininess", mesh->material.kShininess);
 	}
 	else
-	{	
+	{
 		defaultShader.SetBool("lightEnabled", false);
 	}
-	if(mesh->textureID > 0)
+	if (mesh->textureID > 0)
 	{
 		defaultShader.SetBool("colorTextureEnabled", true);
 		glActiveTexture(GL_TEXTURE0);
@@ -262,15 +262,15 @@ void SceneKinematics::RenderMesh(Mesh *mesh, bool enableLight)
 		defaultShader.SetBool("colorTextureEnabled", false);
 	}
 	mesh->Render();
-	if(mesh->textureID > 0)
+	if (mesh->textureID > 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
 
-void SceneKinematics::RenderGO(GameObject *go)
+void SceneMenu::RenderGO(GameObject *go)
 {
-	switch(go->type)
+	switch (go->type)
 	{
 	case GameObject::GO_BALL:
 		break;
@@ -279,36 +279,36 @@ void SceneKinematics::RenderGO(GameObject *go)
 	}
 }
 
-void SceneKinematics::Render()
+void SceneMenu::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 
 	Mtx44 projection;
 	projection.SetToOrtho(0, m_worldWidth, 0, m_worldHeight, -10, 10);
 	projectionStack.LoadMatrix(projection);
-	
+
 	viewStack.LoadIdentity();
 	viewStack.LookAt(
-						camera.position.x, camera.position.y, camera.position.z,
-						camera.target.x, camera.target.y, camera.target.z,
-						camera.up.x, camera.up.y, camera.up.z
-					);
+		camera.position.x, camera.position.y, camera.position.z,
+		camera.target.x, camera.target.y, camera.target.z,
+		camera.up.x, camera.up.y, camera.up.z
+	);
 	modelStack.LoadIdentity();
-	
+
 	RenderMesh(meshList[GEO_AXES], false);
 
-	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if(go->active)
+		if (go->active)
 		{
 			RenderGO(go);
 		}
 	}
-	if(m_ghost->active)
+	if (m_ghost->active)
 	{
 		RenderGO(m_ghost);
 	}
@@ -318,31 +318,31 @@ void SceneKinematics::Render()
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-	
-	
+
+
 
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
 }
 
-void SceneKinematics::Exit()
+void SceneMenu::Exit()
 {
 	// Cleanup VBO
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
-		if(meshList[i])
+		if (meshList[i])
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-	
+
 	//Cleanup GameObjects
-	while(m_goList.size() > 0)
+	while (m_goList.size() > 0)
 	{
 		GameObject *go = m_goList.back();
 		delete go;
 		m_goList.pop_back();
 	}
-	if(m_ghost)
+	if (m_ghost)
 	{
 		delete m_ghost;
 		m_ghost = NULL;
