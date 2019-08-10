@@ -33,7 +33,7 @@ void SceneKinematics::Init()
 	glBindVertexArray(m_vertexArrayID);
 
 	
-	defaultShader.Init("Shader//comg.vertexshader", "Shader//comg.fragmentshader");
+	defaultShader.Init("Shader//comg.vert", "Shader//comg.frag");
 	
 	// Use our shader
 	defaultShader.Use();
@@ -76,7 +76,7 @@ void SceneKinematics::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
-	bLightEnabled = false;
+	bLightEnabled = true;
 
 	m_speed = 1.f;
 	
@@ -84,6 +84,8 @@ void SceneKinematics::Init()
 	Math::InitRNG();
 
 	m_ghost = new GameObject(GameObject::GO_BALL);
+
+	m_ghost->active = true;
 }
 
 void SceneKinematics::Update(double dt)
