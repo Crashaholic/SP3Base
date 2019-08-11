@@ -13,23 +13,28 @@ out vec3 vertexNormal_cameraspace;
 out vec2 texCoord;
 
 // Values that stay constant for the whole mesh.
-uniform mat4 MVP;
-uniform mat4 MV;
-uniform mat4 MV_inverse_transpose;
+//Original Code
+//======================
+//uniform mat4 MVP;
+//uniform mat4 MV;
+//uniform mat4 MV_inverse_transpose;
 uniform bool lightEnabled;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
 
 void main(){
 	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
+	gl_Position =  model * vec4(vertexPosition_modelspace, 1);
 	
 	if(lightEnabled == true)
 	{
 		// Vector position, in camera space
-		vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace, 1) ).xyz;
+		vertexPosition_cameraspace = ( view * vec4(vertexPosition_modelspace, 1) ).xyz;
 		
 		// Vertex normal, in camera space
 		// Use MV if ModelMatrix does not scale the model ! Use its inverse transpose otherwise.
-		vertexNormal_cameraspace = ( MV_inverse_transpose * vec4(vertexNormal_modelspace, 0) ).xyz;
+		vertexNormal_cameraspace = ( proj * vec4(vertexNormal_modelspace, 0) ).xyz;
 	}
 	// The color of each vertex will be interpolated to produce the color of each fragment
 	fragmentColor = vertexColor;
@@ -37,3 +42,24 @@ void main(){
 	texCoord = vertexTexCoord;
 }
 
+//Original Code
+//======================
+//void main(){
+//	// Output position of the vertex, in clip space : MVP * position
+//	gl_Position =  MVP * vec4(vertexPosition_modelspace, 1);
+//	
+//	if(lightEnabled == true)
+//	{
+//		// Vector position, in camera space
+//		vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace, 1) ).xyz;
+//		
+//		// Vertex normal, in camera space
+//		// Use MV if ModelMatrix does not scale the model ! Use its inverse transpose otherwise.
+//		vertexNormal_cameraspace = ( MV_inverse_transpose * vec4(vertexNormal_modelspace, 0) ).xyz;
+//	}
+//	// The color of each vertex will be interpolated to produce the color of each fragment
+//	fragmentColor = vertexColor;
+//	// A simple pass through. The texCoord of each fragment will be interpolated from texCoord of each vertex
+//	texCoord = vertexTexCoord;
+//}
+//

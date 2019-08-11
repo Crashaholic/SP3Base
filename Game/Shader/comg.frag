@@ -5,7 +5,9 @@ in vec3 vertexPosition_cameraspace;
 in vec3 fragmentColor;
 in vec3 vertexNormal_cameraspace;
 in vec2 texCoord;
-
+//New Code
+in float transparency;
+in vec3 coloredTexture;
 // Ouput data
 out vec4 color;
 
@@ -78,7 +80,8 @@ void main(){
 		
 		// Ambient : simulates indirect lighting
 		color = materialColor * vec4(material.kAmbient, 1);
-		
+		color *= coloredTexture;//M: multiplies color by coloredTexture to get color blending;
+
 		for(int i = 0; i < numLights; ++i)
 		{
 			// Light direction
@@ -122,8 +125,10 @@ void main(){
 				color = texture2D( colorTexture, texCoord ) * vec4( textColor, 1 );
 			else
 				color = texture2D( colorTexture, texCoord );
+			color.rgb *= coloredTexture;//M: multiplies color by coloredTexture to get color blending;
 		}
 		else
 			color = vec4( fragmentColor, 1 );
 	}
+	color.a *= transparency;//M: multiply alpha by transparency
 }
