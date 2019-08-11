@@ -10,14 +10,15 @@ SceneManager::SceneManager()
 SceneManager::~SceneManager()
 {
 	// WIP
-	unordered_map<string, Scene*> empty;
-	using std::swap;
-	swap(sceneList, empty);
+	// unordered_map<string, Scene*> empty;
+	// using std::swap;
+	// swap(sceneList, empty);
 }
 
 void SceneManager::firstScene(string name)
 {
 	activeScene = sceneList[name];
+	activeScene->Init();
 }
 
 void SceneManager::switchToScene(string name, Scene* curr)
@@ -45,4 +46,9 @@ SceneManager & SceneManager::getSceneManager()
 Scene * SceneManager::getActiveScene()
 {
 	return activeScene;
+}
+
+unordered_map<string, Scene*>& SceneManager::getList()
+{
+	return sceneList;
 }

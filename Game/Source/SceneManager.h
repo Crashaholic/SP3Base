@@ -23,5 +23,6 @@ public:
 	void addScene(string name, Scene* scene);
 	static SceneManager& getSceneManager();
 	Scene* getActiveScene();
+	unordered_map<string, Scene*>& getList();
 };
 

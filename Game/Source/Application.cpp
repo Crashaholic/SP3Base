@@ -118,12 +118,10 @@ void Application::Run()
 {
 	//Main Loop
 	Scene* scene = manager->getActiveScene();
-	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
-		scene = manager->getActiveScene();
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers
@@ -136,11 +134,16 @@ void Application::Run()
 		{
 			scene->readyExit = false;
 			scene->Exit();
+			scene = manager->getActiveScene();
 		}
 
 	} //Check if the ESC key had been pressed or if the window had been closed
 	scene->Exit();
-	delete scene;
+	for (auto x : manager->getList())
+	{
+		delete x.second;
+	}
+	manager->getList().clear();
 }
 
 void Application::Exit()
