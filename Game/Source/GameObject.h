@@ -18,12 +18,9 @@ struct GameObject
 	Vector3 scale;
 
 	Vector3 corn[4];	// corner
-	Vector3 axis[2];	// axis
-	double	orig[2];	// origin
 	Vector3 norm;		// normal
 	Vector3 perp;		// normal perpendicular
 
-	Vector3 normal;
 	bool active;
 	float mass;
 	bool hasGravity;

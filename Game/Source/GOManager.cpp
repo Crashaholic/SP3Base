@@ -58,32 +58,45 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	case GameObject::GO_CUBE:
 	{
 		// As of now, I see no reason to move to update function since it is a single case.
-		go1->corn[0] = go1->pos - (go1->perp * go1->scale.x) - (go1->norm * go1->scale.y);
-		go1->corn[1] = go1->pos + (go1->perp * go1->scale.x) - (go1->norm * go1->scale.y);
-		go1->corn[2] = go1->pos + (go1->perp * go1->scale.x) + (go1->norm * go1->scale.y);
-		go1->corn[3] = go1->pos - (go1->perp * go1->scale.x) + (go1->norm * go1->scale.y);
-		go1->axis[0] = go1->perp;
-		go1->axis[1] = go1->norm;
-		go1->orig[0] = go1->corn[0].Dot(go1->perp);
-		go1->orig[1] = go1->corn[0].Dot(go1->norm);
+		go1->perp = go1->norm.Cross(Vector3(0, 0, 1));
+		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
 
-		go2->corn[0] = go2->pos - (go2->perp * go2->scale.x) - (go2->norm * go2->scale.y);
-		go2->corn[1] = go2->pos + (go2->perp * go2->scale.x) - (go2->norm * go2->scale.y);
-		go2->corn[2] = go2->pos + (go2->perp * go2->scale.x) + (go2->norm * go2->scale.y);
-		go2->corn[3] = go2->pos - (go2->perp * go2->scale.x) + (go2->norm * go2->scale.y);
-		go2->axis[0] = go2->perp;
-		go2->axis[1] = go2->norm;
-		go2->orig[0] = go2->corn[0].Dot(go2->perp);
-		go2->orig[1] = go2->corn[0].Dot(go2->norm);
+		Vector3 hori1 = go1->perp * go1->scale.x;
+		Vector3 vert1 = go1->norm * go1->scale.y;
+		Vector3 hori2 = go2->perp * go2->scale.x;
+		Vector3 vert2 = go2->norm * go2->scale.y;
 
-		if ((overlapOBB(go1, go2) == true) && (overlapOBB(go2, go1) == true))
-			return true;
+		go1->corn[0] = go1->pos - hori1 - vert1;
+		go1->corn[1] = go1->pos + hori1 - vert1;
+		go1->corn[2] = go1->pos + hori1 + vert1;
+		go1->corn[3] = go1->pos - hori1 + vert1;
 
+		go2->corn[0] = go2->pos - hori2 - vert2;
+		go2->corn[1] = go2->pos + hori2 - vert2;
+		go2->corn[2] = go2->pos + hori2 + vert2;
+		go2->corn[3] = go2->pos - hori2 + vert2;
+
+		Vector3 normals[2];
+		normals[0] = go1->norm;
+		normals[1] = go1->perp;
+
+		// Hardcoded for 2 normals - Can be converted to take in any number of normals
+		for (int i = 0; i < 2; ++i)
+		{
+			float min1, max1, min2, max2;
+			testSAT(normals[i], go1->corn, min1, max1);
+			testSAT(normals[i], go2->corn, min2, max2);
+			if (overlap(min1, max1, min2, max2) == false)
+				return false;
+		}
+		std::cout << "hit";
+		return true;
+		
 		break;
 	}
 	default:
 	{
-		;
+		break;
 	}
 	}
 	return false;
@@ -92,8 +105,8 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 	// Testing
-	// go1->active = false;
-	// go2->active = false;
+	go1->active = false;
+	go2->active = false;
 }
 
 GameObject * GOManager::fetchGO()
@@ -132,26 +145,32 @@ void GOManager::cleanList()
 	}
 }
 
-bool GOManager::overlapOBB(GameObject * go1, GameObject * go2)
+bool GOManager::testSAT(Vector3 axis, Vector3 corn[], float & min, float & max)
 {
-	for (int i = 0; i < 2; ++i)
+	// Seperating Axis Theorem Test
+	min = 9001.0f;
+	max = -9001.0f;
+
+	// Hardcoded for 4 points - Can be converted to take in any number of points
+	for (int i = 0; i < 4; ++i)
 	{
-		double t = go2->corn[i].Dot(go2->axis[i]);
-		double min = t;
-		double max = t;
+		// dot product finds length along the axis when points are projected onto it
+		float x = corn[i].Dot(axis);
 
-		for (int j = 0; j < 4; ++j)
-		{
-			t = go2->corn[j].Dot(go2->axis[j]);
-
-			if (t < min)
-				min = t;
-			else if (t > max)
-				max = t;
-		}
-
-		if ((min > 1 + go1->orig[i]) || (max < go1->orig[i]))
-			return false;
+		// find min and max values along the axis
+		if (x < min)
+			min = x;
+		if (x > max)
+			max = x;
 	}
-	return true;
+	return false;
+}
+
+bool GOManager::overlap(float min1, float max1, float min2, float max2)
+{
+	if (((min2 >= min1) && (min2 <= max1)) ||
+		((min1 >= min2) && (min1 <= max2)))
+		return true;
+
+	return false;
 }

@@ -7,7 +7,7 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	active(false),
 	mass(1.f),
 	hasGravity(false),
-	normal(0, 1, 0)
+	norm(0, 1, 0)
 {
 }
 

@@ -23,7 +23,8 @@ public:
 	GameObject* fetchGO();
 	std::vector<GameObject*>& getlist();
 	void cleanList();
-	bool overlapOBB(GameObject* go1, GameObject *go2);
+	bool testSAT(Vector3 axis, Vector3 corn[], float &min, float &max);
+	bool overlap(float min1, float max1, float min2, float max2);
 };
 
 #endif

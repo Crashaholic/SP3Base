@@ -23,9 +23,6 @@ void ScenePlane::Init()
 {
 	Scene::Init();
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-	
-
-	
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	m_worldHeight = 100.f;
@@ -39,6 +36,23 @@ void ScenePlane::Init()
 	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
 	decal1 = LoadTGA("Image//A10decal2.tga");
+
+	// Testing cubes
+	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
+
+	GameObject *g1 = GOManager::GetInstance()->fetchGO();
+	g1->scale.Set(4.0f, 4.0f, 1.0f);
+	g1->type = GameObject::GO_CUBE;
+	g1->norm.Set(1, 1, 0);
+	g1->vel.Set(0, 4, 0);
+	g1->pos.Set(center.x, center.y - 50.0f, center.z);
+
+	GameObject *g2 = GOManager::GetInstance()->fetchGO();
+	g2->scale.Set(4.0f, 4.0f, 1.0f);
+	g2->type = GameObject::GO_CUBE;
+	g2->norm.Set(1, 1, 0);
+	g2->vel.Set(0, -4, 0);
+	g2->pos.Set(center.x, center.y + 50.0f, center.z);
 }
 
 void ScenePlane::Update(double dt)
