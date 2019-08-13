@@ -29,14 +29,10 @@ void SceneMenu::Init()
 
 
 	bLightEnabled = true;
-
 	m_speed = 1.f;
-
-	m_gravity.Set(0, -9.8f, 0); //init gravity as 9.8ms-2 downwards
+	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
-
 	m_ghost = new GameObject(GameObject::GO_BALL);
-
 	m_ghost->active = true;
 }
 
@@ -68,33 +64,24 @@ void SceneMenu::Update(double dt)
 	{
 	}
 
-	// Switch scene=
+	// Switch scene
 	if (Application::IsKeyPressed('6'))
 	{
 		SceneManager::getSceneManager().switchToScene("Plane", this);
 	}
 
-	//Mouse Section
+	// Mouse Section
 	static bool bLButtonState = false;
-	//Exercise 10: ghost code here
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
-
-		//Exercise 10: spawn ghost ball
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 	}
-
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
@@ -107,7 +94,7 @@ void SceneMenu::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	//Physics Simulation Section
+	// Physics Simulation Section
 	fps = (float)(1.f / dt);
 }
 
@@ -132,27 +119,11 @@ void SceneMenu::Render()
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	// for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	// {
-	// 	GameObject *go = (GameObject *)*it;
-	// 	if (go->active)
-	// 	{
-	// 		RenderGO(go);
-	// 	}
-	// }
-	// if (m_ghost->active)
-	// {
-	// 	RenderGO(m_ghost);
-	// }
-
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-
-
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
 }

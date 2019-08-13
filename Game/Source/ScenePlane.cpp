@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "SceneManager.h"
+#include "Logging.h"
 
 ScenePlane::ScenePlane()
 {
@@ -31,22 +32,18 @@ void ScenePlane::Init()
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
 	bLightEnabled = true;
-
 	m_speed = 1.f;
-	
-	m_gravity.Set(0, -9.8f, 0); //init gravity as 9.8ms-2 downwards
+	m_gravity.Set(0, -9.8f, 0); 
 	Math::InitRNG();
 
-	m_ghost = new GameObject(GameObject::GO_BALL);
-	m_ghost->active = true;
-	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
 	decal1 = LoadTGA("Image//A10decal2.tga");
 }
 
 void ScenePlane::Update(double dt)
 {
-	//Keyboard Section
+	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 	if(Application::IsKeyPressed('2'))
@@ -88,9 +85,8 @@ void ScenePlane::Update(double dt)
 		SceneManager::getSceneManager().switchToScene("Menu", this);
 	}
 
-	//Mouse Section
+	// Mouse Section
 	static bool bLButtonState = false;
-	//Exercise 10: ghost code here
 	if(!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
@@ -101,21 +97,18 @@ void ScenePlane::Update(double dt)
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
 
-		m_ghost->pos.Set(x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0);
-		//Exercise 10: spawn ghost ball
+		vec3 n = terr.GetNormal(Vector3(
+			static_cast<float>(x / w * m_worldWidth), 
+			static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
+			static_cast<float>(0.0f))
+		);
+
+		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
-		GameObject* go = GOManager::GetInstance()->fetchGO();
-		go->type = GameObject::GO_BALL;
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		float w = static_cast<float>(Application::GetWindowWidth());
-		float h = static_cast<float>(Application::GetWindowHeight());
-		go->pos.Set(x/w * m_worldWidth,m_worldHeight- y / h*m_worldHeight, 0);
-		go->vel.Set(20, 20, 0);
 	}
 	
 	static bool bRButtonState = false;
@@ -131,7 +124,7 @@ void ScenePlane::Update(double dt)
 	}
 	GOManager::GetInstance()->update(dt);
 
-	//Physics Simulation Section
+	// Physics Simulation Section
 	fps = (float)(1.f / dt);
 }
 
@@ -164,14 +157,9 @@ void ScenePlane::Render()
 			RenderGO(go);
 		}
 	}
-	if(m_ghost->active)
-	{
-		RenderGO(m_ghost);
-	}
 
 	modelStack.PushMatrix();
-		modelStack.Scale(1, m_worldHeight, 1);
-		RenderMesh(terr.tMesh, true);
+	RenderMesh(terr.tMesh, false);
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
@@ -195,17 +183,10 @@ void ScenePlane::Render()
 void ScenePlane::Exit()
 {
 	// Cleanup VBO
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
-		if(meshList[i])
+		if (meshList[i])
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-	
-	//Cleanup GameObjects
-	if(m_ghost)
-	{
-		delete m_ghost;
-		m_ghost = NULL;
-	}
 }
