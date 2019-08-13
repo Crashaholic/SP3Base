@@ -1,4 +1,4 @@
-#include "SceneGame.h"
+#include "ScenePlane.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -11,15 +11,15 @@
 #include "SceneManager.h"
 #include "Logging.h"
 
-SceneGame::SceneGame()
+ScenePlane::ScenePlane()
 {
 }
 
-SceneGame::~SceneGame()
+ScenePlane::~ScenePlane()
 {
 }
 
-void SceneGame::Init()
+void ScenePlane::Init()
 {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -96,7 +96,7 @@ void SceneGame::Init()
 	terr.GenerateTerrainMesh();
 }
 
-void SceneGame::Update(double dt)
+void ScenePlane::Update(double dt)
 {
 	//Keyboard Section
 	if(Application::IsKeyPressed('1'))
@@ -153,12 +153,12 @@ void SceneGame::Update(double dt)
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
-		GameObject* go =	GOManager::GetInstance()->fetchGO();
+		GameObject* go = GOManager::GetInstance()->fetchGO();
 		go->type = GameObject::GO_BALL;
 		double x, y;
 		Application::GetCursorPos(&x, &y);
-		float w = Application::GetWindowWidth();
-		float h = Application::GetWindowHeight();
+		float w = static_cast<float>(Application::GetWindowWidth());
+		float h = static_cast<float>(Application::GetWindowHeight());
 		go->pos.Set(x/w * m_worldWidth,m_worldHeight- y / h*m_worldHeight, 0);
 		go->vel.Set(20, 20, 0);
 	}
@@ -175,11 +175,12 @@ void SceneGame::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 	GOManager::GetInstance()->update(dt);
+
 	//Physics Simulation Section
 	fps = (float)(1.f / dt);
 }
 
-void SceneGame::RenderText(Mesh* mesh, std::string text, Color color)
+void ScenePlane::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if(!mesh || mesh->textureID <= 0)
 		return;
@@ -212,7 +213,7 @@ void SceneGame::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneGame::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void ScenePlane::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if(!mesh || mesh->textureID <= 0)
 		return;
@@ -252,7 +253,7 @@ void SceneGame::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneGame::RenderMesh(Mesh *mesh, bool enableLight)
+void ScenePlane::RenderMesh(Mesh *mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	
@@ -294,7 +295,7 @@ void SceneGame::RenderMesh(Mesh *mesh, bool enableLight)
 	}
 }
 
-void SceneGame::RenderGO(GameObject *go)
+void ScenePlane::RenderGO(GameObject *go)
 {
 	switch(go->type)
 	{
@@ -310,7 +311,7 @@ void SceneGame::RenderGO(GameObject *go)
 	}
 }
 
-void SceneGame::Render()
+void ScenePlane::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -363,7 +364,7 @@ void SceneGame::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 }
 
-void SceneGame::Exit()
+void ScenePlane::Exit()
 {
 	// Cleanup VBO
 	for(int i = 0; i < NUM_GEOMETRY; ++i)

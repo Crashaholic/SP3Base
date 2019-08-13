@@ -1,5 +1,5 @@
-#ifndef SCENE_GAME_H
-#define SCENE_GAME_H
+#ifndef SCENE_PLANE_H
+#define SCENE_PLANE_H
 
 #include "Scene.h"
 #include "Mtx44.h"
@@ -7,11 +7,11 @@
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
-#include "GOManager.h"
 #include "shader.hpp"
-#include <vector>
 #include "Terrain.h"
-class SceneGame : public Scene
+#include <vector>
+
+class ScenePlane : public Scene
 {
 	enum GEOMETRY_TYPE
 	{
@@ -23,8 +23,8 @@ class SceneGame : public Scene
 	};
 
 public:
-	SceneGame();
-	~SceneGame();
+	ScenePlane();
+	~ScenePlane();
 
 	virtual void Init();
 	virtual void Update(double dt);

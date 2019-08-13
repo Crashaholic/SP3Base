@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #include "SceneManager.h"
-#include "SceneGame.h"
+#include "ScenePlane.h"
 #include "SceneMenu.h"
 
 class Application

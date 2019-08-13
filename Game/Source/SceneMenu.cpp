@@ -121,7 +121,7 @@ void SceneMenu::Update(double dt)
 	// Switch scene=
 	if (Application::IsKeyPressed('6'))
 	{
-		SceneManager::getSceneManager().switchToScene("Game", this);
+		SceneManager::getSceneManager().switchToScene("Plane", this);
 	}
 
 	//Mouse Section
@@ -308,18 +308,18 @@ void SceneMenu::Render()
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-		{
-			RenderGO(go);
-		}
-	}
-	if (m_ghost->active)
-	{
-		RenderGO(m_ghost);
-	}
+	// for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	// {
+	// 	GameObject *go = (GameObject *)*it;
+	// 	if (go->active)
+	// 	{
+	// 		RenderGO(go);
+	// 	}
+	// }
+	// if (m_ghost->active)
+	// {
+	// 	RenderGO(m_ghost);
+	// }
 
 	//On screen text
 	std::ostringstream ss;
@@ -343,13 +343,6 @@ void SceneMenu::Exit()
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
-	//Cleanup GameObjects
-	while (m_goList.size() > 0)
-	{
-		GameObject *go = m_goList.back();
-		delete go;
-		m_goList.pop_back();
-	}
 	if (m_ghost)
 	{
 		delete m_ghost;

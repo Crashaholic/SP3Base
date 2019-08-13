@@ -9,8 +9,10 @@
 class GOManager:public Singleton<GOManager>
 {
 	friend Singleton<GOManager>;
+
 private:
 	std::vector<GameObject*> m_goList;
+
 public:
 	GOManager();
 	~GOManager();
@@ -18,7 +20,8 @@ public:
 	bool checkcollision(GameObject* go1, GameObject* go2);
 	void collisionresponse(GameObject* go1, GameObject* go2);
 	GameObject* fetchGO();
-	std::vector<GameObject*> getlist();
+	std::vector<GameObject*>& getlist();
+	void cleanList();
 };
 
 #endif

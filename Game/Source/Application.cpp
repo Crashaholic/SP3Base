@@ -106,12 +106,12 @@ void Application::Init()
 		//return -1;
 	}
 	//Ryan
-	Scene *sc1 = new SceneGame();
+	Scene *sc1 = new ScenePlane();
 	Scene *sc2 = new SceneMenu();
 	manager = &SceneManager::getSceneManager();
-	manager->addScene("Game", sc1);
+	manager->addScene("Plane", sc1);
 	manager->addScene("Menu", sc2);
-	manager->firstScene("Game");
+	manager->firstScene("Plane");
 }
 
 void Application::Run()
@@ -134,7 +134,12 @@ void Application::Run()
 		{
 			scene->readyExit = false;
 			scene->Exit();
+
+			//Cleanup GameObjects
+			GOManager::GetInstance()->cleanList();
+
 			scene = manager->getActiveScene();
+			scene->Init();
 		}
 
 	} //Check if the ESC key had been pressed or if the window had been closed

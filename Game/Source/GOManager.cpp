@@ -25,7 +25,7 @@ void GOManager::update(double dt)
 		if (go->active)
 		{
 			if (go->hasGravity)
-				go->vel += Vector3(0, -9.8, 0) * static_cast<float>(dt);
+				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = (GameObject *)*it2;
@@ -79,7 +79,17 @@ GameObject * GOManager::fetchGO()
 	return m_goList[size];
 }
 
-std::vector<GameObject*> GOManager::getlist()
+std::vector<GameObject*>& GOManager::getlist()
 {
 	return m_goList;
+}
+
+void GOManager::cleanList()
+{
+	while (m_goList.size() > 0)
+	{
+		GameObject *go = m_goList.back();
+		delete go;
+		m_goList.pop_back();
+	}
 }
