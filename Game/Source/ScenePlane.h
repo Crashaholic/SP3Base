@@ -65,6 +65,7 @@ private:
 	float m_timeTaken2;
 	float m_heightEstimated;
 	float m_heightMax;
+	Terrain terr;
 };
 
 #endif
