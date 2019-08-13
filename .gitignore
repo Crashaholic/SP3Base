@@ -4,7 +4,6 @@
 
 /Common/Debug
 /Common/Release
-/Common/x64/Debug
 /Debug/Game.pdb
 /Debug/Game.ilk
 /Debug/Common.pdb
@@ -20,3 +19,4 @@
 /.vs/Game/v15
 /SP3Base.rar
 /.vs
+*.user
