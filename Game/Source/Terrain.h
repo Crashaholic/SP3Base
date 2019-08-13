@@ -10,9 +10,14 @@ public:
 	~Terrain();
 
 	Vector3 Points[64];
+	Vector3 Bottom[64];
 
-	void GenerateRandomHeight();
+	Mesh* tMesh;
 
+
+
+	void GenerateRandomHeight(unsigned int worldWidth);
+	void GenerateTerrainMesh();
 
 };
 

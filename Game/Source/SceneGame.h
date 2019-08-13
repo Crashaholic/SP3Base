@@ -10,7 +10,7 @@
 #include "GOManager.h"
 #include "shader.hpp"
 #include <vector>
-// test
+#include "Terrain.h"
 class SceneGame : public Scene
 {
 	enum GEOMETRY_TYPE
@@ -66,6 +66,7 @@ private:
 	float m_timeTaken2;
 	float m_heightEstimated;
 	float m_heightMax;
+	Terrain terr;
 };
 
 #endif

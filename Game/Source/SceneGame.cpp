@@ -79,6 +79,8 @@ void SceneGame::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
 	bLightEnabled = true;
 
@@ -88,8 +90,9 @@ void SceneGame::Init()
 	Math::InitRNG();
 
 	m_ghost = new GameObject(GameObject::GO_BALL);
-
 	m_ghost->active = true;
+	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateTerrainMesh();
 }
 
 void SceneGame::Update(double dt)
@@ -295,7 +298,6 @@ void SceneGame::RenderGO(GameObject *go)
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, 1);
-		//modelStack.Rotate(go->);
 		RenderMesh(meshList[GEO_BALL], false);
 		modelStack.PopMatrix();
 		break;
@@ -338,13 +340,22 @@ void SceneGame::Render()
 		RenderGO(m_ghost);
 	}
 
+	modelStack.PushMatrix();
+		modelStack.Scale(1, m_worldHeight, 1);
+		RenderMesh(terr.tMesh, true);
+	modelStack.PopMatrix();
+	GLenum err = glGetError();
+
+	modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
+		RenderMesh(meshList[GEO_BALL], false);
+	modelStack.PopMatrix();
+
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 }
 
 void SceneGame::Exit()
