@@ -16,6 +16,14 @@ GOManager::~GOManager()
 	}
 }
 
+void GOManager::init()
+{
+	for (unsigned int i = 0; i < 10; ++i)
+	{
+		m_goList.push_back(new GameObject(GameObject::GO_NONE));
+	}
+}
+
 void GOManager::update(double dt)
 {
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -45,13 +53,10 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	case GameObject::GO_BALL:
 	{
 		// Ball to cube collision
-		
 		break;
 	}
 	case GameObject::GO_CUBE:
 	{
-		// Ryan
-		// We only have to do these calculations in the case of cube-cube collision.
 		// As of now, I see no reason to move to update function since it is a single case.
 		go1->corn[0] = go1->pos - (go1->perp * go1->scale.x) - (go1->norm * go1->scale.y);
 		go1->corn[1] = go1->pos + (go1->perp * go1->scale.x) - (go1->norm * go1->scale.y);
@@ -87,8 +92,8 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 	// Testing
-	go1->active = false;
-	go2->active = false;
+	// go1->active = false;
+	// go2->active = false;
 }
 
 GameObject * GOManager::fetchGO()
@@ -101,7 +106,6 @@ GameObject * GOManager::fetchGO()
 			go->active = true;
 			go->vel.SetZero();
 			go->pos.SetZero();
-			go->scale.Set(1, 1, 1);
 			go->type = GameObject::GO_NONE;
 			return go;
 		}

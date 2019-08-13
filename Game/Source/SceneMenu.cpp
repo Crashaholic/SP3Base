@@ -34,10 +34,7 @@ void SceneMenu::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-
 	defaultShader.Init("Shader//comg.vert", "Shader//comg.frag");
-
-	// Use our shader
 	defaultShader.Use();
 
 	lights[0].type = Light::LIGHT_DIRECTIONAL;
@@ -79,14 +76,10 @@ void SceneMenu::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 
 	bLightEnabled = true;
-
 	m_speed = 1.f;
-
-	m_gravity.Set(0, -9.8f, 0); //init gravity as 9.8ms-2 downwards
+	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
-
 	m_ghost = new GameObject(GameObject::GO_BALL);
-
 	m_ghost->active = true;
 }
 
@@ -118,30 +111,24 @@ void SceneMenu::Update(double dt)
 	{
 	}
 
-	// Switch scene=
+	// Switch scene
 	if (Application::IsKeyPressed('6'))
 	{
 		SceneManager::getSceneManager().switchToScene("Plane", this);
 	}
 
-	//Mouse Section
+	// Mouse Section
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
-
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
 	}
-
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
@@ -154,7 +141,7 @@ void SceneMenu::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	//Physics Simulation Section
+	// Physics Simulation Section
 	fps = (float)(1.f / dt);
 }
 
@@ -166,11 +153,6 @@ void SceneMenu::RenderText(Mesh* mesh, std::string text, Color color)
 	glDisable(GL_DEPTH_TEST);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-	//glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
-	//glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
-	//glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-	//glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
-	//glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
 	defaultShader.SetBool("textEnabled", true);
 	defaultShader.SetBool("lightEnabled", false);
 	defaultShader.SetBool("colorTextureEnabled", true);
@@ -179,14 +161,13 @@ void SceneMenu::RenderText(Mesh* mesh, std::string text, Color color)
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
+		// 1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 1.0f, 0, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
-		//glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 		defaultShader.SetMat4("MVP", MVP);
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
 	defaultShader.SetBool("textEnabled", false);
 	glEnable(GL_DEPTH_TEST);
 }
@@ -217,7 +198,8 @@ void SceneMenu::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+		// 1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		defaultShader.SetMat4("MVP", MVP);
 
@@ -245,7 +227,7 @@ void SceneMenu::RenderMesh(Mesh *mesh, bool enableLight)
 		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
 		defaultShader.SetMat4("MV_inverse_transpose", modelView_inverse_transpose);
 
-		//load material
+		// Load material
 		defaultShader.SetVec3("material.kAmbient", { mesh->material.kAmbient.r, mesh->material.kAmbient.g, mesh->material.kAmbient.b, });
 		defaultShader.SetVec3("material.kDiffuse", { mesh->material.kDiffuse.r, mesh->material.kDiffuse.g, mesh->material.kDiffuse.b });
 		defaultShader.SetVec3("material.kSpecular", { mesh->material.kSpecular.r, mesh->material.kSpecular.g , mesh->material.kSpecular.b });
@@ -305,27 +287,11 @@ void SceneMenu::Render()
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	// for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	// {
-	// 	GameObject *go = (GameObject *)*it;
-	// 	if (go->active)
-	// 	{
-	// 		RenderGO(go);
-	// 	}
-	// }
-	// if (m_ghost->active)
-	// {
-	// 	RenderGO(m_ghost);
-	// }
-
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-
-
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
 }

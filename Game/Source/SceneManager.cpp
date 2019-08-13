@@ -18,7 +18,6 @@ SceneManager::~SceneManager()
 void SceneManager::firstScene(string name)
 {
 	activeScene = sceneList[name];
-	activeScene->Init();
 }
 
 void SceneManager::switchToScene(string name, Scene* curr)

@@ -105,7 +105,6 @@ void Application::Init()
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		//return -1;
 	}
-	//Ryan
 	Scene *sc1 = new ScenePlane();
 	Scene *sc2 = new SceneMenu();
 	manager = &SceneManager::getSceneManager();
@@ -118,8 +117,10 @@ void Application::Run()
 {
 	//Main Loop
 	Scene* scene = manager->getActiveScene();
+	GOManager::GetInstance()->init();
+	scene->Init();
 
-	// Start timer to calculate how long it takes to render this frame
+	//Start timer to calculate how long it takes to render this frame
 	m_timer.startTimer();    
 	//Check if the ESC key had been pressed or if the window had been closed
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
@@ -129,7 +130,7 @@ void Application::Run()
 		
 		glfwSwapBuffers(m_window);		//Swap buffers
 		glfwPollEvents();				//Get and organize events, like keyboard and mouse input, window resizing, etc
-        m_timer.waitUntil(frameTime);	// Frame rate limiter. Limits each frame to a specified time in ms
+        m_timer.waitUntil(frameTime);	//Frame rate limiter. Limits each frame to a specified time in ms
 
 		if (scene->readyExit == true)
 		{

@@ -16,6 +16,7 @@ private:
 public:
 	GOManager();
 	~GOManager();
+	void init();
 	void update(double dt);
 	bool checkcollision(GameObject* go1, GameObject* go2);
 	void collisionresponse(GameObject* go1, GameObject* go2);

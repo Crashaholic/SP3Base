@@ -88,9 +88,19 @@ void ScenePlane::Init()
 	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
 
-	m_ghost = GOManager::GetInstance()->fetchGO();
-	m_ghost->active = true;
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
+
+	GameObject* go = GOManager::GetInstance()->fetchGO();
+	go->type = GameObject::GO_CUBE;
+	go->pos.Set(0, 0, 0);
+	go->vel.Set(0.0f, 20.0f, 0.0f);
+	go->scale.Set(2.5f, 2.5f, 1.0f);
+
+	//GameObject* go1 = GOManager::GetInstance()->fetchGO();
+	//go1->type = GameObject::GO_CUBE;
+	//go1->pos.Set(0, 80, 0);
+	//go1->vel.Set(0.0f, -10.0f, 0.0f);
+	//go1->scale.Set(2.5f, 2.5f, 1.0f);
 }
 
 void ScenePlane::Update(double dt)

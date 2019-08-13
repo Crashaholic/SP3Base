@@ -27,7 +27,7 @@ struct GameObject
 	bool active;
 	float mass;
 	bool hasGravity;
-	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
+	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };
 

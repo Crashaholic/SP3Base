@@ -61,10 +61,6 @@ void Terrain::GenerateRandomHeight(unsigned int worldWidth)
 		}
 		LOG_NONE("Points[%]: %", i, Points[i]);
 	}
-	//for (int i = x - 10; i < x + 10; ++i)
-	//{
-	//	if(tMesh->vertexBuffer)
-	//}
 }
 
 void Terrain::GenerateTerrainMesh()
