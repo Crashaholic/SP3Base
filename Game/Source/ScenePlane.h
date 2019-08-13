@@ -58,14 +58,14 @@ private:
 	float m_worldWidth;
 	float m_worldHeight;
 	Vector3 m_gravity;
-	GameObject *m_ghost;
-	GameObject *m_timeGO;
-	float m_timeEstimated1;
-	float m_timeTaken1;
-	float m_timeEstimated2;
-	float m_timeTaken2;
-	float m_heightEstimated;
-	float m_heightMax;
+	// GameObject *m_ghost;
+	// GameObject *m_timeGO;
+	// float m_timeEstimated1;
+	// float m_timeTaken1;
+	// float m_timeEstimated2;
+	// float m_timeTaken2;
+	// float m_heightEstimated;
+	// float m_heightMax;
 	Terrain terr;
 };
 

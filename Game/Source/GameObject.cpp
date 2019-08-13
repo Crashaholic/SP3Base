@@ -1,12 +1,13 @@
 
 #include "GameObject.h"
 
-GameObject::GameObject(GAMEOBJECT_TYPE typeValue) 
+GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	: type(typeValue),
 	scale(1, 1, 1),
 	active(false),
 	mass(1.f),
-	hasGravity(true)
+	hasGravity(true),
+	normal(0, 1, 0)
 {
 }
 

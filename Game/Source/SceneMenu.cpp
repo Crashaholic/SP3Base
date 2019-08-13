@@ -126,7 +126,6 @@ void SceneMenu::Update(double dt)
 
 	//Mouse Section
 	static bool bLButtonState = false;
-	//Exercise 10: ghost code here
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
@@ -136,8 +135,6 @@ void SceneMenu::Update(double dt)
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
-
-		//Exercise 10: spawn ghost ball
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{

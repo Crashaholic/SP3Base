@@ -89,10 +89,10 @@ void ScenePlane::Init()
 	m_gravity.Set(0, -9.8f, 0); //init gravity as 9.8ms-2 downwards
 	Math::InitRNG();
 
-	m_ghost = new GameObject(GameObject::GO_BALL);
-	m_ghost->active = true;
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
+
+	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
 }
 
 void ScenePlane::Update(double dt)
@@ -142,8 +142,7 @@ void ScenePlane::Update(double dt)
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
 
-		m_ghost->pos.Set(x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0);
-		//Exercise 10: spawn ghost ball
+		// x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -169,6 +168,10 @@ void ScenePlane::Update(double dt)
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
+		GameObject* go = GOManager::GetInstance()->fetchGO();
+		go->type = GameObject::GO_CUBE;
+		go->pos.Set(0, 0, 0);
+		go->vel.Set(20, 20, 0);
 	}
 	GOManager::GetInstance()->update(dt);
 
@@ -303,6 +306,12 @@ void ScenePlane::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CUBE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->normal.y, go->normal.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], false);
+		modelStack.PopMatrix();
 		break;
 	}
 }
@@ -336,21 +345,16 @@ void ScenePlane::Render()
 			RenderGO(go);
 		}
 	}
-	if(m_ghost->active)
-	{
-		RenderGO(m_ghost);
-	}
+	// if(m_ghost->active)
+	// {
+	// 	RenderGO(m_ghost);
+	// }
 
 	modelStack.PushMatrix();
 		modelStack.Scale(1, m_worldHeight, 1);
 		RenderMesh(terr.tMesh, true);
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
-
-	modelStack.PushMatrix();
-		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
-		RenderMesh(meshList[GEO_BALL], false);
-	modelStack.PopMatrix();
 
 	//On screen text
 	std::ostringstream ss;
@@ -370,9 +374,9 @@ void ScenePlane::Exit()
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	
 	//Cleanup GameObjects
-	if(m_ghost)
-	{
-		delete m_ghost;
-		m_ghost = NULL;
-	}
-}
+	// if(m_ghost)
+	// {
+	// 	delete m_ghost;
+	// 	m_ghost = NULL;
+	// }
+}	// 

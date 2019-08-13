@@ -22,6 +22,7 @@ public:
 	GameObject* fetchGO();
 	std::vector<GameObject*>& getlist();
 	void cleanList();
+	bool overlapOBB(GameObject* go1, GameObject *go2);
 };
 
 #endif
