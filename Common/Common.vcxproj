@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Collider\Collider.cpp" />
     <ClCompile Include="Source\Logging.cpp" />
     <ClCompile Include="Source\MatrixStack.cpp" />
     <ClCompile Include="Source\Mtx44.cpp" />
@@ -18,6 +19,7 @@
     <ClCompile Include="Source\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Collider\Collider.h" />
     <ClInclude Include="Source\Logging.h" />
     <ClInclude Include="Source\MatrixStack.h" />
     <ClInclude Include="Source\Mtx44.h" />
