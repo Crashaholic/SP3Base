@@ -78,6 +78,7 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\GOManager.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\GOManager.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />

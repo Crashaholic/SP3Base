@@ -12,13 +12,3 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 GameObject::~GameObject()
 {
 }
-
-inline void GameObject::SetPos(const Vector3 & pos)
-{
-	this->pos = pos;
-}
-
-inline Vector3 GameObject::GetPos()
-{
-	return pos;
-}
