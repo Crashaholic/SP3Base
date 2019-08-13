@@ -55,7 +55,6 @@ private:
 	float fps;
 
 	//Physics
-	std::vector<GameObject *> m_goList;
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;

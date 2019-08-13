@@ -25,7 +25,6 @@ void SceneManager::switchToScene(string name, Scene* curr)
 {
 	curr->readyExit = true;
 	activeScene = sceneList[name];
-	activeScene->Init();
 }
 
 void SceneManager::addScene(string name, Scene * scene)
