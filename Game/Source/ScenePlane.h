@@ -8,6 +8,7 @@
 #include "MatrixStack.h"
 #include "Light.h"
 #include "shader.hpp"
+#include "Terrain.h"
 #include <vector>
 
 class ScenePlane : public Scene
