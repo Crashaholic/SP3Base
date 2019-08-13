@@ -10,9 +10,31 @@ Struct to define a 3D vector
 #include <cmath>
 #include "Vector3.h"
 
+// Methods to do comparison between 2 values
+// Used to compare components of 2 vectors
 bool Vector3::IsEqual(float a, float b) const
 {
 	return a - b <= Math::EPSILON && b - a <= Math::EPSILON;
+}
+
+bool Vector3::IsGreater(float a, float b) const
+{
+	return (a > b - Math::EPSILON);
+}
+
+bool Vector3::IsGreaterEqual(float a, float b) const
+{
+	return IsGreater(a, b) || IsEqual(a, b);
+}
+
+bool Vector3::IsLesser(float a, float b) const
+{
+	return (a < b + Math::EPSILON);
+}
+
+bool Vector3::IsLesserEqual(float a, float b) const
+{
+	return IsLesser(a, b) || IsEqual(a, b);
 }
 
 /******************************************************************************/
@@ -388,4 +410,56 @@ Scalar product of scalar with vector
 Vector3 operator*( float scalar, const Vector3& rhs )
 {
 	return rhs * scalar;
+}
+
+/******************************************************************************/
+/*!
+\brief
+operator>= overload for greater or equal to check
+
+\param rhs
+vector to compare with
+\return
+Resulting vector
+*/
+/******************************************************************************/
+bool Vector3::operator>= (const Vector3& rhs) const
+{
+	return IsGreaterEqual(x, rhs.x) && IsGreaterEqual(y, rhs.y) && IsGreaterEqual(z, rhs.z);
+}
+
+/******************************************************************************/
+/*!
+\brief
+operator>= overload for lesser or equal to check
+
+\param rhs
+vector to compare with
+\return
+Resulting vector
+*/
+/******************************************************************************/
+bool Vector3::operator<= (const Vector3& rhs) const
+{
+	return IsLesser(x, rhs.x) && IsLesser(y, rhs.y) && IsLesser(z, rhs.z);
+}
+
+/******************************************************************************/
+/*!
+\brief
+Distance Squared between 2 Vector3 positions
+
+\param thisVector
+Vector3 thisVector
+\param thatVector
+Vector3 thatVector
+\return
+Distance squared between the 2 Vector3 positions
+*/
+/******************************************************************************/
+double DistanceSquaredBetween(Vector3 thisVector, Vector3 thatVector)
+{
+	return	((thatVector.x - thisVector.x)*(thatVector.x - thisVector.x) +
+		(thatVector.y - thisVector.y)*(thatVector.y - thisVector.y) +
+		(thatVector.z - thisVector.z)*(thatVector.z - thisVector.z));
 }
