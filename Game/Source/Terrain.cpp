@@ -45,13 +45,13 @@ void Terrain::GenerateRandomHeight(unsigned int worldWidth)
 		{
 			Points[i].x = worldWidth;
 			Bottom[i].x = worldWidth;
-			Points[i].y = lastY + Math::RandFloatMinMax(-5.f, 5.f);
+			Points[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
 		}
 		else
 		{
 			Points[i].x = i * ((float)worldWidth / ((float)TERRAIN_SIZE - 1.f));
 			Bottom[i].x = i * ((float)worldWidth / ((float)TERRAIN_SIZE - 1.f));
-			Points[i].y = lastY + Math::RandFloatMinMax(-5.f, 5.f);
+			Points[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
 			if (Points[i].y < 0)
 			{
 				lastY = 3;
@@ -72,17 +72,10 @@ void Terrain::GenerateTerrainMesh()
 	Vertex v;
 	std::vector<Vertex> vertex_buffer_data;
 	std::vector<GLuint> index_buffer_data;
-	//v.pos.Set(0, 0, 0);
-	//v.color.Set(1, 1, 1);
-	//vertex_buffer_data.push_back(v);
-	//index_buffer_data.push_back(0);
-	for (int i = 0; i < TERRAIN_SIZE; ++i)
-	{
-		v.pos.Set(Bottom[i].x, Bottom[i].y, Bottom[i].z);
-		v.color.Set(1, 1, 1);
-		v.normal.Set(0, 1, 0);
-		vertex_buffer_data.push_back(v);
-	}
+	v.pos.Set(0, 0, 0);
+	v.color.Set(1, 1, 1);
+	vertex_buffer_data.push_back(v);
+	index_buffer_data.push_back(0);
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
 		v.pos.Set(Points[i].x, Points[i].y, Points[i].z);
@@ -90,11 +83,18 @@ void Terrain::GenerateTerrainMesh()
 		v.normal.Set(0, 1, 0);
 		vertex_buffer_data.push_back(v);
 	}
+	for (int i = 0; i < TERRAIN_SIZE; ++i)
+	{
+		v.pos.Set(Bottom[i].x, Bottom[i].y, Bottom[i].z);
+		v.color.Set(1, 1, 1);
+		v.normal.Set(0, 1, 0);
+		vertex_buffer_data.push_back(v);
+	}
 
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
-		index_buffer_data.push_back(i + TERRAIN_SIZE);
-		index_buffer_data.push_back(i);
+		index_buffer_data.push_back(i + TERRAIN_SIZE + 1);
+		index_buffer_data.push_back(i+ 1);
 	}
 
 	tMesh = new Mesh("2DTerrain");

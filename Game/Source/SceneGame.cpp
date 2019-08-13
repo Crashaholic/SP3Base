@@ -144,8 +144,8 @@ void SceneGame::Update(double dt)
 		int h = Application::GetWindowHeight();
 
 		m_ghost->pos.Set(x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0);
-
-		LOG_NONE("Terrain Normal: %",terr.GetNormal(m_ghost->pos));
+		vec3 n = terr.GetNormal(m_ghost->pos);
+		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
 
 		//Exercise 10: spawn ghost ball
 	}
