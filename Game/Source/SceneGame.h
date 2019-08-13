@@ -10,7 +10,7 @@
 #include "GameObject.h"
 #include "shader.hpp"
 #include <vector>
-
+// test
 class SceneGame : public Scene
 {
 	enum GEOMETRY_TYPE
