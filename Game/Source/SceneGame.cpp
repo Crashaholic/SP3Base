@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "SceneManager.h"
+#include "Logging.h"
 
 SceneGame::SceneGame()
 {
@@ -143,6 +144,9 @@ void SceneGame::Update(double dt)
 		int h = Application::GetWindowHeight();
 
 		m_ghost->pos.Set(x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0);
+
+		LOG_NONE("Terrain Normal: %",terr.GetNormal(m_ghost->pos));
+
 		//Exercise 10: spawn ghost ball
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
@@ -341,8 +345,9 @@ void SceneGame::Render()
 	}
 
 	modelStack.PushMatrix();
-		modelStack.Scale(1, m_worldHeight, 1);
-		RenderMesh(terr.tMesh, true);
+		//modelStack.Scale(2, 1, 1);
+		//modelStack.Translate(m_worldWidth / 63, 0, 0);
+		RenderMesh(terr.tMesh, false);
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
