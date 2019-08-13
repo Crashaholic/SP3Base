@@ -49,29 +49,54 @@ float getSpotlightEffect(Light light, vec3 lightDirection) {
 
 // Constant values
 const int MAX_LIGHTS = 8;
+const int MAX_TEXTURES = 8;
 
 // Values that stay constant for the whole mesh.
 uniform bool lightEnabled;
 uniform Light lights[MAX_LIGHTS];
 uniform Material material;
 uniform int numLights;
-uniform bool colorTextureEnabled;
-uniform sampler2D colorTexture;
+uniform bool colorTextureEnabled[MAX_TEXTURES];
+uniform sampler2D colorTexture[MAX_TEXTURES];
 uniform bool textEnabled;
 uniform vec3 textColor;
 //New Code
-//uniform float transparency;
-//uniform vec3 coloredTexture;
+uniform float transparency;
+uniform vec3 coloredTexture[MAX_TEXTURES];
+uniform bool colorableTexture[MAX_TEXTURES];
 
-void main(){
+void main()
+{
 	if(lightEnabled == true)
 	{
 		// Material properties
 		vec4 materialColor;
-		if(colorTextureEnabled == true)
-			materialColor = texture2D( colorTexture, texCoord );
+		int texCount = 0;
+		
+		for (int i = 0; i < MAX_TEXTURES; ++i)
+		{
+			if(colorTextureEnabled[i] == true)
+			{
+				materialColor.rgb += texture2D( colorTexture[i], texCoord ).rgb;
+				if(colorableTexture[i] == true)
+				{
+					if(texture2D( colorTexture[i], texCoord ).a != 0)
+						materialColor.rgb *= coloredTexture[i];
+				}
+				else
+				{
+					materialColor.rgb *= vec4(1,1,1,1).rgb;
+				}
+				++texCount;
+			}		
+		}
+		if (texCount > 0)
+		{
+			materialColor = materialColor/texCount;
+		}
 		else
 			materialColor = vec4( fragmentColor, 1 );
+		
 
 		// Vectors
 		vec3 eyeDirection_cameraspace = - vertexPosition_cameraspace;
@@ -119,16 +144,50 @@ void main(){
 	}
 	else
 	{
-		if(colorTextureEnabled == true)
+		if(colorTextureEnabled[0] == true && textEnabled == true)
 		{
-			if(textEnabled == true)
-				color = texture2D( colorTexture, texCoord ) * vec4( textColor, 1 );
-			else
-				color = texture2D( colorTexture, texCoord );
-			//color.rgb *= coloredTexture;//M: multiplies color by coloredTexture to get color blending;
+			color = texture2D(colorTexture[0], texCoord) * vec4(textColor,1);
 		}
 		else
-			color = vec4( fragmentColor, 1 );
+		{
+			int texCount = 0;
+
+			color = vec4(0,0,0,0);
+			for(int i = 0;i<MAX_TEXTURES;++i)
+			{
+				if(colorTextureEnabled[i] == true)
+				{
+					if(texture2D( colorTexture[i], texCoord ).a > 0.1)
+						color = texture2D( colorTexture[i], texCoord );
+
+					//color +=texture2D(colorTexture[i], texCoord);
+					++texCount;
+				}
+				//if(colorableTexture[i] == true)
+				{
+					color.rgb*=coloredTexture[i];
+				}
+			}
+			if(texCount>0)
+			{
+				//color = color/texCount;
+			}
+			else
+				color = vec4(fragmentColor,1);
+		}
+		//if(color.a<0.9)
+			//discard;
 	}
+//		if(colorTextureEnabled[0] == true )
+//		{
+//			if(textEnabled == true)
+//				color = texture2D( colorTexture[0], texCoord ) * vec4( textColor, 1 );
+//			else
+//				color = texture2D( colorTexture[0], texCoord );
+//			//color.rgb *= coloredTexture;//M: multiplies color by coloredTexture to get color blending;
+//		}
+//		else
+//			color = vec4( fragmentColor, 1 );
+//	}
 	//color.a *= transparency;//M: multiply alpha by transparency
 }

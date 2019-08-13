@@ -13,14 +13,7 @@
 
 class ScenePlane : public Scene
 {
-	enum GEOMETRY_TYPE
-	{
-		GEO_AXES,
-		GEO_TEXT,
-		GEO_BALL,
-		GEO_CUBE,
-		NUM_GEOMETRY,
-	};
+
 
 public:
 	ScenePlane();
@@ -31,25 +24,9 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	void RenderText(Mesh* mesh, std::string text, Color color);
-	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-	void RenderMesh(Mesh *mesh, bool enableLight);
-	void RenderGO(GameObject *go);
 
 private:
-	unsigned m_vertexArrayID;
-	Mesh* meshList[NUM_GEOMETRY];
-	Shader defaultShader;
-
 	Camera camera;
-
-	MS modelStack;
-	MS viewStack;
-	MS projectionStack;
-
-	Light lights[1];
-
-	bool bLightEnabled;
 
 	float fps;
 
@@ -67,6 +44,8 @@ private:
 	float m_heightEstimated;
 	float m_heightMax;
 	Terrain terr;
+
+	unsigned decal1;
 };
 
 #endif
