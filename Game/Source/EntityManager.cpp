@@ -1,6 +1,6 @@
 #include "EntityManager.h"
 #include "EntityBase.h"
-#include "Collider/Collider.h"
+#include "Collider.h"
 
 #include <iostream>
 using namespace std;
@@ -97,30 +97,26 @@ EntityManager::~EntityManager()
 bool EntityManager::CheckOverlap(Vector3 thisMinAABB, Vector3 thisMaxAABB, Vector3 thatMinAABB, Vector3 thatMaxAABB)
 {
 	// Check if this object is overlapping that object
-	if (((thatMinAABB >= thisMinAABB) && (thatMinAABB <= thisMaxAABB))
-		||
+	if (((thatMinAABB >= thisMinAABB) && (thatMinAABB <= thisMaxAABB)) || 
 		((thatMaxAABB >= thisMinAABB) && (thatMaxAABB <= thisMaxAABB)))
 	{
 		return true;
 	}
 
 	// Check if that object is overlapping this object
-	if (((thisMinAABB >= thatMinAABB) && (thisMinAABB <= thatMaxAABB))
-		||
+	if (((thisMinAABB >= thatMinAABB) && (thisMinAABB <= thatMaxAABB)) ||
 		((thisMaxAABB >= thatMinAABB) && (thisMaxAABB <= thatMaxAABB)))
 	{
 		return true;
 	}
 
 	// Check if this object is within that object
-	if (((thisMinAABB >= thatMinAABB) && (thisMaxAABB <= thatMaxAABB))
-		&&
+	if (((thisMinAABB >= thatMinAABB) && (thisMaxAABB <= thatMaxAABB)) &&
 		((thisMaxAABB >= thatMinAABB) && (thisMaxAABB <= thatMaxAABB)))
 		return true;
 
 	// Check if that object is within this object
-	if (((thatMinAABB >= thisMinAABB) && (thatMinAABB <= thisMaxAABB))
-		&&
+	if (((thatMinAABB >= thisMinAABB) && (thatMinAABB <= thisMaxAABB)) &&
 		((thatMaxAABB >= thisMinAABB) && (thatMaxAABB <= thisMaxAABB)))
 		return true;
 
