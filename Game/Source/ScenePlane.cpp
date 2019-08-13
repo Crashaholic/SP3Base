@@ -35,10 +35,7 @@ void ScenePlane::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	
 	defaultShader.Init("Shader//comg.vert", "Shader//comg.frag");
-	
-	// Use our shader
 	defaultShader.Use();
 
 	lights[0].type = Light::LIGHT_DIRECTIONAL;
@@ -84,21 +81,21 @@ void ScenePlane::Init()
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
 	bLightEnabled = true;
-
 	m_speed = 1.f;
-	
-	m_gravity.Set(0, -9.8f, 0); //init gravity as 9.8ms-2 downwards
+	m_gravity.Set(0, -9.8f, 0); 
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
 
+	m_ghost = GOManager::GetInstance()->fetchGO();
+	m_ghost->active = true;
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
 }
 
 void ScenePlane::Update(double dt)
 {
-	//Keyboard Section
+	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 	if(Application::IsKeyPressed('2'))
@@ -130,9 +127,8 @@ void ScenePlane::Update(double dt)
 		SceneManager::getSceneManager().switchToScene("Menu", this);
 	}
 
-	//Mouse Section
+	// Mouse Section
 	static bool bLButtonState = false;
-	//Exercise 10: ghost code here
 	if(!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
@@ -143,24 +139,18 @@ void ScenePlane::Update(double dt)
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
 
-		m_ghost->pos.Set(x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0);
-		vec3 n = terr.GetNormal(m_ghost->pos);
-		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
+		vec3 n = terr.GetNormal(Vector3(
+			static_cast<float>(x / w * m_worldWidth), 
+			static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
+			static_cast<float>(0.0f))
+		);
 
-		//Exercise 10: spawn ghost ball
+		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
-		GameObject* go = GOManager::GetInstance()->fetchGO();
-		go->type = GameObject::GO_BALL;
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		float w = static_cast<float>(Application::GetWindowWidth());
-		float h = static_cast<float>(Application::GetWindowHeight());
-		go->pos.Set(x/w * m_worldWidth,m_worldHeight- y / h*m_worldHeight, 0);
-		go->vel.Set(20, 20, 0);
 	}
 	
 	static bool bRButtonState = false;
@@ -173,14 +163,10 @@ void ScenePlane::Update(double dt)
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
-		GameObject* go = GOManager::GetInstance()->fetchGO();
-		go->type = GameObject::GO_CUBE;
-		go->pos.Set(0, 0, 0);
-		go->vel.Set(20, 20, 0);
 	}
 	GOManager::GetInstance()->update(dt);
 
-	//Physics Simulation Section
+	// Physics Simulation Section
 	fps = (float)(1.f / dt);
 }
 
@@ -192,11 +178,6 @@ void ScenePlane::RenderText(Mesh* mesh, std::string text, Color color)
 	glDisable(GL_DEPTH_TEST);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-	//glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
-	//glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
-	//glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-	//glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
-	//glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
 	defaultShader.SetBool("textEnabled", true);
 	defaultShader.SetBool("lightEnabled", false);
 	defaultShader.SetBool("colorTextureEnabled", true);
@@ -205,14 +186,13 @@ void ScenePlane::RenderText(Mesh* mesh, std::string text, Color color)
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
+		// 1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); 
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
-		//glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 		defaultShader.SetMat4("model", MVP);
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
 	defaultShader.SetBool("textEnabled", false);
 	glEnable(GL_DEPTH_TEST);
 }
@@ -243,7 +223,8 @@ void ScenePlane::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, f
 	for(unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+		// 1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		defaultShader.SetMat4("model", MVP);
 
@@ -271,7 +252,7 @@ void ScenePlane::RenderMesh(Mesh *mesh, bool enableLight)
 		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
 		defaultShader.SetMat4("proj", modelView_inverse_transpose);
 		
-		//load material
+		// Load material
 		defaultShader.SetVec3("material.kAmbient", {mesh->material.kAmbient.r, mesh->material.kAmbient.g, mesh->material.kAmbient.b, });
 		defaultShader.SetVec3("material.kDiffuse", {mesh->material.kDiffuse.r, mesh->material.kDiffuse.g, mesh->material.kDiffuse.b });
 		defaultShader.SetVec3("material.kSpecular", {mesh->material.kSpecular.r, mesh->material.kSpecular.g , mesh->material.kSpecular.b });
@@ -350,15 +331,9 @@ void ScenePlane::Render()
 			RenderGO(go);
 		}
 	}
-	// if(m_ghost->active)
-	// {
-	// 	RenderGO(m_ghost);
-	// }
 
 	modelStack.PushMatrix();
-		//modelStack.Scale(2, 1, 1);
-		//modelStack.Translate(m_worldWidth / 63, 0, 0);
-		RenderMesh(terr.tMesh, false);
+	RenderMesh(terr.tMesh, false);
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
@@ -372,17 +347,10 @@ void ScenePlane::Render()
 void ScenePlane::Exit()
 {
 	// Cleanup VBO
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
+	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
-		if(meshList[i])
+		if (meshList[i])
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-	
-	//Cleanup GameObjects
-	// if(m_ghost)
-	// {
-	// 	delete m_ghost;
-	// 	m_ghost = NULL;
-	// }
-}	// 
+}

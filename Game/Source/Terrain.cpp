@@ -43,8 +43,8 @@ void Terrain::GenerateRandomHeight(unsigned int worldWidth)
 		}
 		else if (i == TERRAIN_SIZE - 1)
 		{
-			Points[i].x = worldWidth;
-			Bottom[i].x = worldWidth;
+			Points[i].x = static_cast<float>(worldWidth);
+			Bottom[i].x = static_cast<float>(worldWidth);
 			Points[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
 		}
 		else

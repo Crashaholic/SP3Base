@@ -58,7 +58,7 @@ private:
 	float m_worldWidth;
 	float m_worldHeight;
 	Vector3 m_gravity;
-	// GameObject *m_ghost;
+	GameObject *m_ghost;
 	// GameObject *m_timeGO;
 	// float m_timeEstimated1;
 	// float m_timeTaken1;
