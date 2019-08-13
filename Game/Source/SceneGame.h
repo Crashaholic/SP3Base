@@ -7,7 +7,7 @@
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
-#include "GameObject.h"
+#include "GOManager.h"
 #include "shader.hpp"
 #include <vector>
 // test
@@ -54,7 +54,6 @@ private:
 	float fps;
 
 	//Physics
-	std::vector<GameObject *> m_goList;
 	float m_speed;
 	float m_worldWidth;
 	float m_worldHeight;

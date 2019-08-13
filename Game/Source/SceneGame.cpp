@@ -64,6 +64,8 @@ void SceneGame::Init()
 	defaultShader.SetFloat("lights[0].cosCutoff",lights[0].cosCutoff);
 	defaultShader.SetFloat("lights[0].cosInner" ,lights[0].cosInner);
 	defaultShader.SetFloat("lights[0].exponent" ,lights[0].exponent);
+	defaultShader.SetVec3("coloredTexture", vec3{ 1,1,1});
+	defaultShader.SetFloat("transparency" ,1.0f);
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -137,12 +139,21 @@ void SceneGame::Update(double dt)
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
 
+		m_ghost->pos.Set(x / w * m_worldWidth, m_worldHeight - y / h * m_worldHeight, 0);
 		//Exercise 10: spawn ghost ball
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 		std::cout << "LBUTTON UP" << std::endl;
+		GameObject* go =	GOManager::GetInstance()->fetchGO();
+		go->type = GameObject::GO_BALL;
+		double x, y;
+		Application::GetCursorPos(&x, &y);
+		float w = Application::GetWindowWidth();
+		float h = Application::GetWindowHeight();
+		go->pos.Set(x/w * m_worldWidth,m_worldHeight- y / h*m_worldHeight, 0);
+		go->vel.Set(20, 20, 0);
 	}
 	
 	static bool bRButtonState = false;
@@ -156,7 +167,7 @@ void SceneGame::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
-
+	GOManager::GetInstance()->update(dt);
 	//Physics Simulation Section
 	fps = (float)(1.f / dt);
 }
@@ -185,7 +196,7 @@ void SceneGame::RenderText(Mesh* mesh, std::string text, Color color)
 		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		//glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-		defaultShader.SetMat4("MVP", MVP);
+		defaultShader.SetMat4("model", MVP);
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -222,7 +233,7 @@ void SceneGame::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 		Mtx44 characterSpacing;
 		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
-		defaultShader.SetMat4("MVP", MVP);
+		defaultShader.SetMat4("model", MVP);
 
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
@@ -239,14 +250,14 @@ void SceneGame::RenderMesh(Mesh *mesh, bool enableLight)
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
-	defaultShader.SetMat4("MVP", MVP);
+	defaultShader.SetMat4("model", MVP);
 	if(enableLight && bLightEnabled)
 	{
 		defaultShader.SetBool("lightEnabled", true);
 		modelView = viewStack.Top() * modelStack.Top();
-		defaultShader.SetMat4("MV", modelView);
+		defaultShader.SetMat4("view", modelView);
 		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
-		defaultShader.SetMat4("MV_inverse_transpose", modelView_inverse_transpose);
+		defaultShader.SetMat4("proj", modelView_inverse_transpose);
 		
 		//load material
 		defaultShader.SetVec3("material.kAmbient", {mesh->material.kAmbient.r, mesh->material.kAmbient.g, mesh->material.kAmbient.b, });
@@ -281,6 +292,12 @@ void SceneGame::RenderGO(GameObject *go)
 	switch(go->type)
 	{
 	case GameObject::GO_BALL:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, 1);
+		//modelStack.Rotate(go->);
+		RenderMesh(meshList[GEO_BALL], false);
+		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CUBE:
 		break;
@@ -307,10 +324,10 @@ void SceneGame::Render()
 	modelStack.LoadIdentity();
 	
 	RenderMesh(meshList[GEO_AXES], false);
-
+	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
 	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
-		GameObject *go = (GameObject *)*it;
+		GameObject *go = (GameObject*)*it;
 		if(go->active)
 		{
 			RenderGO(go);
@@ -326,9 +343,6 @@ void SceneGame::Render()
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-	
-	
-
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
 }
@@ -344,12 +358,6 @@ void SceneGame::Exit()
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	
 	//Cleanup GameObjects
-	while(m_goList.size() > 0)
-	{
-		GameObject *go = m_goList.back();
-		delete go;
-		m_goList.pop_back();
-	}
 	if(m_ghost)
 	{
 		delete m_ghost;

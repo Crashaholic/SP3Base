@@ -76,7 +76,6 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
-    <ClCompile Include="Source\EntityManager.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GOManager.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
@@ -94,7 +93,6 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera.h" />
-    <ClInclude Include="Source\EntityManager.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GOManager.h" />
     <ClInclude Include="Source\Light.h" />
@@ -110,6 +108,10 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\comg.frag" />
+    <None Include="Shader\comg.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,27 +1,24 @@
-#ifndef GAME_OBJECT_H
-#define GAME_OBJECT_H
+#ifndef GO_MANAGER_H
+#define GO_MANAGER_H
 
+#include "SingletonTemplate.h"
 #include "Vector3.h"
+#include "GameObject.h"
+#include <vector>
 
-class GameObject
+class GOManager:public Singleton<GOManager>
 {
+	friend Singleton<GOManager>;
+private:
+	std::vector<GameObject*> m_goList;
 public:
-	enum GAMEOBJECT_TYPE
-	{
-		GO_NONE = 0,
-		GO_BALL,
-		GO_CUBE,
-		GO_TOTAL, //must be last
-	};
-	GAMEOBJECT_TYPE type;
-	Vector3 pos;
-	Vector3 vel;
-	Vector3 scale;
-	bool active;
-	float mass;
-
-	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
-	~GameObject();
+	GOManager();
+	~GOManager();
+	void update(double dt);
+	bool checkcollision(GameObject* go1, GameObject* go2);
+	void collisionresponse(GameObject* go1, GameObject* go2);
+	GameObject* fetchGO();
+	std::vector<GameObject*> getlist();
 };
 
 #endif
