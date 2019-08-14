@@ -105,12 +105,22 @@ void Application::Init()
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		//return -1;
 	}
-	Scene *sc1 = new ScenePlane();
-	Scene *sc2 = new SceneMenu();
+	Scene *sc1 = new SceneMenu();
+	Scene *sc2 = new ScenePlane();
+	Scene *sc3 = new SceneTank();
+	Scene *sc4 = new ScenePSelect();
+	Scene *sc5 = new SceneTSelect();
+	Scene *sc6 = new SceneScore();
+	Scene *sc7 = new SceneEnd();
 	manager = &SceneManager::getSceneManager();
-	manager->addScene("Plane", sc1);
-	manager->addScene("Menu", sc2);
-	manager->firstScene("Plane");
+	manager->addScene("Menu", sc1);
+	manager->addScene("Plane", sc2);
+	manager->addScene("Tank", sc3);
+	manager->addScene("PSelect", sc4);
+	manager->addScene("TSelect", sc5);
+	manager->addScene("Score", sc6);
+	manager->addScene("End", sc7);
+	manager->firstScene("Menu");
 }
 
 void Application::Run()

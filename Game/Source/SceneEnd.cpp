@@ -1,4 +1,4 @@
-#include "SceneMenu.h"
+#include "SceneEnd.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -10,18 +10,18 @@
 
 #include "SceneManager.h"
 
-SceneMenu::SceneMenu()
+SceneEnd::SceneEnd()
 {
 }
 
-SceneMenu::~SceneMenu()
+SceneEnd::~SceneEnd()
 {
 }
 
-void SceneMenu::Init()
+void SceneEnd::Init()
 {
 	Scene::Init();
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glClearColor(0.4f, 0.4f, 0.4f, 0.0f);
 
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -36,7 +36,7 @@ void SceneMenu::Init()
 	m_ghost->active = true;
 }
 
-void SceneMenu::Update(double dt)
+void SceneEnd::Update(double dt)
 {
 	//Keyboard Section
 	if (Application::IsKeyPressed('1'))
@@ -95,7 +95,7 @@ void SceneMenu::Update(double dt)
 	fps = (float)(1.f / dt);
 }
 
-void SceneMenu::Render()
+void SceneEnd::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -125,7 +125,7 @@ void SceneMenu::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
 }
 
-void SceneMenu::Exit()
+void SceneEnd::Exit()
 {
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)

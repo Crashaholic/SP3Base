@@ -217,3 +217,34 @@ void Scene::RenderGO(GameObject *go)
 	}
 }
 
+void Scene::checkSwitch()
+{
+	if (Application::IsKeyPressed('5'))
+	{
+		SceneManager::getSceneManager().switchToScene("Menu", this);
+	}
+	if (Application::IsKeyPressed('6'))
+	{
+		SceneManager::getSceneManager().switchToScene("Plane", this);
+	}
+	if (Application::IsKeyPressed('7'))
+	{
+		SceneManager::getSceneManager().switchToScene("Tank", this);
+	}
+	if (Application::IsKeyPressed('8'))
+	{
+		SceneManager::getSceneManager().switchToScene("PSelect", this);
+	}
+	if (Application::IsKeyPressed('9'))
+	{
+		SceneManager::getSceneManager().switchToScene("TSelect", this);
+	}
+	if (Application::IsKeyPressed('0'))
+	{
+		SceneManager::getSceneManager().switchToScene("Score", this);
+	}
+	if (Application::IsKeyPressed(VK_OEM_MINUS))
+	{
+		SceneManager::getSceneManager().switchToScene("End", this);
+	}
+}

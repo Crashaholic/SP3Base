@@ -22,7 +22,7 @@ ScenePlane::~ScenePlane()
 void ScenePlane::Init()
 {
 	Scene::Init();
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	m_worldHeight = 100.f;
@@ -94,10 +94,7 @@ void ScenePlane::Update(double dt)
 	}
 
 	// Switch scene
-	if (Application::IsKeyPressed('5'))
-	{
-		SceneManager::getSceneManager().switchToScene("Menu", this);
-	}
+	checkSwitch();
 
 	// Mouse Section
 	static bool bLButtonState = false;
