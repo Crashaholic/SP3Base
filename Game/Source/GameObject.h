@@ -10,6 +10,7 @@ struct GameObject
 		GO_NONE = 0,
 		GO_BALL,
 		GO_CUBE,
+		GO_A10,
 		GO_TOTAL, //must be last
 	};
 	GAMEOBJECT_TYPE type;
@@ -24,6 +25,7 @@ struct GameObject
 	bool active;
 	float mass;
 	bool hasGravity;
+	virtual void Update(double dt);
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };

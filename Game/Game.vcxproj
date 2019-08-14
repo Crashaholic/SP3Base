@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Plane\Plane.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
     <ClCompile Include="Source\Application.cpp" />
@@ -91,8 +92,10 @@
     <ClCompile Include="Source\SceneMenu.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
+    <ClCompile Include="Source\Weapon\Bomb.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Plane\Plane.h" />
     <ClInclude Include="Source\Terrain.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera.h" />
@@ -111,6 +114,7 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
+    <ClInclude Include="Source\Weapon\Bomb.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />

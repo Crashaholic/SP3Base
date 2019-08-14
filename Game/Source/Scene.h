@@ -11,6 +11,7 @@
 #include "shader.hpp"
 #include <vector>
 
+
 class Scene
 {
 protected:

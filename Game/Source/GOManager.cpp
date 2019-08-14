@@ -135,6 +135,36 @@ std::vector<GameObject*>& GOManager::getlist()
 	return m_goList;
 }
 
+void GOManager::addGO(GameObject * newgo)
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go == newgo)
+			return;
+	}
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go)
+		{
+			if (!go->active)
+			{
+				delete go;
+				go = newgo;
+				return;
+			}
+		}
+		else
+		{
+			go = newgo;
+			return;
+		}
+	}
+	m_goList.push_back(newgo);
+}
+
 void GOManager::cleanList()
 {
 	while (m_goList.size() > 0)

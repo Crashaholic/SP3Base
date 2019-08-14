@@ -22,6 +22,8 @@ ScenePlane::~ScenePlane()
 void ScenePlane::Init()
 {
 	Scene::Init();
+	plane = new Plane;
+	plane->Init();
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 

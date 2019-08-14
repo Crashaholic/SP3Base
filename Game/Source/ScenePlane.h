@@ -2,14 +2,8 @@
 #define SCENE_PLANE_H
 
 #include "Scene.h"
-#include "Mtx44.h"
-#include "Camera.h"
-#include "Mesh.h"
-#include "MatrixStack.h"
-#include "Light.h"
-#include "shader.hpp"
 #include "Terrain.h"
-#include <vector>
+#include "Plane/Plane.h"
 
 class ScenePlane : public Scene
 {
@@ -26,6 +20,7 @@ public:
 
 
 private:
+	Plane *plane;
 	Camera camera;
 
 	float fps;
