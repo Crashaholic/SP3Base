@@ -200,12 +200,12 @@ void GOManager::addGO(GameObject * newgo)
 
 void GOManager::cleanList()
 {
-	while (m_goList.size() > 0)
+	for (auto go : m_goList)
 	{
-		GameObject *go = m_goList.back();
 		delete go;
-		m_goList.pop_back();
 	}
+	m_goList.clear();
+	m_goList.shrink_to_fit();
 }
 
 bool GOManager::testSAT(Vector3 axis, Vector3 corn[], float & min, float & max)

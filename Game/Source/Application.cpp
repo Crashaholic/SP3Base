@@ -153,6 +153,7 @@ void Application::Run()
 		}
 	}
 	scene->Exit();
+	GOManager::GetInstance()->cleanList();
 	for (auto x : manager->getList())
 	{
 		delete x.second;

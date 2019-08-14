@@ -60,13 +60,15 @@ void ScenePlane::Init()
 	g2->pos.Set(center.x, center.y + 30.0f, center.z);
 
 	// Tank
-	tank = new GameObject(GameObject::PLAYER_TANK);
+	tank = GOManager::GetInstance()->fetchGO();
+	tank->type = GameObject::PLAYER_TANK;
 	tank->scale.Set(15.0f, 4.0f, 1.0f);
 	tank->active = true;
 	tank->norm.Set(1, 1, 0);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
 
-	tank2 = new GameObject(GameObject::PLAYER_TANKGUN);
+	tank2 = GOManager::GetInstance()->fetchGO();
+	tank2->type = GameObject::PLAYER_TANKGUN;
 	tank2->scale.Set(7.0f, 2.0f, 1.0f);
 	tank2->active = true;
 	tank2->angle = 89;
@@ -382,11 +384,6 @@ void ScenePlane::Exit()
 	{
 		if (meshList[i])
 			delete meshList[i];
-	}
-	if (tank)
-	{
-		delete tank;
-		tank = NULL;
 	}
 
 	glDeleteVertexArrays(1, &m_vertexArrayID);
