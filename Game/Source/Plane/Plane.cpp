@@ -16,11 +16,10 @@ void Plane::Update(double dt)
 {
 	//GameObject::Update(dt);
 	ReadInput(dt, 'A', 'D', 'Q', 'E');
-	dir = Vector3(cos(angle), sin(angle), 0);
+	dir.Set(cos(angle), sin(angle), 0.0f);
 	vel = dir * topSpeed;
 	pos += vel * (float)dt;
-	//norm.Set(-dir.y, dir.x);
-	norm.Set(cos(angle), sin(angle), 0.0f);
+	norm = dir;
 }
 
 void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
@@ -39,13 +38,12 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 void Plane::Init()
 {
 	angle = 0.0f;
-	dir.Set(1, 0, 0);
+	dir.Set(cos(angle), sin(angle), 0.0f);
 	topSpeed = 10.0f;
 	turnSpeed = 5.0f;
-	pos.Set(50, 5, 0);
+	pos.Set(10.0f, 80.0f, 0.0f);
 	vel.SetZero();
-	scale.Set(5.7, 1.4, 1);
-	scale *= 2;
+	scale.Set(5.7f, 1.4f, 1.0f);
 	active = true;
 	type = PLAYER_PLANE_A10;
 	GOManager::GetInstance()->addGO(this);

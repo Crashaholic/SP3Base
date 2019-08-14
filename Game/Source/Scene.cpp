@@ -66,17 +66,17 @@ void Scene::Init()
 	}
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference", 1000, 1000, 1000);
-	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
+	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(0.2f, 0.2f, 0.2f), 10, 10, 1.f);
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0.2f, 0.2f, 0.2f), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//pico8.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
-	meshList[GEO_A10] = MeshBuilder::GenerateQuad("Plane1", Color(1, 1, 1), 1.0f);
-	meshList[GEO_A10]->textureID[0] = LoadTGA("Image//A10.tga");
-	meshList[GEO_TANK] = MeshBuilder::GenerateQuad("Tank", Color(0, 1, 1), 1.0f);
-	//meshList[GEO_TANK]->textureID[0] = LoadTGA("Image//tank.tga");
-	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("bullet", Color(1, 0, 1), 10, 10, 1.f);
-
+	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 1.0f);
+	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
+	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 1.0f);
+	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 1.0f);
+	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateSphere("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 0.0f, 1.0f), 10, 10, 1.f);
+	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -214,48 +214,40 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CUBE], true);
+		RenderMesh(meshList[GEO_CUBE], false);
 		modelStack.PopMatrix();
+		debugBalls(go);
 		break;
 	case GameObject::PLAYER_PLANE_A10:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CUBE], false);
-
+		modelStack.Scale(go->scale.x * 2, go->scale.y * 2, go->scale.z * 2);
+		RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
 		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(go->angle), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_CUBE], false);
-
-		modelStack.PopMatrix();
-
+		debugBalls(go);
 		break;
-	case GameObject::PLAYER_TANK_GENERIC:
+	case GameObject::PLAYER_TANK:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, 0);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		//modelStack.Rotate(Math::RadianToDegree(go->angle) - 90.f, 0, 0, 1);
-		RenderMesh(meshList[GEO_TANK], false);
+		RenderMesh(meshList[GEO_PLAYER_TANK], false);
 		modelStack.PopMatrix();
 		break;
-	case GameObject::PLAYER_TANKGUN_GENERIC:
+	case GameObject::PLAYER_TANKGUN:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, 0);
 		modelStack.Rotate(Math::RadianToDegree(go->angle) - 180.f, 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_TANK], false);
+		RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
 		modelStack.PopMatrix();
 		break;
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, 0);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BULLET], false);
+		RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
 		modelStack.PopMatrix();
 		break;
 	}
@@ -291,4 +283,31 @@ void Scene::checkSwitch()
 	{
 		SceneManager::getSceneManager().switchToScene("End", this);
 	}
+}
+
+void Scene::debugBalls(GameObject * go)
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(go->corn[0].x, go->corn[0].y, go->corn[0].z);
+	modelStack.Scale(0.5f, 0.5f, 0.5f);
+	RenderMesh(meshList[GEO_DEBUG], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(go->corn[1].x, go->corn[1].y, go->corn[1].z);
+	modelStack.Scale(0.5f, 0.5f, 0.5f);
+	RenderMesh(meshList[GEO_DEBUG], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(go->corn[2].x, go->corn[2].y, go->corn[2].z);
+	modelStack.Scale(0.5f, 0.5f, 0.5f);
+	RenderMesh(meshList[GEO_DEBUG], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(go->corn[3].x, go->corn[3].y, go->corn[3].z);
+	modelStack.Scale(0.5f, 0.5f, 0.5f);
+	RenderMesh(meshList[GEO_DEBUG], false);
+	modelStack.PopMatrix();
 }

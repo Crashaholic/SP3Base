@@ -25,7 +25,6 @@ void ScenePlane::Init()
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	plane = new Plane;
 	plane->Init();
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	m_worldHeight = 100.f;
@@ -47,27 +46,27 @@ void ScenePlane::Init()
 	GameObject *g1 = GOManager::GetInstance()->fetchGO();
 	g1->scale.Set(8.0f, 8.0f, 8.0f);
 	g1->type = GameObject::GO_CUBE;
-	g1->angle = 0.0f;
+	g1->angle = 60.0f;
 	g1->norm.Set(cos(Math::DegreeToRadian(g1->angle)), sin(Math::DegreeToRadian(g1->angle)), 0.0f);
 	g1->vel.Set(0, 0, 0);
 	g1->pos.Set(center.x, center.y, center.z);
 
 	GameObject *g2 = GOManager::GetInstance()->fetchGO();
-	g2->scale.Set(8.0f, 1.0f, 1.0f);
-	g2->type = GameObject::GO_CUBE;
+	g2->scale.Set(8.0f, 8.0f, 1.0f);
+	g2->type = GameObject::GO_BALL;
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
-	//g2->vel.Set(0, -10, 0);
-	g2->pos.Set(center.x, center.y + 50.0f, center.z);
+	g2->vel.Set(0, -5.0f, 0);
+	g2->pos.Set(center.x, center.y + 30.0f, center.z);
 
 	// Tank
-	tank = new GameObject(GameObject::PLAYER_TANK_GENERIC);
+	tank = new GameObject(GameObject::PLAYER_TANK);
 	tank->scale.Set(15.0f, 4.0f, 1.0f);
 	tank->active = true;
 	tank->norm.Set(1, 1, 0);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
 
-	tank2 = new GameObject(GameObject::PLAYER_TANKGUN_GENERIC);
+	tank2 = new GameObject(GameObject::PLAYER_TANKGUN);
 	tank2->scale.Set(7.0f, 2.0f, 1.0f);
 	tank2->active = true;
 	tank2->angle = 89;
@@ -103,9 +102,9 @@ void ScenePlane::Update(double dt)
 		lol = !lol;
 	}
 	if (lol)
-		meshList[GEO_A10]->textureID[1] = decal1;
+		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = decal1;
 	else
-		meshList[GEO_A10]->textureID[1] = 0;
+		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = 0;
 
 	if(Application::IsKeyPressed(' '))
 	{
@@ -173,7 +172,7 @@ void ScenePlane::Update(double dt)
 	{
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
-		object->type = GameObject::GO_CUBE;
+		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->dir * BULLET_SPEED;

@@ -111,12 +111,14 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 		go2->corn[2] = go2->pos + hori2 + vert2;
 		go2->corn[3] = go2->pos - hori2 + vert2;
 
-		Vector3 normals[2];
+		Vector3 normals[4];
 		normals[0] = go1->norm;
 		normals[1] = go1->perp;
+		normals[2] = go2->norm;
+		normals[3] = go2->perp;
 
 		// Hardcoded for 2 normals - Can be converted to take in any number of normals
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
 			float min1, max1, min2, max2;
 			testSAT(normals[i], go1->corn, min1, max1);
