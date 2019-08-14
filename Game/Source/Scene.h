@@ -41,6 +41,8 @@ public:
 	void RenderMesh(Mesh *mesh, bool enableLight);
 	void RenderGO(GameObject *go);
 
+	void checkSwitch();
+
 protected:
 	Shader defaultShader;
 

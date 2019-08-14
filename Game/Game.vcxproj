@@ -76,6 +76,11 @@
   <ItemGroup>
     <ClCompile Include="Source\Plane\Plane.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
+    <ClCompile Include="Source\SceneEnd.cpp" />
+    <ClCompile Include="Source\ScenePSelect.cpp" />
+    <ClCompile Include="Source\SceneScore.cpp" />
+    <ClCompile Include="Source\SceneTank.cpp" />
+    <ClCompile Include="Source\SceneTSelect.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
@@ -95,6 +100,11 @@
     <ClCompile Include="Source\Weapon\Bomb.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\SceneEnd.h" />
+    <ClInclude Include="Source\ScenePSelect.h" />
+    <ClInclude Include="Source\SceneScore.h" />
+    <ClInclude Include="Source\SceneTank.h" />
+    <ClInclude Include="Source\SceneTSelect.h" />
     <ClInclude Include="Source\Plane\Plane.h" />
     <ClInclude Include="Source\Terrain.h" />
     <ClInclude Include="Source\Application.h" />

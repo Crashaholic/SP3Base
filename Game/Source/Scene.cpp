@@ -69,7 +69,7 @@ void Scene::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//calibri.tga");
+	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//pico8.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_A10] = MeshBuilder::GenerateQuad("Plane1", Color(1, 1, 1), 1.0f);
 	meshList[GEO_A10]->textureID[0] = LoadTGA("Image//A10.tga");
@@ -225,3 +225,34 @@ void Scene::RenderGO(GameObject *go)
 	}
 }
 
+void Scene::checkSwitch()
+{
+	if (Application::IsKeyPressed('5'))
+	{
+		SceneManager::getSceneManager().switchToScene("Menu", this);
+	}
+	if (Application::IsKeyPressed('6'))
+	{
+		SceneManager::getSceneManager().switchToScene("Plane", this);
+	}
+	if (Application::IsKeyPressed('7'))
+	{
+		SceneManager::getSceneManager().switchToScene("Tank", this);
+	}
+	if (Application::IsKeyPressed('8'))
+	{
+		SceneManager::getSceneManager().switchToScene("PSelect", this);
+	}
+	if (Application::IsKeyPressed('9'))
+	{
+		SceneManager::getSceneManager().switchToScene("TSelect", this);
+	}
+	if (Application::IsKeyPressed('0'))
+	{
+		SceneManager::getSceneManager().switchToScene("Score", this);
+	}
+	if (Application::IsKeyPressed(VK_OEM_MINUS))
+	{
+		SceneManager::getSceneManager().switchToScene("End", this);
+	}
+}

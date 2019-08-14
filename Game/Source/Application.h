@@ -10,6 +10,11 @@
 #include "SceneManager.h"
 #include "ScenePlane.h"
 #include "SceneMenu.h"
+#include "SceneTank.h"
+#include "ScenePSelect.h"
+#include "SceneTSelect.h"
+#include "SceneScore.h"
+#include "SceneEnd.h"
 
 class Application
 {

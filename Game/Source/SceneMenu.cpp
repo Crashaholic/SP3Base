@@ -21,7 +21,7 @@ SceneMenu::~SceneMenu()
 void SceneMenu::Init()
 {
 	Scene::Init();
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -65,10 +65,7 @@ void SceneMenu::Update(double dt)
 	}
 
 	// Switch scene
-	if (Application::IsKeyPressed('6'))
-	{
-		SceneManager::getSceneManager().switchToScene("Plane", this);
-	}
+	checkSwitch();
 
 	// Mouse Section
 	static bool bLButtonState = false;
