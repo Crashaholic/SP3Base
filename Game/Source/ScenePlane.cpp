@@ -282,6 +282,15 @@ void ScenePlane::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 
+	case GameObject::PLAYER_PLANE_A10:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_A10], false);
+		modelStack.PopMatrix();
+		break;
+
+
 	}
 }
 
