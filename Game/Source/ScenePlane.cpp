@@ -46,33 +46,34 @@ void ScenePlane::Init()
 	GameObject *g1 = GOManager::GetInstance()->fetchGO();
 	g1->scale.Set(8.0f, 8.0f, 8.0f);
 	g1->type = GameObject::GO_CUBE;
-	g1->angle = 60.0f;
+	g1->angle = 45.0f;
 	g1->norm.Set(cos(Math::DegreeToRadian(g1->angle)), sin(Math::DegreeToRadian(g1->angle)), 0.0f);
 	g1->vel.Set(0, 0, 0);
 	g1->pos.Set(center.x, center.y, center.z);
 
 	GameObject *g2 = GOManager::GetInstance()->fetchGO();
-	g2->scale.Set(8.0f, 8.0f, 1.0f);
-	g2->type = GameObject::GO_BALL;
+	g2->scale.Set(4.0f, 4.0f, 1.0f);
+	g2->type = GameObject::GO_CUBE;
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
-	g2->vel.Set(0, -5.0f, 0);
-	g2->pos.Set(center.x, center.y + 30.0f, center.z);
+	//g2->vel.Set(0, -5.0f, 0);
+	g2->pos.Set(center.x, center.y + 40.0f, center.z);
 
 	// Tank
 	tank = GOManager::GetInstance()->fetchGO();
 	tank->type = GameObject::PLAYER_TANK;
-	tank->scale.Set(15.0f, 4.0f, 1.0f);
+	tank->scale.Set(7.5f, 2.0f, 1.0f);
 	tank->active = true;
-	tank->norm.Set(1, 1, 0);
+	tank->angle = 0.0f;
+	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
 
 	tank2 = GOManager::GetInstance()->fetchGO();
 	tank2->type = GameObject::PLAYER_TANKGUN;
-	tank2->scale.Set(7.0f, 2.0f, 1.0f);
+	tank2->scale.Set(3.5f, 1.0f, 1.0f);
 	tank2->active = true;
-	tank2->angle = 89;
-	tank2->norm.Set(1, 1, 0);
+	tank2->angle = 89.0f;
+	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 	tank2->pos.Set(center.x - 53.f, center.y - 26.0f, center.z); 
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
@@ -153,20 +154,22 @@ void ScenePlane::Update(double dt)
 	// Tank barrel control
 	if (Application::IsKeyPressed('I')) // Left
 	{
-		tank2->angle += 1 * static_cast<float>(dt);
+		tank2->angle += 30.0f * static_cast<float>(dt);
 	}
 	if (Application::IsKeyPressed('P')) // Right
 	{
-		tank2->angle -= 1 * static_cast<float>(dt);
+		tank2->angle -= 30.0f * static_cast<float>(dt);
 	}
-	if (tank2->angle <= 88.4f)
+	if (tank2->angle <= 30.0f)
 	{
-		tank2->angle = 88.4f;
+		tank2->angle = 30.0f;
 	}
-	if (tank2->angle >= 90.7f)
+	if (tank2->angle >= 150.0f)
 	{
-		tank2->angle = 90.7f;
+		tank2->angle = 150.0f;
 	}
+	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
+
 	// Tank shoot
 	bulletCooldown -= 0.1f * dt; // lower = more delay
 	tank2->dir.Set(cosf(tank2->angle), sinf(tank2->angle), 0);
@@ -177,7 +180,7 @@ void ScenePlane::Update(double dt)
 		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
-		object->vel = tank2->dir * BULLET_SPEED;
+		object->vel = tank2->norm * BULLET_SPEED;
 		bulletCooldown = 0.1f;
 	}
 
@@ -231,9 +234,6 @@ void ScenePlane::Update(double dt)
 		if (go->active)
 		{
 			// unspawn bullets when they leave screen
-			//if (go->type == GameObject::GO_BALL)
-			//{
-			//}
 			bool hit = false;
 			switch (go->wrapMode)
 			{

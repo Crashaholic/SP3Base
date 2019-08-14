@@ -73,8 +73,8 @@ void Scene::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 1.0f);
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
-	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 1.0f);
-	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 1.0f);
+	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateSphere("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 0.0f, 1.0f), 10, 10, 1.f);
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
 }
@@ -217,7 +217,6 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], false);
 		modelStack.PopMatrix();
-		debugBalls(go);
 		break;
 	case GameObject::PLAYER_PLANE_A10:
 		modelStack.PushMatrix();
@@ -226,7 +225,6 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.Scale(go->scale.x * 2, go->scale.y * 2, go->scale.z * 2);
 		RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
 		modelStack.PopMatrix();
-		debugBalls(go);
 		break;
 	case GameObject::PLAYER_TANK:
 		modelStack.PushMatrix();
@@ -239,7 +237,7 @@ void Scene::RenderGO(GameObject *go)
 	case GameObject::PLAYER_TANKGUN:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Rotate(Math::RadianToDegree(go->angle) - 180.f, 0, 0, 1);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
 		modelStack.PopMatrix();
@@ -252,6 +250,7 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	}
+	debugBalls(go);
 	glEnable(GL_CULL_FACE);
 }
 
