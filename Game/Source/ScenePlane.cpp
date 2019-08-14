@@ -75,18 +75,6 @@ void ScenePlane::Init()
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
 }
 
-GameObject* ScenePlane::FetchGO()
-{
-	for (auto it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject*)*it;
-		if (!go->active)
-		{
-			return go;
-		}
-	}
-}
-
 void ScenePlane::Update(double dt)
 {
 
@@ -247,38 +235,6 @@ void ScenePlane::Update(double dt)
 					go->active = false;
 			}
 		}
-	}
-
-}
-
-void ScenePlane::RenderGO(GameObject *go)
-{
-	switch (go->type)
-	{
-	case GameObject::PLAYER_TANK_GENERIC:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//modelStack.Rotate(Math::RadianToDegree(go->angle) - 90.f, 0, 0, 1);
-		RenderMesh(meshList[GEO_TANK], false);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::PLAYER_TANKGUN_GENERIC:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Rotate(Math::RadianToDegree(go->angle) - 180.f, 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_TANK], false);
-		modelStack.PopMatrix();
-		break;
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_BULLET], false);
-		modelStack.PopMatrix();
-		break;
-
 	}
 }
 

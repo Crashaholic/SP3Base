@@ -217,6 +217,29 @@ void Scene::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_CUBE], true);
 		modelStack.PopMatrix();
 		break;
+	case GameObject::PLAYER_TANK_GENERIC:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		//modelStack.Rotate(Math::RadianToDegree(go->angle) - 90.f, 0, 0, 1);
+		RenderMesh(meshList[GEO_TANK], false);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::PLAYER_TANKGUN_GENERIC:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Rotate(Math::RadianToDegree(go->angle) - 180.f, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_TANK], false);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BULLET], false);
+		modelStack.PopMatrix();
+		break;
 	}
 }
 
