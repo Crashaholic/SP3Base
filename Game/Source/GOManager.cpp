@@ -75,7 +75,7 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 		rotation.SetToRotation(Math::RadianToDegree(-angle) + 90.0f, 0, 0, 1);
 		newPos = rotation * newPos + go2->pos;
 		Vector3 len(newPos - go2->pos);
-
+		
 		if (len.x > go2->scale.x + go1->scale.x)
 			return false;
 		if (len.y > go2->scale.y + go1->scale.y)
@@ -88,10 +88,9 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 			return true;
 		else
 			return false;
-
 		break;
 	}
-	case GameObject::GO_CUBE:
+	default:
 	{
 		go1->perp = go1->norm.Cross(Vector3(0, 0, 1));
 		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
@@ -125,10 +124,6 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 				return false;
 		}
 		return true;
-		break;
-	}
-	default:
-	{
 		break;
 	}
 	}
