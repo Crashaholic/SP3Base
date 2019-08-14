@@ -69,7 +69,7 @@ void Scene::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//calibri.tga");
+	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//pico8.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_A10] = MeshBuilder::GenerateQuad("Plane1", Color(1, 1, 1), 1.0f);
 	meshList[GEO_A10]->textureID[0] = LoadTGA("Image//A10.tga");
