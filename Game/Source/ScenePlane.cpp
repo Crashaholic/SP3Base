@@ -77,17 +77,8 @@ void ScenePlane::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//pico9.tga");
+	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
-
-	meshList[WEAPONUP] = MeshBuilder::GenerateQuad("weaponup", Color(1, 0, 0), 1.f);
-	meshList[WEAPONUP]->textureID = LoadTGA("Image//weap.tga");
-	meshList[SPEEDUP] = MeshBuilder::GenerateQuad("speedup", Color(1, 0, 0), 1.f);
-	meshList[SPEEDUP]->textureID = LoadTGA("Image//speed.tga");
-	meshList[SIZEUP] = MeshBuilder::GenerateQuad("sizeup", Color(1, 0, 0), 1.f);
-	meshList[SIZEUP]->textureID = LoadTGA("Image//life.tga");
-
-
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
@@ -102,14 +93,6 @@ void ScenePlane::Init()
 	m_ghost->active = true;
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
-
-	// Tank upgrade stuff
-	tankup1 = tankup2 = tankup3 = move = move2 = move3 = false;
-	// spawn points of upgrade drop (need location of plane as the spawn point of the drop)
-	updropy = up2dropy = up3dropy = 70;
-	updropx = 40;
-	up2dropx = 60;
-	up3dropx = 80;
 }
 
 void ScenePlane::Update(double dt)
@@ -140,49 +123,6 @@ void ScenePlane::Update(double dt)
 	{
 	}
 
-	/* Spawning of upgrade drops */
-	if (Application::IsKeyPressed('L')) // Temp spawning of weap upgrade
-	{
-		tankup1 = move = true;
-	}
-	if (Application::IsKeyPressed('M')) // Temp spawning of speed upgrade
-	{
-		tankup2 = move2 = true;
-	}
-	if (Application::IsKeyPressed('N')) // Temp spawning of size upgrade
-	{
-		tankup3 = move3 = true;
-	}
-	/*****************************/
-	/* Movement of upgrade drops */
-	if (move == true)
-	{
-		updropy -= 9 * dt;
-	}
-	if (updropy < 10)
-	{
-		move = false;
-		tankup1 = false;
-	}
-	if (move2 == true)
-	{
-		up2dropy -= 9 * dt;
-	}
-	if (up2dropy < 10)
-	{
-		move2 = false;
-		tankup2 = false;
-	}
-	if (move3 == true)
-	{
-		up3dropy -= 9 * dt;
-	}
-	if (up3dropy < 10)
-	{
-		move3 = false;
-		tankup3 = false;
-	}
-	/*****************************/
 	// Switch scene
 	if (Application::IsKeyPressed('5'))
 	{
@@ -399,31 +339,6 @@ void ScenePlane::Render()
 	if(m_ghost->active)
 	{
 		RenderGO(m_ghost);
-	}
-
-	if (tankup1 == true)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(updropx, updropy, 0);
-		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[WEAPONUP], false);
-		modelStack.PopMatrix();
-	}
-	if (tankup2 == true)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(up2dropx, up2dropy, 0);
-		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[SPEEDUP], false);
-		modelStack.PopMatrix();
-	}
-	if (tankup3 == true)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(up3dropx, up3dropy, 0);
-		modelStack.Scale(5, 5, 1);
-		RenderMesh(meshList[SIZEUP], false);
-		modelStack.PopMatrix();
 	}
 
 	modelStack.PushMatrix();
