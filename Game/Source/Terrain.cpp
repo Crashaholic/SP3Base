@@ -103,4 +103,19 @@ void Terrain::GenerateTerrainMesh()
 
 	tMesh->indexSize = index_buffer_data.size();
 }
-
+Vector3 Terrain::getHeight(Vector3 TankPos)
+{
+	vec3 R, L;
+	for (int i = 1; i < TERRAIN_SIZE; ++i)
+	{
+		if (Points[i].x > TankPos.x)
+		{
+			R = Points[i];
+			L = Points[i - 1];
+			break;
+		}
+	}
+	float newY;
+	newY = L.y + ((TankPos.x - L.x) / (R.x - L.x)) * (R.y - L.y);
+	return Vector3(TankPos.x, newY);
+}

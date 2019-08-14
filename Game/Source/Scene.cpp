@@ -73,6 +73,9 @@ void Scene::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_A10] = MeshBuilder::GenerateQuad("Plane1", Color(1, 1, 1), 1.0f);
 	meshList[GEO_A10]->textureID[0] = LoadTGA("Image//A10.tga");
+	meshList[GEO_TANK] = MeshBuilder::GenerateQuad("Tank", Color(0, 1, 1), 1.0f);
+	//meshList[GEO_TANK]->textureID[0] = LoadTGA("Image//tank.tga");
+	meshList[GEO_BULLET] = MeshBuilder::GenerateSphere("bullet", Color(1, 0, 1), 10, 10, 1.f);
 
 }
 

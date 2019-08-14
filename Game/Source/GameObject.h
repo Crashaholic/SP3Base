@@ -15,6 +15,7 @@ struct GameObject
 		PLAYER_PLANE_GENERIC,
 		PLAYER_PLANE_A10,
 		PLAYER_TANK_GENERIC,
+		PLAYER_TANKGUN_GENERIC,
 		
 		ENEMY_PLANE_PASSIVE,
 		ENEMY_PLANE_AGGRESSIVE,
@@ -42,8 +43,10 @@ struct GameObject
 	Vector3 norm;		// normal
 	Vector3 perp;		// normal perpendicular
 
+	Vector3 dir;
 	bool active;
 	float mass;
+	float angle;
 	bool hasGravity;
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();

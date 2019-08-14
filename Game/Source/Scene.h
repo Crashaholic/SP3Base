@@ -21,6 +21,8 @@ protected:
 		GEO_BALL,
 		GEO_CUBE,
 		GEO_A10,
+		GEO_TANK,
+		GEO_BULLET,
 		NUM_GEOMETRY,
 	};	
 	Mesh* meshList[NUM_GEOMETRY];
