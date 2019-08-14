@@ -39,7 +39,7 @@ struct GameObject
 	Vector3 vel;
 	Vector3 scale;
 
-	Vector3 corn[4];	// corner
+	Vector3 /*pop*/corn[4];	// corner
 	Vector3 norm;		// normal
 	Vector3 perp;		// normal perpendicular
 
