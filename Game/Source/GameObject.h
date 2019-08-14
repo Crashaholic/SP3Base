@@ -11,6 +11,8 @@ struct GameObject
 		GO_BALL,
 		GO_CUBE,
 
+		
+
 		// Refer to diagram in discord
 		PLAYER_PLANE_GENERIC,
 		PLAYER_PLANE_A10,
@@ -41,7 +43,7 @@ struct GameObject
 	Vector3 /*pop*/corn[4];	// corner
 	Vector3 norm;		// normal
 	Vector3 perp;		// normal perpendicular
-
+	float angle;
 	bool active;
 	float mass;
 	bool hasGravity;

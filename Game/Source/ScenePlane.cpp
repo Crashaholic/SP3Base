@@ -181,7 +181,7 @@ void ScenePlane::Render()
 	modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
 		modelStack.Scale(57, 14, 1);
-		RenderMesh(meshList[GEO_A10], false);
+		//RenderMesh(meshList[GEO_A10], false);
 	modelStack.PopMatrix();
 	defaultShader.SetVec3("colorableTexture[0]", false);
 	defaultShader.SetVec3("colorableTexture[1]", false);
@@ -201,5 +201,6 @@ void ScenePlane::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
+	//delete plane;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }

@@ -11,7 +11,7 @@
 class Plane : public GameObject
 {
 private:
-	float angle;
+	//float angle;
 	Vector3 dir;
 
 	float topSpeed;
