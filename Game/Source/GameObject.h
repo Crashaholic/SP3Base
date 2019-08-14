@@ -16,10 +16,15 @@ struct GameObject
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 scale;
+
+	Vector3 corn[4];	// corner
+	Vector3 norm;		// normal
+	Vector3 perp;		// normal perpendicular
+
 	bool active;
 	float mass;
 	bool hasGravity;
-	GameObject(GAMEOBJECT_TYPE typeValue = GO_BALL);
+	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };
 

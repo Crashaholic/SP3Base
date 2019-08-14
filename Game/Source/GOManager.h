@@ -16,12 +16,15 @@ private:
 public:
 	GOManager();
 	~GOManager();
+	void init();
 	void update(double dt);
 	bool checkcollision(GameObject* go1, GameObject* go2);
 	void collisionresponse(GameObject* go1, GameObject* go2);
 	GameObject* fetchGO();
 	std::vector<GameObject*>& getlist();
 	void cleanList();
+	bool testSAT(Vector3 axis, Vector3 corn[], float &min, float &max);
+	bool overlap(float min1, float max1, float min2, float max2);
 };
 
 #endif
