@@ -34,6 +34,7 @@ void ScenePlane::Init()
 	bLightEnabled = true;
 	m_speed = 1.f;
 	m_gravity.Set(0, -9.8f, 0); 
+	bulletCooldown = 0.f;
 	Math::InitRNG();
 
 	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
@@ -44,22 +45,54 @@ void ScenePlane::Init()
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
 
 	GameObject *g1 = GOManager::GetInstance()->fetchGO();
-	g1->scale.Set(4.0f, 4.0f, 1.0f);
+	g1->scale.Set(8.0f, 8.0f, 8.0f);
 	g1->type = GameObject::GO_CUBE;
-	g1->norm = Vector3(1, 1, 0).Normalized();
-	g1->vel.Set(0, 4, 0);
-	g1->pos.Set(center.x, center.y - 50.0f, center.z);
+	g1->angle = 0.0f;
+	g1->norm.Set(cos(Math::DegreeToRadian(g1->angle)), sin(Math::DegreeToRadian(g1->angle)), 0.0f);
+	g1->vel.Set(0, 0, 0);
+	g1->pos.Set(center.x, center.y, center.z);
 
 	GameObject *g2 = GOManager::GetInstance()->fetchGO();
-	g2->scale.Set(4.0f, 4.0f, 1.0f);
+	g2->scale.Set(8.0f, 1.0f, 1.0f);
 	g2->type = GameObject::GO_CUBE;
-	g2->norm = Vector3(1, 1, 0).Normalized();
-	g2->vel.Set(0, -4, 0);
+	g2->angle = 90.0f;
+	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
+	g2->vel.Set(0, -10, 0);
 	g2->pos.Set(center.x, center.y + 50.0f, center.z);
+
+	// Tank
+	tank = new GameObject(GameObject::PLAYER_TANK_GENERIC);
+	tank->scale.Set(15.0f, 4.0f, 1.0f);
+	tank->active = true;
+	tank->norm.Set(1, 1, 0);
+	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
+
+	tank2 = new GameObject(GameObject::PLAYER_TANKGUN_GENERIC);
+	tank2->scale.Set(7.0f, 2.0f, 1.0f);
+	tank2->active = true;
+	tank2->angle = 89;
+	tank2->norm.Set(1, 1, 0);
+	tank2->pos.Set(center.x - 53.f, center.y - 26.0f, center.z); 
+
+	tank->pos.y = terr.getHeight(tank->pos).y;
+	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+}
+
+GameObject* ScenePlane::FetchGO()
+{
+	for (auto it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject*)*it;
+		if (!go->active)
+		{
+			return go;
+		}
+	}
 }
 
 void ScenePlane::Update(double dt)
 {
+
 	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -93,6 +126,70 @@ void ScenePlane::Update(double dt)
 	{
 		defaultShader.SetVec3("coloredTexture[0]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 		defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
+	}
+
+	// Tank Movement
+	if (Application::IsKeyPressed('J')) // Left
+	{
+		tank->pos -= 5 * static_cast<float>(dt);
+		tank->pos.y = terr.getHeight(tank->pos).y;
+
+		tank2->pos -= 5 * static_cast<float>(dt);
+		tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+	}
+	if (Application::IsKeyPressed('L')) // Right
+	{
+		tank->pos += 5 * static_cast<float>(dt);
+		tank->pos.y = terr.getHeight(tank->pos).y;
+
+		tank2->pos += 5 * static_cast<float>(dt);
+		tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+	}
+	if (tank->pos.x <= 7.5f)
+	{
+		tank->pos.x = 7.5f;
+	}
+	if (tank->pos.x >= 125)
+	{
+		tank->pos.x = 125;
+	}
+	if (tank2->pos.x <= 9.5f)
+	{
+		tank2->pos.x = 9.5f;
+	}
+	if (tank2->pos.x >= 127)
+	{
+		tank2->pos.x = 127;
+	}
+	// Tank barrel control
+	if (Application::IsKeyPressed('I')) // Left
+	{
+		tank2->angle += 1 * static_cast<float>(dt);
+	}
+	if (Application::IsKeyPressed('P')) // Right
+	{
+		tank2->angle -= 1 * static_cast<float>(dt);
+	}
+	if (tank2->angle <= 88.4f)
+	{
+		tank2->angle = 88.4f;
+	}
+	if (tank2->angle >= 90.7f)
+	{
+		tank2->angle = 90.7f;
+	}
+	// Tank shoot
+	bulletCooldown -= 0.1f * dt; // lower = more delay
+	tank2->dir.Set(cosf(tank2->angle), sinf(tank2->angle), 0);
+	if (Application::IsKeyPressed('N') && bulletCooldown <= 0)
+	{
+		GameObject *object = GOManager::GetInstance()->fetchGO();
+		object->active = true;
+		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
+		object->scale.Set(0.4f, 0.4f, 0.4f);
+		object->pos = tank2->pos;
+		object->vel = tank2->dir * BULLET_SPEED;
+		bulletCooldown = 0.1f;
 	}
 
 	// Switch scene
@@ -139,6 +236,53 @@ void ScenePlane::Update(double dt)
 
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			// unspawn bullets when they leave screen
+			if (go->type == GameObject::GO_BALL)
+			{
+				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.y > m_worldHeight + go->scale.y
+					|| go->pos.x < -go->scale.x || go->pos.y < -go->scale.y)
+					go->active = false;
+			}
+		}
+	}
+
+}
+
+void ScenePlane::RenderGO(GameObject *go)
+{
+	switch (go->type)
+	{
+	case GameObject::PLAYER_TANK_GENERIC:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		//modelStack.Rotate(Math::RadianToDegree(go->angle) - 90.f, 0, 0, 1);
+		RenderMesh(meshList[GEO_TANK], false);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::PLAYER_TANKGUN_GENERIC:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Rotate(Math::RadianToDegree(go->angle) - 180.f, 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_TANK], false);
+		modelStack.PopMatrix();
+		break;
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, 0);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_BULLET], false);
+		modelStack.PopMatrix();
+		break;
+
+	}
 }
 
 void ScenePlane::Render()
@@ -161,6 +305,7 @@ void ScenePlane::Render()
 	modelStack.LoadIdentity();
 	
 	RenderMesh(meshList[GEO_AXES], false);
+
 	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
 	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -170,6 +315,9 @@ void ScenePlane::Render()
 			RenderGO(go);
 		}
 	}
+
+	RenderGO(tank);
+	RenderGO(tank2);
 
 	modelStack.PushMatrix();
 	RenderMesh(terr.tMesh, false);
@@ -189,6 +337,15 @@ void ScenePlane::Render()
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
+
+	ss << "Pos: " << tank->pos;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 6);
+	ss.str("");
+	ss << "Vel: " << tank->vel;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 3);
+	ss.str("");
+	ss.precision(5);
+
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 }
@@ -201,6 +358,11 @@ void ScenePlane::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
-	//delete plane;
+	if (tank)
+	{
+		delete tank;
+		tank = NULL;
+	}
+
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }

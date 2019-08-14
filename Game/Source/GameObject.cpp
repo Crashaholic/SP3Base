@@ -12,7 +12,8 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	active(false),
 	mass(1.f),
 	hasGravity(false),
-	norm(0, 1, 0)
+	norm(0, 1, 0),
+	angle(0.0f)
 {
 }
 
