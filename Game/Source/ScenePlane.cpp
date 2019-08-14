@@ -68,6 +68,9 @@ void ScenePlane::Init()
 	tank2->angle = 89;
 	tank2->norm.Set(1, 1, 0);
 	tank2->pos.Set(center.x - 53.f, center.y - 26.0f, center.z); 
+
+	tank->pos.y = terr.getHeight(tank->pos).y;
+	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
 }
 
 GameObject* ScenePlane::FetchGO()
@@ -144,6 +147,14 @@ void ScenePlane::Update(double dt)
 	if (tank->pos.x >= 125)
 	{
 		tank->pos.x = 125;
+	}
+	if (tank2->pos.x <= 9.5f)
+	{
+		tank2->pos.x = 9.5f;
+	}
+	if (tank2->pos.x >= 127)
+	{
+		tank2->pos.x = 127;
 	}
 	// Tank barrel control
 	if (Application::IsKeyPressed('I')) // Left
