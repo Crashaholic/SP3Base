@@ -57,7 +57,7 @@ void ScenePlane::Init()
 	g2->type = GameObject::GO_CUBE;
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
-	g2->vel.Set(0, -10, 0);
+	//g2->vel.Set(0, -10, 0);
 	g2->pos.Set(center.x, center.y + 50.0f, center.z);
 
 	// Tank
@@ -173,7 +173,7 @@ void ScenePlane::Update(double dt)
 	{
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
-		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
+		object->type = GameObject::GO_CUBE;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->dir * BULLET_SPEED;

@@ -42,7 +42,7 @@ void Plane::Init()
 	dir.Set(1, 0, 0);
 	topSpeed = 10.0f;
 	turnSpeed = 5.0f;
-	pos.Set(50, 50, 0);
+	pos.Set(50, 5, 0);
 	vel.SetZero();
 	scale.Set(5.7, 1.4, 1);
 	scale *= 2;

@@ -43,9 +43,9 @@ void GOManager::update(double dt)
 					GameObject *goA = go;
 					GameObject *goB = go2;
 
-					if (goB->type != GameObject::GO_CUBE)
+					if (!checkCube(goB->type))
 					{
-						if (goA->type != GameObject::GO_CUBE)
+						if (!checkCube(goA->type))
 						{
 							continue;
 						}
@@ -140,7 +140,8 @@ void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 	// Testing
 	go1->vel = 0;
-	//go2->active = false;
+	go1->active = false;
+	go2->active = false;
 	printf("collision!\n");
 }
 
@@ -238,4 +239,12 @@ bool GOManager::overlap(float min1, float max1, float min2, float max2)
 		return true;
 
 	return false;
+}
+
+bool GOManager::checkCube(GameObject::GAMEOBJECT_TYPE type)
+{
+	if (type != GameObject::PLAYER_PROJECTILE_MACHINE)
+		return true;
+	else
+		return false;
 }
