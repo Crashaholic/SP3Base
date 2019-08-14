@@ -37,7 +37,14 @@ struct GameObject
 
 		GO_TOTAL, //must be last
 	};
+	enum SCREENWRAP_MODE {
+		SW_CLEAR = 0,
+		SW_WRAP,
+		SW_HYBRID,
+		SW_BOUNCE
+	};
 	GAMEOBJECT_TYPE type;
+	SCREENWRAP_MODE wrapMode;
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 scale;

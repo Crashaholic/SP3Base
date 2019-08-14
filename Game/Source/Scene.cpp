@@ -200,6 +200,7 @@ void Scene::RenderMesh(Mesh *mesh, bool enableLight)
 
 void Scene::RenderGO(GameObject *go)
 {
+	glDisable(GL_CULL_FACE);
 	switch (go->type)
 	{
 	case GameObject::GO_BALL:
@@ -251,6 +252,7 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	}
+	glEnable(GL_CULL_FACE);
 }
 
 void Scene::checkSwitch()

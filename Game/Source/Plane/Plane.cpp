@@ -20,6 +20,14 @@ void Plane::Update(double dt)
 	vel = dir * topSpeed;
 	pos += vel * (float)dt;
 	norm = dir;
+	if (dir.x < 0)
+	{
+		scale.y = -1.4f;
+	}
+	else
+	{
+		scale.y = 1.4f;
+	}
 }
 
 void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
@@ -46,6 +54,7 @@ void Plane::Init()
 	scale.Set(5.7f, 1.4f, 1.0f);
 	active = true;
 	type = PLAYER_PLANE_A10;
+	wrapMode = SW_HYBRID;
 	GOManager::GetInstance()->addGO(this);
 }
 Plane::Plane()

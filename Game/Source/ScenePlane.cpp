@@ -219,8 +219,7 @@ void ScenePlane::Update(double dt)
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
 	}
-	GOManager::GetInstance()->update(dt);
-
+	m_goList = GOManager::GetInstance()->getlist();
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
 
@@ -230,14 +229,85 @@ void ScenePlane::Update(double dt)
 		if (go->active)
 		{
 			// unspawn bullets when they leave screen
-			if (go->type == GameObject::GO_BALL)
+			//if (go->type == GameObject::GO_BALL)
+			//{
+			//}
+			bool hit = false;
+			switch (go->wrapMode)
 			{
-				if (go->pos.x > m_worldWidth + go->scale.x || go->pos.y > m_worldHeight + go->scale.y
-					|| go->pos.x < -go->scale.x || go->pos.y < -go->scale.y)
+			case GameObject::SW_CLEAR:
+				if (go->pos.x > m_worldWidth|| go->pos.y > m_worldHeight
+					|| go->pos.x < 0 || go->pos.y < 0)
 					go->active = false;
+				hit = true;
+				break;
+			case GameObject::SW_BOUNCE:
+				if (go->pos.x > m_worldWidth)
+				{
+					go->vel.x *= -1.0f;
+					go->dir.x *= -1.0f;
+					go->pos.x = m_worldWidth;
+					hit = true;
+				}
+				if (go->pos.y > m_worldHeight)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = m_worldHeight;
+					hit = true;
+				}
+				if (go->pos.x < 0)
+				{
+					go->vel.x *= -1.0f;
+					go->dir.x *= -1.0f;
+					go->pos.x = 0;
+					hit = true;
+				}
+				if (go->pos.y < 0)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = 0;
+					hit = true;
+				}
+				if (hit)
+					go->angle = (atan2(go->dir.y, go->dir.x));
+				break;
+			case GameObject::SW_WRAP:
+				if (go->pos.x > m_worldWidth)
+					go->pos.x = 0;
+				if (go->pos.x < 0)
+					go->pos.x = m_worldWidth - 0.1f;
+
+				if (go->pos.y > m_worldHeight)
+					go->pos.y = 0;
+				if (go->pos.y < 0)
+					go->pos.y = m_worldHeight - 0.1f;
+			case GameObject::SW_HYBRID:
+				if (go->pos.x > m_worldWidth)
+					go->pos.x = 0;
+				if (go->pos.x < 0)
+					go->pos.x = m_worldWidth - 0.1f;
+				if (go->pos.y > m_worldHeight)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = m_worldHeight;
+					hit = true;
+				}
+				if (go->pos.y < 0)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = 0;
+					hit = true;
+				}
+				go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
+				break;
 			}
 		}
 	}
+	GOManager::GetInstance()->update(dt);
 }
 
 void ScenePlane::Render()
