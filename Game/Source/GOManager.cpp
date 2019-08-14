@@ -53,6 +53,7 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	case GameObject::GO_BALL:
 	{
 		// Ball to cube collision
+
 		break;
 	}
 	case GameObject::GO_CUBE:

@@ -148,6 +148,7 @@ void Application::Run()
 			scene->Exit();
 			GOManager::GetInstance()->cleanList();
 			scene = manager->getActiveScene();
+			GOManager::GetInstance()->init();
 			scene->Init();
 		}
 	}

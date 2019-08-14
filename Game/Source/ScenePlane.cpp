@@ -43,14 +43,14 @@ void ScenePlane::Init()
 	GameObject *g1 = GOManager::GetInstance()->fetchGO();
 	g1->scale.Set(4.0f, 4.0f, 1.0f);
 	g1->type = GameObject::GO_CUBE;
-	g1->norm.Set(1, 1, 0);
+	g1->norm = Vector3(1, 1, 0).Normalized();
 	g1->vel.Set(0, 4, 0);
 	g1->pos.Set(center.x, center.y - 50.0f, center.z);
 
 	GameObject *g2 = GOManager::GetInstance()->fetchGO();
 	g2->scale.Set(4.0f, 4.0f, 1.0f);
 	g2->type = GameObject::GO_CUBE;
-	g2->norm.Set(1, 1, 0);
+	g2->norm = Vector3(1, 1, 0).Normalized();
 	g2->vel.Set(0, -4, 0);
 	g2->pos.Set(center.x, center.y + 50.0f, center.z);
 }
@@ -88,9 +88,8 @@ void ScenePlane::Update(double dt)
 	}
 	if(Application::IsKeyPressed('V'))
 	{
-			defaultShader.SetVec3("coloredTexture[0]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
-	defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
-
+		defaultShader.SetVec3("coloredTexture[0]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
+		defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 	}
 
 	// Switch scene
