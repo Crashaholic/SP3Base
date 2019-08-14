@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "shader.hpp"
 #include "Terrain.h"
+#include "UpgradeTank.h"
 #include <vector>
 
 class ScenePlane : public Scene
@@ -19,6 +20,9 @@ class ScenePlane : public Scene
 		GEO_TEXT,
 		GEO_BALL,
 		GEO_CUBE,
+		WEAPONUP,
+		SPEEDUP,
+		SIZEUP,
 		NUM_GEOMETRY,
 	};
 
@@ -67,6 +71,12 @@ private:
 	float m_heightEstimated;
 	float m_heightMax;
 	Terrain terr;
+
+	UpgradeTank tank;
+	bool tankup1, tankup2, tankup3;
+	bool move, move2, move3;
+	float updropx, updropy;
+	float up2dropx, up2dropy, up3dropx, up3dropy;
 };
 
 #endif
