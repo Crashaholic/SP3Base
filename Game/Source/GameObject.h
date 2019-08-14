@@ -42,8 +42,8 @@ struct GameObject
 	Vector3 scale;
 
 	Vector3 /*pop*/corn[4];	// corner
-	Vector3 norm;		// normal
-	Vector3 perp;		// normal perpendicular
+	Vector3 norm;			// normal
+	Vector3 perp;			// normal perpendicular
 
 	Vector3 dir;
 	bool active;
