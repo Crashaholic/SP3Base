@@ -22,6 +22,7 @@ public:
 
 	void GenerateRandomHeight(unsigned int worldWidth);
 	void GenerateTerrainMesh();
+	Vector3 getHeight(Vector3 TankPos);
 
 };
 
