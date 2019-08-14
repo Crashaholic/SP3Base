@@ -217,6 +217,24 @@ void Scene::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_CUBE], true);
 		modelStack.PopMatrix();
 		break;
+	case GameObject::PLAYER_PLANE_A10:
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], false);
+
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Rotate(Math::RadianToDegree(go->angle), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_CUBE], false);
+
+		modelStack.PopMatrix();
+
+		break;
 	case GameObject::PLAYER_TANK_GENERIC:
 		modelStack.PushMatrix();
 		modelStack.Translate(go->pos.x, go->pos.y, 0);

@@ -11,6 +11,8 @@ struct GameObject
 		GO_BALL,
 		GO_CUBE,
 
+		
+
 		// Refer to diagram in discord
 		PLAYER_PLANE_GENERIC,
 		PLAYER_PLANE_A10,
@@ -48,6 +50,7 @@ struct GameObject
 	float mass;
 	float angle;
 	bool hasGravity;
+	virtual void Update(double dt);
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };

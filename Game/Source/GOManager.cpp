@@ -43,9 +43,9 @@ void GOManager::update(double dt)
 					GameObject *goA = go;
 					GameObject *goB = go2;
 
-					if (goB->type != GameObject::GO_CUBE)
+					if (!checkCube(goB->type))
 					{
-						if (goA->type != GameObject::GO_CUBE)
+						if (!checkCube(goA->type))
 						{
 							continue;
 						}
@@ -58,6 +58,7 @@ void GOManager::update(double dt)
 					}
 				}
 			}
+			go->Update(dt);
 			go->pos += go->vel * static_cast<float>(dt);
 		}
 	}
@@ -133,8 +134,10 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 	// Testing
+	go1->vel = 0;
 	go1->active = false;
 	go2->active = false;
+	printf("collision!\n");
 }
 
 GameObject * GOManager::fetchGO()
@@ -161,6 +164,36 @@ GameObject * GOManager::fetchGO()
 std::vector<GameObject*>& GOManager::getlist()
 {
 	return m_goList;
+}
+
+void GOManager::addGO(GameObject * newgo)
+{
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if (go == newgo)
+	//		return;
+	//}
+	//
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if (go)
+	//	{
+	//		if (!go->active)
+	//		{
+	//			delete go;
+	//			go = newgo;
+	//			return;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		go = newgo;
+	//		return;
+	//	}
+	//}
+	m_goList.push_back(newgo);
 }
 
 void GOManager::cleanList()
@@ -201,4 +234,12 @@ bool GOManager::overlap(float min1, float max1, float min2, float max2)
 		return true;
 
 	return false;
+}
+
+bool GOManager::checkCube(GameObject::GAMEOBJECT_TYPE type)
+{
+	if (type != GameObject::PLAYER_PROJECTILE_MACHINE)
+		return true;
+	else
+		return false;
 }

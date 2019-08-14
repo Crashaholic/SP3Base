@@ -1,6 +1,11 @@
 
 #include "GameObject.h"
 
+void GameObject::Update(double dt)
+{
+	pos += vel * (float)dt;
+}
+
 GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	: type(typeValue),
 	scale(1, 1, 1),
