@@ -41,7 +41,7 @@ struct GameObject
 	Vector3 corn[4];	// corner
 	Vector3 norm;		// normal
 	Vector3 perp;		// normal perpendicular
-
+	float angle;
 	bool active;
 	float mass;
 	bool hasGravity;

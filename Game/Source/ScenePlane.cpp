@@ -41,17 +41,19 @@ void ScenePlane::Init()
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
 
 	GameObject *g1 = GOManager::GetInstance()->fetchGO();
-	g1->scale.Set(4.0f, 4.0f, 1.0f);
+	g1->scale.Set(8.0f, 8.0f, 8.0f);
 	g1->type = GameObject::GO_CUBE;
-	g1->norm = Vector3(1, 1, 0).Normalized();
-	g1->vel.Set(0, 4, 0);
-	g1->pos.Set(center.x, center.y - 50.0f, center.z);
+	g1->angle = 0.0f;
+	g1->norm.Set(cos(Math::DegreeToRadian(g1->angle)), sin(Math::DegreeToRadian(g1->angle)), 0.0f);
+	g1->vel.Set(0, 0, 0);
+	g1->pos.Set(center.x, center.y, center.z);
 
 	GameObject *g2 = GOManager::GetInstance()->fetchGO();
-	g2->scale.Set(4.0f, 4.0f, 1.0f);
+	g2->scale.Set(8.0f, 1.0f, 1.0f);
 	g2->type = GameObject::GO_CUBE;
-	g2->norm = Vector3(1, 1, 0).Normalized();
-	g2->vel.Set(0, -4, 0);
+	g2->angle = 90.0f;
+	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
+	g2->vel.Set(0, -10, 0);
 	g2->pos.Set(center.x, center.y + 50.0f, center.z);
 }
 

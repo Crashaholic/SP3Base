@@ -1,5 +1,6 @@
 
 #include "GameObject.h"
+#include "Mtx44.h"
 #include "GOManager.h"
 
 GOManager::GOManager()
@@ -33,12 +34,28 @@ void GOManager::update(double dt)
 		{
 			if (go->hasGravity)
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = (GameObject *)*it2;
-				if (checkcollision(go, go2))
+				if (go2->active)
 				{
-					collisionresponse(go, go2);
+					GameObject *goA = go;
+					GameObject *goB = go2;
+
+					if (goB->type != GameObject::GO_CUBE)
+					{
+						if (goA->type != GameObject::GO_CUBE)
+						{
+							continue;
+						}
+						goA = go2;
+						goB = go;
+					}
+					if (checkcollision(goA, goB))
+					{
+						collisionresponse(goA, goB);
+					}
 				}
 			}
 			go->pos += go->vel * static_cast<float>(dt);
@@ -52,20 +69,37 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	{
 	case GameObject::GO_BALL:
 	{
-		// Ball to cube collision
+		float angle = atan2(go2->norm.y, go2->norm.x);
+		Vector3 newPos = go1->pos - go2->pos;
+		Mtx44 rotation;
+		rotation.SetToRotation(Math::RadianToDegree(-angle) + 90.0f, 0, 0, 1);
+		newPos = rotation * newPos + go2->pos;
+		Vector3 len(newPos - go2->pos);
+
+		if (len.x > go2->scale.x + go1->scale.x)
+			return false;
+		if (len.y > go2->scale.y + go1->scale.y)
+			return false;
+		if (len.x <= go2->scale.x + go1->scale.x)
+			return true;
+		if (len.y <= go2->scale.y + go1->scale.y)
+			return true;
+		if ((len - go2->scale).LengthSquared() <= go1->scale.x * go1->scale.x)
+			return true;
+		else
+			return false;
 
 		break;
 	}
 	case GameObject::GO_CUBE:
 	{
-		// As of now, I see no reason to move to update function since it is a single case.
 		go1->perp = go1->norm.Cross(Vector3(0, 0, 1));
 		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
 
-		Vector3 hori1 = go1->perp * go1->scale.x;
-		Vector3 vert1 = go1->norm * go1->scale.y;
-		Vector3 hori2 = go2->perp * go2->scale.x;
-		Vector3 vert2 = go2->norm * go2->scale.y;
+		Vector3 hori1 = go1->norm * go1->scale.x;
+		Vector3 vert1 = go1->perp * go1->scale.y;
+		Vector3 hori2 = go2->norm * go2->scale.x;
+		Vector3 vert2 = go2->perp * go2->scale.y;
 
 		go1->corn[0] = go1->pos - hori1 - vert1;
 		go1->corn[1] = go1->pos + hori1 - vert1;
@@ -90,9 +124,7 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 			if (overlap(min1, max1, min2, max2) == false)
 				return false;
 		}
-		std::cout << "hit";
 		return true;
-		
 		break;
 	}
 	default:
