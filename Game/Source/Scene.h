@@ -51,6 +51,16 @@ protected:
 		NUM_GEOMETRY,
 	};	
 	Mesh* meshList[NUM_GEOMETRY];
+
+	int lives;
+	int upgrade_1;			// Blast radius OR Reload speed
+	int upgrade_2;			// Bomb count OR Movement speed
+	int upgrade_3;			// Extra life
+	int attackCount;		// number of times a player has fired a weapon (bursts count as one)
+	int kills;
+	float accuracy;			// = kills / attackCount
+	int highScore;			
+
 public:
 	Scene() {}
 	~Scene() {}

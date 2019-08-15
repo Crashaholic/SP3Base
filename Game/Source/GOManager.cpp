@@ -41,17 +41,18 @@ void GOManager::update(double dt)
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 			}
 
-			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
+			for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = (GameObject *)*it2;
 				if (go2->active)
 				{
 					updateCorn(go2);
 					
-					if (collisionGate(go, go2))
+					if (collisionGate(go, go2) == true)
 					{
 						if (checkcollision(go, go2))
 						{
+							printf("collision!\n");
 							collisionresponse(go, go2);
 						}
 					}
@@ -156,7 +157,6 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 
-	printf("collision!\n");
 }
 
 GameObject * GOManager::fetchGO()
@@ -265,6 +265,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
+		case GameObject::GO_CUBE:
 			return true;
 		}
 		break;
