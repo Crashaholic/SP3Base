@@ -27,7 +27,7 @@ public:
 	void cleanList();
 	bool testSAT(Vector3 axis, Vector3 corn[], float &min, float &max);
 	bool overlap(float min1, float max1, float min2, float max2);
-	bool checkCube(GameObject::GAMEOBJECT_TYPE type);
+	void updateCorn(GameObject* go);
 };
 
 #endif

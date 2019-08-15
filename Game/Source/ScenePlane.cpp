@@ -63,7 +63,6 @@ void ScenePlane::Init()
 	tank = GOManager::GetInstance()->fetchGO();
 	tank->type = GameObject::PLAYER_TANK;
 	tank->scale.Set(7.5f, 2.0f, 1.0f);
-	tank->active = true;
 	tank->angle = 0.0f;
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
@@ -71,7 +70,6 @@ void ScenePlane::Init()
 	tank2 = GOManager::GetInstance()->fetchGO();
 	tank2->type = GameObject::PLAYER_TANKGUN;
 	tank2->scale.Set(3.5f, 1.0f, 1.0f);
-	tank2->active = true;
 	tank2->angle = 89.0f;
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 	tank2->pos.Set(center.x - 53.f, center.y - 26.0f, center.z); 

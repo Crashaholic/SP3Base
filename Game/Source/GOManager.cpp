@@ -32,6 +32,10 @@ void GOManager::update(double dt)
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
+			go->Update(dt);
+			go->pos += go->vel * static_cast<float>(dt);
+			updateCorn(go);
+
 			if (go->hasGravity)
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 
@@ -40,14 +44,14 @@ void GOManager::update(double dt)
 				GameObject *go2 = (GameObject *)*it2;
 				if (go2->active)
 				{
+					updateCorn(go2);
+
 					if (checkcollision(go, go2))
 					{
 						collisionresponse(go, go2);
 					}
 				}
 			}
-			go->Update(dt);
-			go->pos += go->vel * static_cast<float>(dt);
 		}
 	}
 }
@@ -123,22 +127,6 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	}
 	default:
 	{
-		go1->perp = go1->norm.Cross(Vector3(0, 0, 1));
-		Vector3 hori1 = go1->norm * go1->scale.x;
-		Vector3 vert1 = go1->perp * go1->scale.y;
-		go1->corn[0] = go1->pos - hori1 - vert1;
-		go1->corn[1] = go1->pos + hori1 - vert1;
-		go1->corn[2] = go1->pos + hori1 + vert1;
-		go1->corn[3] = go1->pos - hori1 + vert1;
-
-		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
-		Vector3 hori2 = go2->norm * go2->scale.x;
-		Vector3 vert2 = go2->perp * go2->scale.y;
-		go2->corn[0] = go2->pos - hori2 - vert2;
-		go2->corn[1] = go2->pos + hori2 - vert2;
-		go2->corn[2] = go2->pos + hori2 + vert2;
-		go2->corn[3] = go2->pos - hori2 + vert2;
-
 		Vector3 normals[4];
 		normals[0] = go1->norm;
 		normals[1] = go1->perp;
@@ -163,9 +151,9 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 	// Testing
-	go1->vel = 0;
-	go1->active = false;
-	go2->active = false;
+	// go1->vel = 0;
+	// go1->active = false;
+	// go2->active = false;
 	printf("collision!\n");
 }
 
@@ -239,10 +227,13 @@ bool GOManager::overlap(float min1, float max1, float min2, float max2)
 	return false;
 }
 
-bool GOManager::checkCube(GameObject::GAMEOBJECT_TYPE type)
+void GOManager::updateCorn(GameObject * go)
 {
-	if (type != GameObject::PLAYER_PROJECTILE_MACHINE)
-		return true;
-	else
-		return false;
+	go->perp = go->norm.Cross(Vector3(0, 0, 1));
+	Vector3 hori1 = go->norm * go->scale.x;
+	Vector3 vert1 = go->perp * go->scale.y;
+	go->corn[0] = go->pos - hori1 - vert1;
+	go->corn[1] = go->pos + hori1 - vert1;
+	go->corn[2] = go->pos + hori1 + vert1;
+	go->corn[3] = go->pos - hori1 + vert1;
 }

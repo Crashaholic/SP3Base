@@ -35,6 +35,8 @@ struct GameObject
 		ENEMY_PROJECTILE_BOMB,
 		ENEMY_PROJECTILE_MACHINE,	// Machine gun
 
+		EXPLOSION,
+
 		GO_TOTAL, //must be last
 	};
 	enum SCREENWRAP_MODE {

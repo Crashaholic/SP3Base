@@ -45,6 +45,7 @@ protected:
 		GEO_ENEMY_PROJECTILE_BOMB,
 		GEO_ENEMY_PROJECTILE_MACHINE,	// Machine gun
 
+		GEO_EXPLOSION,
 		GEO_DEBUG,						// Debug balls
 
 		NUM_GEOMETRY,
