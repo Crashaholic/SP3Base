@@ -100,20 +100,18 @@ void ScenePlane::Update(double dt)
 	static bool lol = false;
 	if(Application::IsKeyPressed('C'))
 	{
-		lol = !lol;
-	}
-	if (lol)
 		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = decal1;
-	else
-		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = 0;
-
-	if(Application::IsKeyPressed(' '))
-	{
 	}
+	//if (lol)
+	//else
+	//	meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = 0;
+
 	if(Application::IsKeyPressed('V'))
 	{
-		defaultShader.SetVec3("coloredTexture[0]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
-		defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
+		plane->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
+		plane->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
+		//defaultShader.SetVec3("coloredTexture[0]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
+		//defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 	}
 
 	// Tank Movement

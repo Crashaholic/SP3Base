@@ -57,6 +57,10 @@ void Plane::Init()
 	wrapMode = SW_HYBRID;
 	GOManager::GetInstance()->addGO(this);
 }
+void Plane::SetTerrain(Terrain * terr)
+{
+	terreference = terr;
+}
 Plane::Plane()
 {
 

@@ -200,6 +200,12 @@ void Scene::RenderMesh(Mesh *mesh, bool enableLight)
 
 void Scene::RenderGO(GameObject *go)
 {
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ go->color[i].r,go->color[i].g,go->color[i].b });
+		//defaultShader.SetVec3("colorableTexture[" + std::to_string(i) + "]", go->isColorable[i]);
+	}
+
 	glDisable(GL_CULL_FACE);
 	switch (go->type)
 	{
@@ -252,6 +258,12 @@ void Scene::RenderGO(GameObject *go)
 	}
 	debugBalls(go);
 	glEnable(GL_CULL_FACE);
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ 1.f,1.f,1.f });
+		//defaultShader.SetVec3("colorableTexture[" + std::to_string(i) + "]", go->isColorable[i]);
+	}
+
 }
 
 void Scene::checkSwitch()
