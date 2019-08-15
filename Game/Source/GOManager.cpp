@@ -23,11 +23,19 @@ void GOManager::init()
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
+	lives = 2;
+	upgrade_1 = 0;
+	upgrade_2 = 0;
+	upgrade_3 = 0;
+	attackCount = 0;
+	kills = 0;
+	accuracy = 0.0f;
+	highScore = 0;
 }
 
 void GOManager::update(double dt)
 {
-	for (unsigned int i = 0;i<m_goList.size();++i)
+	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
 		if (go->active)
@@ -41,61 +49,97 @@ void GOManager::update(double dt)
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 			}
 
-			for (unsigned int o = 0; o < m_goList.size(); ++o)
+			if (terrainGate(go))
 			{
-				GameObject *go2 = m_goList[o];
+				if (checkTerrain(go))
+				{
+					terrainResponse(go);
+				}
+			}
+
+			for (unsigned int j = 0; j < m_goList.size(); ++j)
+			{
+				GameObject *go2 = m_goList[j];
 				if (go2->active)
 				{
 					updateCorn(go2);
 					
-					if (collisionGate(go, go2) == true)
+					if (collisionGate(go, go2))
 					{
-						if (checkcollision(go, go2))
+						if (checkCollision(go, go2))
 						{
-							printf("collision!\n");
-							collisionresponse(go, go2);
+							collisionResponse(go, go2);
 						}
 					}
 				}
 			}
 		}
 	}
-	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	//{
-	//	GameObject *go = (GameObject *)*it;
-	//	if (go->active)
-	//	{
-	//		go->Update(dt);
-	//		go->pos += go->vel * static_cast<float>(dt);
-	//		updateCorn(go);
-
-	//		if (go->hasGravity)
-	//		{
-	//			go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
-	//		}
-
-	//		for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
-	//		{
-	//			GameObject *go2 = (GameObject *)*it2;
-	//			if (go2->active)
-	//			{
-	//				updateCorn(go2);
-	//				
-	//				if (collisionGate(go, go2) == true)
-	//				{
-	//					if (checkcollision(go, go2))
-	//					{
-	//						printf("collision!\n");
-	//						collisionresponse(go, go2);
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 }
 
-bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
+bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
+{
+	// collisionGate narrows down go1 and go2 to specific cases so we can avoid stupid things
+	// like enemy projectiles being able to kill other enemies and player bomb destroying the player
+	switch (go1->type)
+	{
+		// Player to Enemy + Player to Upgrade
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	case GameObject::PLAYER_TANK:
+	case GameObject::PLAYER_TANKGUN:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		case GameObject::UPGRADE_1:
+		case GameObject::UPGRADE_2:
+		case GameObject::UPGRADE_3:
+		case GameObject::GO_CUBE:
+			return true;
+		}
+		break;
+	}
+	// Player projectile to Enemy
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+			return true;
+		}
+		break;
+	}
+	// Enemy projectile to Player
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
+		case GameObject::PLAYER_TANK:
+		case GameObject::PLAYER_TANKGUN:
+			return true;
+		}
+		break;
+	}
+	}
+	return false;
+}
+
+bool GOManager::checkCollision(GameObject * go1, GameObject * go2)
 {
 	switch (go1->type)
 	{
@@ -187,9 +231,192 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	return false;
 }
 
-void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
+void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 {
+	switch (go1->type)
+	{
+		// Player To
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	case GameObject::PLAYER_TANK:
+	case GameObject::PLAYER_TANKGUN:
+	{
+		switch (go2->type)
+		{
+		// Enemy
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		{
+			++kills;
+			go2->active = false;
+			playerDeath(go1);
+			break;
+		}
+		// Upgrade
+		case GameObject::UPGRADE_1:
+		{
+			++upgrade_1;
+			go2->active = false;
+			break;
+		}
+		case GameObject::UPGRADE_2:
+		{
+			++upgrade_2;
+			go2->active = false;
+			break;
+		}
+		case GameObject::UPGRADE_3:
+		{
+			++upgrade_3;
+			go2->active = false;
+			break;
+		}
+		// Testing
+		case GameObject::GO_CUBE:
+		{
+			go2->active = false;
+			break;
+		}
+		}
+		break;
+	}
+	// Player projectile to Enemy
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		{
+			++kills;
+			go2->active = false;
+			break;
+		}
+		}
+		break;
+	}
+	// Enemy projectile to Player
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
+		case GameObject::PLAYER_TANK:
+		case GameObject::PLAYER_TANKGUN:
+		{
+			playerDeath(go2);
+			break;
+		}
+		}
+		break;
+	}
+	default:
+	{
+		// This should never run, if collision gate works properly.
+		break;
+	}
+	}
+}
 
+bool GOManager::terrainGate(GameObject * go)
+{
+	switch (go->type)
+	{
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	case GameObject::UPGRADE_1:
+	case GameObject::UPGRADE_2:
+	case GameObject::UPGRADE_3:
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+		return true;
+	}
+	return false;
+}
+
+bool GOManager::checkTerrain(GameObject * go)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		if (go->corn[i].y < terreference->getHeight(go->corn[i]).y)
+			return true;
+	}
+	return false;
+}
+
+void GOManager::terrainResponse(GameObject * go)
+{
+	switch (go->type)
+	{
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	{
+		--lives;
+		playerDeath(go);
+		break;
+	}
+	case GameObject::UPGRADE_1:
+	case GameObject::UPGRADE_2:
+	case GameObject::UPGRADE_3:
+	{
+		// if the upgrade is going downwards
+		if (go->vel.y < 0.0f)
+		{
+			go->active = false;
+		}
+		break;
+	}
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	{
+		go->active = false;
+		break;
+	}
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+	{
+		go->active = false;
+		break;
+	}
+	default:
+	{
+		// This should never run, if terrain gate works properly.
+		break;
+	}
+	}
+}
+
+void GOManager::playerDeath(GameObject * go)
+{
+	--lives;
+	if (lives <= 0)
+	{
+		go->active = false;
+		// TODO: Ryan & Yan Quan
+		// Switch scene and pass high score to YQ's function
+		highScore = kills + (accuracy / 10.0f) * kills;
+	}
+	else
+	{
+		go->reset();
+	}
 }
 
 GameObject * GOManager::fetchGO()
@@ -206,12 +433,11 @@ GameObject * GOManager::fetchGO()
 			return go;
 		}
 	}
-	unsigned int size = m_goList.size();
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	return m_goList[size];
+	return m_goList[m_goList.size() - 1];
 }
 
 std::vector<GameObject*>& GOManager::getlist()
@@ -286,66 +512,4 @@ void GOManager::updateCorn(GameObject * go)
 		go->corn[2] = go->pos + hori1 + vert1;
 		go->corn[3] = go->pos - hori1 + vert1;
 	}
-}
-
-bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
-{
-	// collisionGate narrows down go1 and go2 to specific cases so we can avoid stupid things
-	// like enemy projectiles being able to kill other enemies and player bomb destroying the player
-	switch (go1->type)
-	{
-	// Player to Enemy + Player to Upgrade
-	case GameObject::PLAYER_PLANE_KOMET:
-	case GameObject::PLAYER_PLANE_A10:
-	case GameObject::PLAYER_TANK:
-	case GameObject::PLAYER_TANKGUN:
-	{
-		switch (go2->type)
-		{
-		case GameObject::ENEMY_PLANE_PASSIVE:
-		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_TANK_PASSIVE:
-		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
-		case GameObject::UPGRADE_1:
-		case GameObject::UPGRADE_2:
-		case GameObject::UPGRADE_3:
-		case GameObject::GO_CUBE:
-			return true;
-		}
-		break;
-	}
-	// Player projectile to Enemy
-	case GameObject::PLAYER_PROJECTILE_BOMB:
-	case GameObject::PLAYER_PROJECTILE_NUKE:
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
-	case GameObject::PLAYER_PROJECTILE_MISSILE:
-	{
-		switch (go2->type)
-		{
-		case GameObject::ENEMY_PLANE_PASSIVE:
-		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_TANK_PASSIVE:
-		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
-			return true;
-		}
-		break;
-	}
-	// Enemy projectile to Player
-	case GameObject::ENEMY_PROJECTILE_BOMB:
-	case GameObject::ENEMY_PROJECTILE_MACHINE:
-	{
-		switch (go2->type)
-		{
-		case GameObject::PLAYER_PLANE_KOMET:
-		case GameObject::PLAYER_PLANE_A10:
-		case GameObject::PLAYER_TANK:
-		case GameObject::PLAYER_TANKGUN:
-			return true;
-		}
-		break;
-	}
-	}
-	return false;
 }

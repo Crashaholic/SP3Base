@@ -34,11 +34,6 @@ void Plane::Update(double dt)
 	{
 		scale.y = 1.4f;
 	}
-	for (int i = 0; i < 4; ++i)
-	{
-	if (corn[i].y < terreference->getHeight(corn[i]).y)
-		Reset();
-	}
 }
 
 void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
@@ -61,20 +56,13 @@ void Plane::Init()
 	topSpeed = 10.0f;
 	turnSpeed = 5.0f;
 	pos.Set(10.0f, 80.0f, 0.0f);
+	defaultPos = pos;
 	vel.SetZero();
 	scale.Set(5.7f, 1.4f, 1.0f);
 	active = true;
 	type = PLAYER_PLANE_A10;
 	wrapMode = SW_HYBRID;
 	GOManager::GetInstance()->addGO(this);
-}
-
-void Plane::Reset()
-{
-	angle = 0.0f;
-	dir.Set(cos(angle), sin(angle), 0.0f);
-	pos.Set(10.0f, 80.0f, 0.0f);
-	vel.SetZero();
 }
 
 Plane::Plane()

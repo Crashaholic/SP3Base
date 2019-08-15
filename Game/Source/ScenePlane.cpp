@@ -76,7 +76,9 @@ void ScenePlane::Init()
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
-	plane->terreference = &terr;
+
+	// Set terrain reference in GOManager
+	GOManager::GetInstance()->terreference = &terr;
 }
 
 void ScenePlane::Update(double dt)
