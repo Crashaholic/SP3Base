@@ -178,7 +178,7 @@ void ScenePlane::Update(double dt)
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;
-		bulletCooldown = 0.1f;
+		//bulletCooldown = 0.1f;
 	}
 
 	// Switch scene
@@ -195,14 +195,14 @@ void ScenePlane::Update(double dt)
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
+		
+		//vec3 n = terr.GetNormal(Vector3(
+		//	static_cast<float>(x / w * m_worldWidth), 
+		//	static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
+		//	static_cast<float>(0.0f))
+		//);
 
-		vec3 n = terr.GetNormal(Vector3(
-			static_cast<float>(x / w * m_worldWidth), 
-			static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
-			static_cast<float>(0.0f))
-		);
-
-		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
+		//LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
