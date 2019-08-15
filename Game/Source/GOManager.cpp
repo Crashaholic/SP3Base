@@ -40,15 +40,20 @@ void GOManager::update(double dt)
 			{
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 			}
+
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = (GameObject *)*it2;
 				if (go2->active)
 				{
 					updateCorn(go2);
-					if (checkcollision(go, go2))
+					
+					if (collisionGate(go, go2))
 					{
-						collisionresponse(go, go2);
+						if (checkcollision(go, go2))
+						{
+							collisionresponse(go, go2);
+						}
 					}
 				}
 			}
@@ -236,4 +241,65 @@ void GOManager::updateCorn(GameObject * go)
 		go->corn[2] = go->pos + hori1 + vert1;
 		go->corn[3] = go->pos - hori1 + vert1;
 	}
+}
+
+bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
+{
+	// collisionGate narrows down go1 and go2 to specific cases so we can avoid stupid things
+	// like enemy projectiles being able to kill other enemies and player bomb destroying the player
+	switch (go1->type)
+	{
+	// Player to Enemy + Player to Upgrade
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	case GameObject::PLAYER_TANK:
+	case GameObject::PLAYER_TANKGUN:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		case GameObject::UPGRADE_1:
+		case GameObject::UPGRADE_2:
+		case GameObject::UPGRADE_3:
+			return true;
+		}
+		break;
+	}
+	// Player projectile to Enemy
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+			return true;
+		}
+		break;
+	}
+	// Enemy projectile to Player
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
+		case GameObject::PLAYER_TANK:
+		case GameObject::PLAYER_TANKGUN:
+			return true;
+		}
+		break;
+	}
+	}
+	return false;
 }
