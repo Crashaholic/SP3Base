@@ -26,7 +26,6 @@ void GOManager::init()
 	lives = 2;
 	upgrade_1 = 0;
 	upgrade_2 = 0;
-	upgrade_3 = 0;
 	attackCount = 0;
 	kills = 0;
 	accuracy = 0.0f;
@@ -79,8 +78,6 @@ void GOManager::update(double dt)
 
 bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 {
-	// collisionGate narrows down go1 and go2 to specific cases so we can avoid stupid things
-	// like enemy projectiles being able to kill other enemies and player bomb destroying the player
 	switch (go1->type)
 	{
 		// Player to Enemy + Player to Upgrade
@@ -104,7 +101,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
-	// Player projectile to Enemy
+	// Player Projectile to Enemy
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
@@ -121,7 +118,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
-	// Enemy projectile to Player
+	// Enemy Projectile to Player
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
@@ -270,7 +267,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		case GameObject::UPGRADE_3:
 		{
-			++upgrade_3;
+			++lives;
 			go2->active = false;
 			break;
 		}
@@ -283,7 +280,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
-	// Player projectile to Enemy
+	// Player Projectile To
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
@@ -304,7 +301,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
-	// Enemy projectile to Player
+	// Enemy Projectile To
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
@@ -366,7 +363,6 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	{
-		--lives;
 		playerDeath(go);
 		break;
 	}
@@ -415,6 +411,7 @@ void GOManager::playerDeath(GameObject * go)
 	}
 	else
 	{
+		std::cout << lives << std::endl;
 		go->reset();
 	}
 }
