@@ -35,6 +35,7 @@ private:
 
 	GameObject *tank, *tank2;
 	float angle;
+	float tankSpeed;
 	double bulletCooldown;
 };
 
