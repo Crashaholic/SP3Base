@@ -83,6 +83,9 @@ protected:
 	MS projectionStack;
 
 	bool bLightEnabled;
+
+	float m_worldWidth;
+	float m_worldHeight;
 };
 
 #endif

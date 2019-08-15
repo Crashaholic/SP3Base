@@ -56,6 +56,7 @@ struct GameObject
 	Vector3 norm;			// normal
 	Vector3 perp;			// normal perpendicular
 	Vector3 dir;
+	Terrain* terreference;
 	bool active;
 	float mass;
 	float angle;

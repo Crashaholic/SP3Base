@@ -209,33 +209,52 @@ void Scene::RenderGO(GameObject *go)
 	}
 
 	glDisable(GL_CULL_FACE);
-
-	modelStack.PushMatrix();
-	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
-	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	switch (go->type)
+	int renders = 1;
+	if (go->wrapMode == GameObject::SW_HYBRID)
 	{
-	case GameObject::GO_BALL:
-		RenderMesh(meshList[GEO_BALL], false);
-		break;
-	case GameObject::GO_CUBE:
-		RenderMesh(meshList[GEO_CUBE], false);
-		break;
-	case GameObject::PLAYER_PLANE_A10:
-		RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
-		break;
-	case GameObject::PLAYER_TANK:
-		RenderMesh(meshList[GEO_PLAYER_TANK], false);
-		break;
-	case GameObject::PLAYER_TANKGUN:
-		RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
-		break;
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
-		RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
-		break;
+		renders = 3;
 	}
-	modelStack.PopMatrix();
+	for (int i = 0; i < renders; ++i)
+	{
+		modelStack.PushMatrix();
+		switch(i)
+		{
+		case 0:
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			break;
+		case 1:
+			modelStack.Translate(go->pos.x + m_worldWidth, go->pos.y, go->pos.z);
+			break;
+		case 2:
+			modelStack.Translate(go->pos.x - m_worldWidth, go->pos.y, go->pos.z);
+			break;
+		}
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		switch (go->type)
+		{
+		case GameObject::GO_BALL:
+			RenderMesh(meshList[GEO_BALL], false);
+			break;
+		case GameObject::GO_CUBE:
+			RenderMesh(meshList[GEO_CUBE], false);
+			break;
+		case GameObject::PLAYER_PLANE_A10:
+			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
+			break;
+		case GameObject::PLAYER_TANK:
+			RenderMesh(meshList[GEO_PLAYER_TANK], false);
+			break;
+		case GameObject::PLAYER_TANKGUN:
+			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
+			break;
+		case GameObject::PLAYER_PROJECTILE_MACHINE:
+			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
+			break;
+		}
+		modelStack.PopMatrix();
+	}
+	
 	if (go->hasCollider())
 		debugBalls(go);
 

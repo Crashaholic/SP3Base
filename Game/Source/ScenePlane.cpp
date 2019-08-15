@@ -76,6 +76,7 @@ void ScenePlane::Init()
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+	plane->terreference = &terr;
 }
 
 void ScenePlane::Update(double dt)
