@@ -27,13 +27,14 @@ private:
 
 
 	//=== Wave ===
-	float waveNo;
+	unsigned int waveNo;
 	unsigned int enemyCount;
 	unsigned int startCount;
 	void EndWave();
 	void SpawnEnemy();
 	vec3 SpawnPos1;
 	vec3 SpawnPos2;
+	double spawnTimer;
 
 
 	// Physics

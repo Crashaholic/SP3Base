@@ -110,7 +110,7 @@ void Terrain::GenerateTerrainMesh()
 
 	tMesh->indexSize = index_buffer_data.size();
 }
-Vector3 Terrain::getHeight(Vector3 TankPos)
+Vector3 Terrain::GetHeight(Vector3 TankPos)
 {
 	vec3 R, L;
 	for (int i = 1; i < TERRAIN_SIZE; ++i)

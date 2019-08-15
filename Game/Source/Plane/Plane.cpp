@@ -36,7 +36,7 @@ void Plane::Update(double dt)
 	}
 	for (int i = 0; i < 4; ++i)
 	{
-	if (corn[i].y < terreference->getHeight(corn[i]).y)
+	if (corn[i].y < terreference->GetHeight(corn[i]).y)
 		Reset();
 	}
 }

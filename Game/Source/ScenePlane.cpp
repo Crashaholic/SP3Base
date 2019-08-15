@@ -75,12 +75,15 @@ void ScenePlane::Init()
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 	tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
 
-	tank->pos.y = terr.getHeight(tank->pos).y;
-	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+	tank->pos.y = terr.GetHeight(tank->pos).y;
+	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
 	plane->terreference = &terr;
 
-	SpawnPos1 = vec3(-2, terr.getHeight({-2, 0, 0}).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.getHeight({ m_worldWidth + 2, 0, 0}).y, 0);
+	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
+	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
+	spawnTimer = 3.f; // TODO: REPLACE WITH A CONST
+
+	startCount = 2;//TODO: REPLACE WITH A CONST
 }
 
 void ScenePlane::Update(double dt)
@@ -119,25 +122,28 @@ void ScenePlane::Update(double dt)
 		//defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 	}
 
-	double x, y;;
+	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
+
+	if (spawnTimer == 0 && Math::RandFloatMinMax(0.f, 1.f) > 0.5f) // TODO: REPLACE APPROPRIATE VALUES WITH A CONST
+	{
+		SpawnEnemy();
+	}
+
+	double x, y;
 	Application::GetCursorPos(&x, &y);
 	int w = Application::GetWindowWidth();
 	int h = Application::GetWindowHeight();
 
-	vec3 n = terr.GetNormal(Vector3(
-		static_cast<float>(x / w * m_worldWidth),
-		static_cast<float>(m_worldHeight - y / h * m_worldHeight),
-		static_cast<float>(0.0f))
-	);
+	vec3 n = terr.GetNormal(tank->pos);
 
 	// Tank Movement
 	if (Application::IsKeyPressed('J')) // Left
 	{
 		tank->pos -= tankSpeed * static_cast<float>(dt);
-		tank->pos.y = terr.getHeight(tank->pos).y;
+		tank->pos.y = terr.GetHeight(tank->pos).y;
 
 		tank2->pos -= tankSpeed * static_cast<float>(dt);
-		tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+		tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
 
 		if (n <= 0)
 		{
@@ -149,10 +155,10 @@ void ScenePlane::Update(double dt)
 	if (Application::IsKeyPressed('L')) // Right
 	{
 		tank->pos += tankSpeed * static_cast<float>(dt);
-		tank->pos.y = terr.getHeight(tank->pos).y;
+		tank->pos.y = terr.GetHeight(tank->pos).y;
 
 		tank2->pos += tankSpeed * static_cast<float>(dt);
-		tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+		tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
 
 		if (n <= 0)
 		{
@@ -209,6 +215,19 @@ void ScenePlane::Update(double dt)
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;
 		bulletCooldown = 0.5f;
+	}
+	static bool hPressed = false;
+	if (Application::IsKeyPressed('H'))
+	{
+		if (!hPressed)
+		{
+			hPressed = true;
+		}
+	}
+	else
+	{
+		if (hPressed)
+			hPressed = false;
 	}
 
 	// Switch scene
@@ -415,6 +434,8 @@ void ScenePlane::Exit()
 void ScenePlane::EndWave()
 {
 	enemyCount = 0;
+	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+	waveNo++;
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 }
@@ -422,14 +443,19 @@ void ScenePlane::EndWave()
 void ScenePlane::SpawnEnemy()
 {
 	int tempcount = startCount + 1 * waveNo;
-	if (enemyCount >= tempcount)
+	if (enemyCount > tempcount)
 	{
 		return;
 	}
 	else
 	{
-		GameObject* t = GOManager::GetInstance()->fetchGO();
-		t->pos = (rand() % 2 ? SpawnPos1 : SpawnPos2);
+		bool spawner = rand() % 2;
+		//GameObject* t = GOManager::GetInstance()->fetchGO();
+		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
+		//TODO: TANK TARGET/MOVE CODE HERE
+		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
+		LOG_NONE("SPAWNED AT: %", (int)spawner + 1);
 		++enemyCount;
+		spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
 	}
 }
