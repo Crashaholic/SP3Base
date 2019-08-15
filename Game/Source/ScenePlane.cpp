@@ -168,7 +168,7 @@ void ScenePlane::Update(double dt)
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 
 	// Tank shoot
-	bulletCooldown -= 0.1f * dt; // lower = more delay
+	bulletCooldown -= dt; // lower = more delay
 	tank2->dir.Set(cosf(tank2->angle), sinf(tank2->angle), 0);
 	if (Application::IsKeyPressed('N') && bulletCooldown <= 0)
 	{
@@ -178,7 +178,7 @@ void ScenePlane::Update(double dt)
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;
-		//bulletCooldown = 0.1f;
+		bulletCooldown = 0.5f;
 	}
 
 	// Switch scene

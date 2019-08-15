@@ -40,7 +40,7 @@ void GOManager::update(double dt)
 			{
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 			}
-
+			//if(it != m_goList.end())
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = (GameObject *)*it2;
@@ -187,6 +187,17 @@ std::vector<GameObject*>& GOManager::getlist()
 
 void GOManager::addGO(GameObject * newgo)
 {
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if (!go->active)
+	//	{
+	//		delete go;
+	//		go = NULL;
+	//		go = newgo;
+	//		return;
+	//	}
+	//}
 	m_goList.push_back(newgo);
 }
 

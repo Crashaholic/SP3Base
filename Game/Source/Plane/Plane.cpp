@@ -4,11 +4,13 @@
 void Plane::Primary()
 {
 	GameObject* bomb = GOManager::GetInstance()->fetchGO();
+	bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
+	bomb->vel = vel;
+	bomb->pos = pos;
+	//bomb->
+	for(int i = 0;i<MAX_TEXTURES;++i)
+		bomb->color[i] = color[i];
 	//bomb = dynamic_cast<GameObject*>(bomb);
-	Bomb* b = dynamic_cast<Bomb*>(bomb);
-	b->type = GameObject::PLAYER_PROJECTILE_BOMB;
-	b->terreference = terreference;
-	topSpeed = 0.01f;
 }
 
 void Plane::Secondary()
