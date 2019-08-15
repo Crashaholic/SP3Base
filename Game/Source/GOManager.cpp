@@ -32,6 +32,10 @@ void GOManager::update(double dt)
 		GameObject *go = (GameObject *)*it;
 		if (go->active)
 		{
+			go->Update(dt);
+			go->pos += go->vel * static_cast<float>(dt);
+			updateCorn(go);
+
 			if (go->hasGravity)
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 
@@ -40,26 +44,14 @@ void GOManager::update(double dt)
 				GameObject *go2 = (GameObject *)*it2;
 				if (go2->active)
 				{
-					GameObject *goA = go;
-					GameObject *goB = go2;
+					updateCorn(go2);
 
-					if (!checkCube(goB->type))
+					if (checkcollision(go, go2))
 					{
-						if (!checkCube(goA->type))
-						{
-							continue;
-						}
-						goA = go2;
-						goB = go;
-					}
-					if (checkcollision(goA, goB))
-					{
-						collisionresponse(goA, goB);
+						collisionresponse(go, go2);
 					}
 				}
 			}
-			go->Update(dt);
-			go->pos += go->vel * static_cast<float>(dt);
 		}
 	}
 }
@@ -70,6 +62,8 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	{
 	case GameObject::GO_BALL:
 	{
+		// Method I - Matrix rotation + AABB vs Circle (Bugged)
+		/*
 		float angle = atan2(go2->norm.y, go2->norm.x);
 		Vector3 newPos = go1->pos - go2->pos;
 		Mtx44 rotation;
@@ -89,35 +83,56 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 			return true;
 		else
 			return false;
-		break;
-	}
-	default:
-	{
-		go1->perp = go1->norm.Cross(Vector3(0, 0, 1));
-		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
+		*/
 
-		Vector3 hori1 = go1->norm * go1->scale.x;
-		Vector3 vert1 = go1->perp * go1->scale.y;
+		// Method II - Modified SAT test (Bugged)
+		/*
+		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
 		Vector3 hori2 = go2->norm * go2->scale.x;
 		Vector3 vert2 = go2->perp * go2->scale.y;
-
-		go1->corn[0] = go1->pos - hori1 - vert1;
-		go1->corn[1] = go1->pos + hori1 - vert1;
-		go1->corn[2] = go1->pos + hori1 + vert1;
-		go1->corn[3] = go1->pos - hori1 + vert1;
-
 		go2->corn[0] = go2->pos - hori2 - vert2;
 		go2->corn[1] = go2->pos + hori2 - vert2;
 		go2->corn[2] = go2->pos + hori2 + vert2;
 		go2->corn[3] = go2->pos - hori2 + vert2;
 
+		float min, max;
+		Vector3 dist(9001.0f, 9001.0f, 9001.0f);
+		for (int i = 0; i < 4; ++i)
+		{
+			if ((go1->pos - go2->corn[i]).LengthSquared() < dist.LengthSquared())
+				dist = go1->pos - go2->corn[i];
+		}
+		testSAT(dist.Normalized(), go2->corn, min, max);
+		if ((dist.Length() - max - go1->scale.x > 0.0f) &&
+			(dist.Length() > 0.0f))
+			return false;
+
+		Vector3 normals[2];
+		normals[0] = go2->norm;
+		normals[1] = go2->perp;
+
+		for (int i = 0; i < 2; ++i)
+		{
+			float min1, max1, min2, max2;
+			testSAT(normals[i], go1, min1, max1);
+			testSAT(normals[i], go1, min2, max2);
+			if (overlap(min1, max1, min2, max2) == false)
+				return false;
+		}
+		return true;
+		*/
+
+		return false;
+		break;
+	}
+	default:
+	{
 		Vector3 normals[4];
 		normals[0] = go1->norm;
 		normals[1] = go1->perp;
 		normals[2] = go2->norm;
 		normals[3] = go2->perp;
 
-		// Hardcoded for 2 normals - Can be converted to take in any number of normals
 		for (int i = 0; i < 4; ++i)
 		{
 			float min1, max1, min2, max2;
@@ -136,9 +151,9 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
 	// Testing
-	go1->vel = 0;
-	go1->active = false;
-	go2->active = false;
+	// go1->vel = 0;
+	// go1->active = false;
+	// go2->active = false;
 	printf("collision!\n");
 }
 
@@ -170,31 +185,6 @@ std::vector<GameObject*>& GOManager::getlist()
 
 void GOManager::addGO(GameObject * newgo)
 {
-	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	//{
-	//	GameObject *go = (GameObject *)*it;
-	//	if (go == newgo)
-	//		return;
-	//}
-	//
-	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	//{
-	//	GameObject *go = (GameObject *)*it;
-	//	if (go)
-	//	{
-	//		if (!go->active)
-	//		{
-	//			delete go;
-	//			go = newgo;
-	//			return;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		go = newgo;
-	//		return;
-	//	}
-	//}
 	m_goList.push_back(newgo);
 }
 
@@ -214,7 +204,6 @@ bool GOManager::testSAT(Vector3 axis, Vector3 corn[], float & min, float & max)
 	min = 9001.0f;
 	max = -9001.0f;
 
-	// Hardcoded for 4 points - Can be converted to take in any number of points
 	for (int i = 0; i < 4; ++i)
 	{
 		// dot product finds length along the axis when points are projected onto it
@@ -238,10 +227,13 @@ bool GOManager::overlap(float min1, float max1, float min2, float max2)
 	return false;
 }
 
-bool GOManager::checkCube(GameObject::GAMEOBJECT_TYPE type)
+void GOManager::updateCorn(GameObject * go)
 {
-	if (type != GameObject::PLAYER_PROJECTILE_MACHINE)
-		return true;
-	else
-		return false;
+	go->perp = go->norm.Cross(Vector3(0, 0, 1));
+	Vector3 hori1 = go->norm * go->scale.x;
+	Vector3 vert1 = go->perp * go->scale.y;
+	go->corn[0] = go->pos - hori1 - vert1;
+	go->corn[1] = go->pos + hori1 - vert1;
+	go->corn[2] = go->pos + hori1 + vert1;
+	go->corn[3] = go->pos - hori1 + vert1;
 }

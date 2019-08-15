@@ -12,7 +12,7 @@ struct GameObject
 		GO_CUBE,
 
 		// Refer to diagram in discord
-		PLAYER_PLANE_COMET,
+		PLAYER_PLANE_KOMET,
 		PLAYER_PLANE_A10,
 		PLAYER_TANK,
 		PLAYER_TANKGUN,
@@ -34,6 +34,8 @@ struct GameObject
 
 		ENEMY_PROJECTILE_BOMB,
 		ENEMY_PROJECTILE_MACHINE,	// Machine gun
+
+		EXPLOSION,
 
 		GO_TOTAL, //must be last
 	};
