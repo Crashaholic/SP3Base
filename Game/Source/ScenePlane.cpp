@@ -63,20 +63,27 @@ void ScenePlane::Init()
 	// Tank
 	tank = GOManager::GetInstance()->fetchGO();
 	tank->type = GameObject::PLAYER_TANK;
-	tank->scale.Set(5.5f, 1.6f, 1.0f);
-	tank->angle = 0.0f;
+	tank->scale.Set(3.5f, 1.2f, 1.0f);
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
 
 	tank2 = GOManager::GetInstance()->fetchGO();
 	tank2->type = GameObject::PLAYER_TANKGUN;
-	tank2->scale.Set(2.0f, 0.8f, 1.0f);
+	tank2->scale.Set(1.5f, 0.6f, 1.0f);
 	tank2->angle = 89.0f;
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 	tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+	vec3 n = terr.GetNormal(tank->pos);
+	if (n <= 0)
+	{
+		tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
+	}
+	else
+		tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
+
 	plane->terreference = &terr;
 
 	SpawnPos1 = vec3(-2, terr.getHeight({-2, 0, 0}).y, 0);
@@ -119,17 +126,7 @@ void ScenePlane::Update(double dt)
 		//defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 	}
 
-	double x, y;;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-
-	vec3 n = terr.GetNormal(Vector3(
-		static_cast<float>(x / w * m_worldWidth),
-		static_cast<float>(m_worldHeight - y / h * m_worldHeight),
-		static_cast<float>(0.0f))
-	);
-
+	vec3 n = terr.GetNormal(tank->pos);
 	// Tank Movement
 	if (Application::IsKeyPressed('J')) // Left
 	{
@@ -161,21 +158,21 @@ void ScenePlane::Update(double dt)
 		else
 			tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 	}
-	if (tank->pos.x <= 7.5f)
+	if (tank->pos.x <= 4.f)
 	{
-		tank->pos.x = 7.5f;
+		tank->pos.x = 4.f;
 	}
-	if (tank->pos.x >= 125)
+	if (tank->pos.x >= 130)
 	{
-		tank->pos.x = 125;
+		tank->pos.x = 130;
 	}
-	if (tank2->pos.x <= 7.8f)
+	if (tank2->pos.x <= 4.f)
 	{
-		tank2->pos.x = 7.8f;
+		tank2->pos.x = 4.f;
 	}
-	if (tank2->pos.x >= 125)
+	if (tank2->pos.x >= 130)
 	{
-		tank2->pos.x = 125;
+		tank2->pos.x = 130;
 	}
 	// Tank barrel control
 	if (Application::IsKeyPressed('I')) // Left
