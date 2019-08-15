@@ -166,13 +166,13 @@ void ScenePlane::Update(double dt)
 	{
 		tank->pos.x = 125;
 	}
-	if (tank2->pos.x <= 9.5f)
+	if (tank2->pos.x <= 7.8f)
 	{
-		tank2->pos.x = 9.5f;
+		tank2->pos.x = 7.8f;
 	}
-	if (tank2->pos.x >= 127)
+	if (tank2->pos.x >= 125)
 	{
-		tank2->pos.x = 127;
+		tank2->pos.x = 125;
 	}
 	// Tank barrel control
 	if (Application::IsKeyPressed('I')) // Left
