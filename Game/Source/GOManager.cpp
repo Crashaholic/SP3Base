@@ -27,9 +27,9 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (unsigned int i = 0;i<m_goList.size();++i)
 	{
-		GameObject *go = (GameObject *)*it;
+		GameObject *go = m_goList[i];
 		if (go->active)
 		{
 			go->Update(dt);
@@ -41,9 +41,9 @@ void GOManager::update(double dt)
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 			}
 
-			for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+			for (unsigned int o = 0; o < m_goList.size(); ++o)
 			{
-				GameObject *go2 = (GameObject *)*it2;
+				GameObject *go2 = m_goList[o];
 				if (go2->active)
 				{
 					updateCorn(go2);
@@ -60,6 +60,39 @@ void GOManager::update(double dt)
 			}
 		}
 	}
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if (go->active)
+	//	{
+	//		go->Update(dt);
+	//		go->pos += go->vel * static_cast<float>(dt);
+	//		updateCorn(go);
+
+	//		if (go->hasGravity)
+	//		{
+	//			go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+	//		}
+
+	//		for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+	//		{
+	//			GameObject *go2 = (GameObject *)*it2;
+	//			if (go2->active)
+	//			{
+	//				updateCorn(go2);
+	//				
+	//				if (collisionGate(go, go2) == true)
+	//				{
+	//					if (checkcollision(go, go2))
+	//					{
+	//						printf("collision!\n");
+	//						collisionresponse(go, go2);
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
@@ -173,11 +206,12 @@ GameObject * GOManager::fetchGO()
 			return go;
 		}
 	}
+	unsigned int size = m_goList.size();
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	return m_goList[m_goList.size() - 1];
+	return m_goList[size];
 }
 
 std::vector<GameObject*>& GOManager::getlist()
