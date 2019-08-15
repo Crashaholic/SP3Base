@@ -25,6 +25,17 @@ private:
 
 	float fps;
 
+
+	//=== Wave ===
+	float waveNo;
+	unsigned int enemyCount;
+	unsigned int startCount;
+	void EndWave();
+	void SpawnEnemy();
+	vec3 SpawnPos1;
+	vec3 SpawnPos2;
+
+
 	// Physics
 	std::vector<GameObject *> m_goList;
 	float m_speed;
@@ -34,6 +45,8 @@ private:
 	Terrain terr;
 
 	unsigned decal1;
+
+
 
 	GameObject *tank, *tank2;
 	float angle;

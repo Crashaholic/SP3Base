@@ -5,11 +5,17 @@
 #include <GL\glew.h>
 
 Terrain::Terrain()
+	: tMesh(nullptr)
 {
 }
 
 Terrain::~Terrain()
 {
+	if (tMesh)
+	{
+		delete tMesh;
+		tMesh = nullptr;
+	}
 }
 
 Vector3 Terrain::GetNormal(Vector3 ObjectPosition)
@@ -93,7 +99,8 @@ void Terrain::GenerateTerrainMesh()
 		index_buffer_data.push_back(i+ 1);
 	}
 
-	tMesh = new Mesh("2DTerrain");
+	if (!tMesh) // Ensure we always have one mesh
+		tMesh = new Mesh("2DTerrain");
 	tMesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
 
 	glBindBuffer(GL_ARRAY_BUFFER, tMesh->vertexBuffer);

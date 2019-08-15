@@ -78,6 +78,9 @@ void ScenePlane::Init()
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+
+	SpawnPos1 = vec3(-2, terr.getHeight({-2, 0, 0}).y, 0);
+	SpawnPos2 = vec3(m_worldWidth + 2, terr.getHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 }
 
 void ScenePlane::Update(double dt)
@@ -205,7 +208,7 @@ void ScenePlane::Update(double dt)
 			static_cast<float>(0.0f))
 		);
 
-		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
+		//LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f); //Commented out because we don't always need the information
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -351,15 +354,11 @@ void ScenePlane::Render()
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
-	defaultShader.SetVec3("colorableTexture[0]", true);
-	defaultShader.SetVec3("colorableTexture[1]", true);
 	modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
 		modelStack.Scale(57, 14, 1);
 		//RenderMesh(meshList[GEO_A10], false);
 	modelStack.PopMatrix();
-	defaultShader.SetVec3("colorableTexture[0]", false);
-	defaultShader.SetVec3("colorableTexture[1]", false);
 
 	//On screen text
 	std::ostringstream ss;
@@ -387,4 +386,26 @@ void ScenePlane::Exit()
 	}
 
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+}
+
+void ScenePlane::EndWave()
+{
+	enemyCount = 0;
+	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateTerrainMesh();
+}
+
+void ScenePlane::SpawnEnemy()
+{
+	int tempcount = startCount + 1 * waveNo;
+	if (enemyCount >= tempcount)
+	{
+		return;
+	}
+	else
+	{
+		GameObject* t = GOManager::GetInstance()->fetchGO();
+		t->pos = (rand() % 2 ? SpawnPos1 : SpawnPos2);
+		++enemyCount;
+	}
 }
