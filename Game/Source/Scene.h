@@ -11,6 +11,7 @@
 #include "shader.hpp"
 #include <vector>
 
+
 class Scene
 {
 protected:
@@ -20,9 +21,32 @@ protected:
 		GEO_TEXT,
 		GEO_BALL,
 		GEO_CUBE,
-		GEO_A10,
-		GEO_TANK,
-		GEO_BULLET,
+
+		GEO_PLAYER_PLANE_KOMET,
+		GEO_PLAYER_PLANE_A10,
+		GEO_PLAYER_TANK,
+		GEO_PLAYER_TANKGUN,
+
+		GEO_ENEMY_PLANE_PASSIVE,
+		GEO_ENEMY_PLANE_AGGRESSIVE,
+		GEO_ENEMY_TANK_PASSIVE,
+		GEO_ENEMY_TANK_AGGRESSIVE,
+		GEO_ENEMY_BUILDING,
+
+		GEO_UPGRADE_1,					// Blast radius OR Reload speed
+		GEO_UPGRADE_2,					// Bomb count OR Movement speed
+		GEO_UPGRADE_3,					// Extra life
+
+		GEO_PLAYER_PROJECTILE_BOMB,
+		GEO_PLAYER_PROJECTILE_NUKE,
+		GEO_PLAYER_PROJECTILE_MACHINE,	// Machine gun
+		GEO_PLAYER_PROJECTILE_MISSILE,
+
+		GEO_ENEMY_PROJECTILE_BOMB,
+		GEO_ENEMY_PROJECTILE_MACHINE,	// Machine gun
+
+		GEO_DEBUG,						// Debug balls
+
 		NUM_GEOMETRY,
 	};	
 	Mesh* meshList[NUM_GEOMETRY];
@@ -43,6 +67,7 @@ public:
 	void RenderGO(GameObject *go);
 
 	void checkSwitch();
+	void debugBalls(GameObject *go);
 
 protected:
 	Shader defaultShader;

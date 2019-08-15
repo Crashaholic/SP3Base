@@ -12,10 +12,10 @@ struct GameObject
 		GO_CUBE,
 
 		// Refer to diagram in discord
-		PLAYER_PLANE_GENERIC,
+		PLAYER_PLANE_KOMET,
 		PLAYER_PLANE_A10,
-		PLAYER_TANK_GENERIC,
-		PLAYER_TANKGUN_GENERIC,
+		PLAYER_TANK,
+		PLAYER_TANKGUN,
 		
 		ENEMY_PLANE_PASSIVE,
 		ENEMY_PLANE_AGGRESSIVE,
@@ -32,9 +32,19 @@ struct GameObject
 		PLAYER_PROJECTILE_MACHINE,	// Machine gun
 		PLAYER_PROJECTILE_MISSILE,
 
+		ENEMY_PROJECTILE_BOMB,
+		ENEMY_PROJECTILE_MACHINE,	// Machine gun
+
 		GO_TOTAL, //must be last
 	};
+	enum SCREENWRAP_MODE {
+		SW_CLEAR = 0,
+		SW_WRAP,
+		SW_HYBRID,
+		SW_BOUNCE
+	};
 	GAMEOBJECT_TYPE type;
+	SCREENWRAP_MODE wrapMode;
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 scale;
@@ -48,6 +58,7 @@ struct GameObject
 	float mass;
 	float angle;
 	bool hasGravity;
+	virtual void Update(double dt);
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };

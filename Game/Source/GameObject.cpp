@@ -1,6 +1,11 @@
 
 #include "GameObject.h"
 
+void GameObject::Update(double dt)
+{
+	pos += vel * (float)dt;
+}
+
 GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	: type(typeValue),
 	scale(1, 1, 1),
@@ -8,7 +13,8 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	mass(1.f),
 	hasGravity(false),
 	norm(0, 1, 0),
-	angle(0.0f)
+	angle(0.0f),
+	wrapMode(SW_CLEAR)
 {
 }
 
