@@ -411,7 +411,7 @@ void GOManager::playerDeath(GameObject * go)
 		go->active = false;
 		// TODO: Ryan & Yan Quan
 		// Switch scene and pass high score to YQ's function
-		highScore = kills + (accuracy / 10.0f) * kills;
+		highScore = kills + static_cast<int>(accuracy / 10.0f) * kills;
 	}
 	else
 	{

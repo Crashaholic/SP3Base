@@ -76,6 +76,7 @@ void ScenePlane::Init()
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+
 	vec3 n = terr.GetNormal(tank->pos);
 	if (n <= 0)
 	{
@@ -83,8 +84,6 @@ void ScenePlane::Init()
 	}
 	else
 		tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
-
-	plane->terreference = &terr;
 
 	SpawnPos1 = vec3(-2, terr.getHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.getHeight({ m_worldWidth + 2, 0, 0}).y, 0);
@@ -415,13 +414,13 @@ void ScenePlane::Exit()
 void ScenePlane::EndWave()
 {
 	enemyCount = 0;
-	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
 }
 
 void ScenePlane::SpawnEnemy()
 {
-	int tempcount = startCount + 1 * waveNo;
+	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount >= tempcount)
 	{
 		return;
