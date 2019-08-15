@@ -73,6 +73,11 @@ void Scene::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
+	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_PROJECTILE_MACHINE]->textureID[0] = LoadTGA("Image//Bomb1.tga");
+	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[0] = LoadTGA("Image//Bomb1.tga");
+	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[1] = LoadTGA("Image//Bomb1decal.tga");
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateSphere("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 0.0f, 1.0f), 10, 10, 1.f);
@@ -250,12 +255,14 @@ void Scene::RenderGO(GameObject *go)
 			break;
 		case GameObject::PLAYER_PROJECTILE_MACHINE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
+		case GameObject::PLAYER_PROJECTILE_BOMB:
+			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_BOMB], false);
 			break;
 		}
 		modelStack.PopMatrix();
 	}
 	
-	if (go->hasCollider())
+	if (go->hasCollider() && false)
 		debugBalls(go);
 
 	glEnable(GL_CULL_FACE);

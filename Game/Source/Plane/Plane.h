@@ -16,6 +16,7 @@ private:
 	float topSpeed;
 	//float acceleration;
 	float turnSpeed;
+	int maxProjectiles;
 protected:
 	virtual void Primary();
 	virtual void Secondary();

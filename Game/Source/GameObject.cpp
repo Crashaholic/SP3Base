@@ -16,6 +16,22 @@ bool GameObject::hasCollider()
 void GameObject::Update(double dt)
 {
 	pos += vel * (float)dt;
+	switch (type)
+	{
+	case PLAYER_PROJECTILE_BOMB:
+	case PLAYER_PROJECTILE_NUKE:
+		try
+		{
+			dir = vel.Normalized();
+		}
+		catch (DivideByZero)
+		{
+			dir.Set(1, 0, 0);
+		}
+		angle = atan2(dir.y, dir.x);
+		norm.Set( -dir.y, dir.x);
+		break;
+	}
 }
 
 GameObject::GameObject(GAMEOBJECT_TYPE typeValue)

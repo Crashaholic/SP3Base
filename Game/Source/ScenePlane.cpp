@@ -235,7 +235,7 @@ void ScenePlane::Update(double dt)
 			switch (go->wrapMode)
 			{
 			case GameObject::SW_CLEAR:
-				if (go->pos.x > m_worldWidth|| go->pos.y > m_worldHeight
+				if (go->pos.x > m_worldWidth
 					|| go->pos.x < 0 || go->pos.y < 0)
 					go->active = false;
 				hit = true;

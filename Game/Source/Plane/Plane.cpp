@@ -7,7 +7,9 @@ void Plane::Primary()
 	bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
 	bomb->vel = vel;
 	bomb->pos = pos;
-	//bomb->
+	bomb->scale.Set(1, 2, 1);
+	bomb->hasGravity = true;
+	bomb->wrapMode = SW_CLEAR;
 	for(int i = 0;i<MAX_TEXTURES;++i)
 		bomb->color[i] = color[i];
 	//bomb = dynamic_cast<GameObject*>(bomb);
@@ -48,10 +50,27 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 	else if (Application::IsKeyPressed(right))
 		angle -= turnSpeed * (float)dt;
 
-	if (Application::IsKeyPressed(pri))
+	static bool press1, press2;
+	if (Application::IsKeyPressed(pri) && !press1)
+	{
 		Primary();
-	else if (Application::IsKeyPressed(sec))
+		press1 = true;
+	}
+	else if (!Application::IsKeyPressed(pri) && press1)
+	{
+		press1 = false;
+	}
+	if (Application::IsKeyPressed(sec) && !press2)
+	{
 		Secondary();
+		press2 = true;
+	}
+	else if (!Application::IsKeyPressed(sec) && press2)
+	{
+		press2 = false;
+	}
+	//else if (Application::IsKeyPressed(sec))
+	//	Secondary();
 }
 
 void Plane::Init()
