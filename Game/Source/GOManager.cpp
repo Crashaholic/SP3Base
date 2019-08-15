@@ -27,29 +27,72 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	for (unsigned int i = 0;i<m_goList.size();++i)
 	{
-		GameObject *go = (GameObject *)*it;
+		GameObject *go = m_goList[i];
 		if (go->active)
 		{
-			if (go->hasGravity)
-				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+			go->Update(dt);
+			go->pos += go->vel * static_cast<float>(dt);
+			updateCorn(go);
 
-			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
+			if (go->hasGravity)
 			{
-				GameObject *go2 = (GameObject *)*it2;
+				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+			}
+
+			for (unsigned int o = 0; o < m_goList.size(); ++o)
+			{
+				GameObject *go2 = m_goList[o];
 				if (go2->active)
 				{
-					if (checkcollision(go, go2))
+					updateCorn(go2);
+					
+					if (collisionGate(go, go2) == true)
 					{
-						collisionresponse(go, go2);
+						if (checkcollision(go, go2))
+						{
+							printf("collision!\n");
+							collisionresponse(go, go2);
+						}
 					}
 				}
 			}
-			go->Update(dt);
-			go->pos += go->vel * static_cast<float>(dt);
 		}
 	}
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if (go->active)
+	//	{
+	//		go->Update(dt);
+	//		go->pos += go->vel * static_cast<float>(dt);
+	//		updateCorn(go);
+
+	//		if (go->hasGravity)
+	//		{
+	//			go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+	//		}
+
+	//		for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+	//		{
+	//			GameObject *go2 = (GameObject *)*it2;
+	//			if (go2->active)
+	//			{
+	//				updateCorn(go2);
+	//				
+	//				if (collisionGate(go, go2) == true)
+	//				{
+	//					if (checkcollision(go, go2))
+	//					{
+	//						printf("collision!\n");
+	//						collisionresponse(go, go2);
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
@@ -123,22 +166,6 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 	}
 	default:
 	{
-		go1->perp = go1->norm.Cross(Vector3(0, 0, 1));
-		Vector3 hori1 = go1->norm * go1->scale.x;
-		Vector3 vert1 = go1->perp * go1->scale.y;
-		go1->corn[0] = go1->pos - hori1 - vert1;
-		go1->corn[1] = go1->pos + hori1 - vert1;
-		go1->corn[2] = go1->pos + hori1 + vert1;
-		go1->corn[3] = go1->pos - hori1 + vert1;
-
-		go2->perp = go2->norm.Cross(Vector3(0, 0, 1));
-		Vector3 hori2 = go2->norm * go2->scale.x;
-		Vector3 vert2 = go2->perp * go2->scale.y;
-		go2->corn[0] = go2->pos - hori2 - vert2;
-		go2->corn[1] = go2->pos + hori2 - vert2;
-		go2->corn[2] = go2->pos + hori2 + vert2;
-		go2->corn[3] = go2->pos - hori2 + vert2;
-
 		Vector3 normals[4];
 		normals[0] = go1->norm;
 		normals[1] = go1->perp;
@@ -162,11 +189,7 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
-	// Testing
-	go1->vel = 0;
-	go1->active = false;
-	go2->active = false;
-	printf("collision!\n");
+
 }
 
 GameObject * GOManager::fetchGO()
@@ -183,11 +206,12 @@ GameObject * GOManager::fetchGO()
 			return go;
 		}
 	}
+	unsigned int size = m_goList.size();
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	return m_goList[m_goList.size() - 1];
+	return m_goList[size];
 }
 
 std::vector<GameObject*>& GOManager::getlist()
@@ -197,6 +221,17 @@ std::vector<GameObject*>& GOManager::getlist()
 
 void GOManager::addGO(GameObject * newgo)
 {
+	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	//{
+	//	GameObject *go = (GameObject *)*it;
+	//	if (!go->active)
+	//	{
+	//		delete go;
+	//		go = NULL;
+	//		go = newgo;
+	//		return;
+	//	}
+	//}
 	m_goList.push_back(newgo);
 }
 
@@ -239,10 +274,78 @@ bool GOManager::overlap(float min1, float max1, float min2, float max2)
 	return false;
 }
 
-bool GOManager::checkCube(GameObject::GAMEOBJECT_TYPE type)
+void GOManager::updateCorn(GameObject * go)
 {
-	if (type != GameObject::PLAYER_PROJECTILE_MACHINE)
-		return true;
-	else
-		return false;
+	if (go->hasCollider())
+	{
+		go->perp = go->norm.Cross(Vector3(0, 0, 1));
+		Vector3 hori1 = go->norm * go->scale.x;
+		Vector3 vert1 = go->perp * go->scale.y;
+		go->corn[0] = go->pos - hori1 - vert1;
+		go->corn[1] = go->pos + hori1 - vert1;
+		go->corn[2] = go->pos + hori1 + vert1;
+		go->corn[3] = go->pos - hori1 + vert1;
+	}
+}
+
+bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
+{
+	// collisionGate narrows down go1 and go2 to specific cases so we can avoid stupid things
+	// like enemy projectiles being able to kill other enemies and player bomb destroying the player
+	switch (go1->type)
+	{
+	// Player to Enemy + Player to Upgrade
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	case GameObject::PLAYER_TANK:
+	case GameObject::PLAYER_TANKGUN:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		case GameObject::UPGRADE_1:
+		case GameObject::UPGRADE_2:
+		case GameObject::UPGRADE_3:
+		case GameObject::GO_CUBE:
+			return true;
+		}
+		break;
+	}
+	// Player projectile to Enemy
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+			return true;
+		}
+		break;
+	}
+	// Enemy projectile to Player
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+	{
+		switch (go2->type)
+		{
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
+		case GameObject::PLAYER_TANK:
+		case GameObject::PLAYER_TANKGUN:
+			return true;
+		}
+		break;
+	}
+	}
+	return false;
 }

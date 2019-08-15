@@ -2,7 +2,8 @@
 #define GAME_OBJECT_H
 
 #include "Vector3.h"
-
+#include "Material.h"
+#include "Terrain.h"
 struct GameObject
 {
 	enum GAMEOBJECT_TYPE
@@ -35,6 +36,8 @@ struct GameObject
 		ENEMY_PROJECTILE_BOMB,
 		ENEMY_PROJECTILE_MACHINE,	// Machine gun
 
+		EXPLOSION,
+
 		SPAWNPOINT_ENEMY_TANK,
 		SPAWNPOINT_ENEMY_PLANE,
 
@@ -51,17 +54,23 @@ struct GameObject
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 scale;
+	Terrain* terreference;
 
-	Vector3 /*pop*/corn[4];	// corner
+	Vector3 /*pop*/corn[4];	// corner//Puns good
 	Vector3 norm;			// normal
 	Vector3 perp;			// normal perpendicular
-
 	Vector3 dir;
 	bool active;
 	float mass;
 	float angle;
 	bool hasGravity;
+	bool hasCollider();
 	virtual void Update(double dt);
+	
+	Component color[MAX_TEXTURES];
+	bool isColorable[MAX_TEXTURES];
+
+
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };

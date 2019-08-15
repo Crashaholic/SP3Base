@@ -24,6 +24,11 @@ void resize_callback(GLFWwindow* window, int w, int h)
 {
 	m_width = w;
 	m_height = h;
+	if (w == 0 && h == 0)
+	{
+		m_width = 1;
+		m_height = 1;
+	}
 	glViewport(0, 0, w, h);
 }
 

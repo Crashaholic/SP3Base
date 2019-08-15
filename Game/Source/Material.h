@@ -1,5 +1,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
+#define MAX_TEXTURES 8
 
 struct Component
 {
@@ -24,5 +25,7 @@ struct Material
 		kShininess = 5.f;
 	}
 };
+
+//typedef Component vec3;
 
 #endif

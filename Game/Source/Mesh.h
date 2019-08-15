@@ -1,6 +1,5 @@
 #ifndef MESH_H
 #define MESH_H
-#define MAX_TEXTURES 8
 
 #include <string>
 #include "Material.h"
