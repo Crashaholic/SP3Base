@@ -1,14 +1,13 @@
 #ifndef BOMB_H
 #define BOMB_H
+#include "../Terrain.h"
 
-
-//#include "GameObject.h"
+#include "../GOManager.h"
 #include "Vector3.h"
 
-class Bomb
+class Bomb : public GameObject
 {
 private:
-
 protected:
 
 public:

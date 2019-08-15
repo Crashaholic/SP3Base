@@ -3,7 +3,11 @@
 
 void Plane::Primary()
 {
-	//GameObject* bomb = GOManager::GetInstance()->fetchGO();
+	GameObject* bomb = GOManager::GetInstance()->fetchGO();
+	//bomb = dynamic_cast<GameObject*>(bomb);
+	Bomb* b = dynamic_cast<Bomb*>(bomb);
+	b->type = GameObject::PLAYER_PROJECTILE_BOMB;
+	b->terreference = terreference;
 	topSpeed = 0.01f;
 }
 
@@ -27,6 +31,11 @@ void Plane::Update(double dt)
 	else
 	{
 		scale.y = 1.4f;
+	}
+	for (int i = 0; i < 4; ++i)
+	{
+	if (corn[i].y < terreference->getHeight(corn[i]).y)
+		Reset();
 	}
 }
 
@@ -57,6 +66,15 @@ void Plane::Init()
 	wrapMode = SW_HYBRID;
 	GOManager::GetInstance()->addGO(this);
 }
+
+void Plane::Reset()
+{
+	angle = 0.0f;
+	dir.Set(cos(angle), sin(angle), 0.0f);
+	pos.Set(10.0f, 80.0f, 0.0f);
+	vel.SetZero();
+}
+
 Plane::Plane()
 {
 

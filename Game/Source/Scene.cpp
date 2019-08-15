@@ -202,38 +202,69 @@ void Scene::RenderMesh(Mesh *mesh, bool enableLight)
 
 void Scene::RenderGO(GameObject *go)
 {
-	glDisable(GL_CULL_FACE);
-
-	modelStack.PushMatrix();
-	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
-	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	switch (go->type)
+	for (int i = 0; i < MAX_TEXTURES; ++i)
 	{
-	case GameObject::GO_BALL:
-		RenderMesh(meshList[GEO_BALL], false);
-		break;
-	case GameObject::GO_CUBE:
-		RenderMesh(meshList[GEO_CUBE], false);
-		break;
-	case GameObject::PLAYER_PLANE_A10:
-		RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
-		break;
-	case GameObject::PLAYER_TANK:
-		RenderMesh(meshList[GEO_PLAYER_TANK], false);
-		break;
-	case GameObject::PLAYER_TANKGUN:
-		RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
-		break;
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
-		RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
-		break;
+		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ go->color[i].r,go->color[i].g,go->color[i].b });
+		//defaultShader.SetVec3("colorableTexture[" + std::to_string(i) + "]", go->isColorable[i]);
 	}
-	modelStack.PopMatrix();
+
+	glDisable(GL_CULL_FACE);
+	int renders = 1;
+	if (go->wrapMode == GameObject::SW_HYBRID)
+	{
+		renders = 3;
+	}
+	for (int i = 0; i < renders; ++i)
+	{
+		modelStack.PushMatrix();
+		switch(i)
+		{
+		case 0:
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			break;
+		case 1:
+			modelStack.Translate(go->pos.x + m_worldWidth, go->pos.y, go->pos.z);
+			break;
+		case 2:
+			modelStack.Translate(go->pos.x - m_worldWidth, go->pos.y, go->pos.z);
+			break;
+		}
+		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		switch (go->type)
+		{
+		case GameObject::GO_BALL:
+			RenderMesh(meshList[GEO_BALL], false);
+			break;
+		case GameObject::GO_CUBE:
+			RenderMesh(meshList[GEO_CUBE], false);
+			break;
+		case GameObject::PLAYER_PLANE_A10:
+			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
+			break;
+		case GameObject::PLAYER_TANK:
+			RenderMesh(meshList[GEO_PLAYER_TANK], false);
+			break;
+		case GameObject::PLAYER_TANKGUN:
+			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
+			break;
+		case GameObject::PLAYER_PROJECTILE_MACHINE:
+			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
+			break;
+		}
+		modelStack.PopMatrix();
+	}
+	
 	if (go->hasCollider())
 		debugBalls(go);
 
 	glEnable(GL_CULL_FACE);
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ 1.f,1.f,1.f });
+		//defaultShader.SetVec3("colorableTexture[" + std::to_string(i) + "]", go->isColorable[i]);
+	}
+
 }
 
 void Scene::checkSwitch()

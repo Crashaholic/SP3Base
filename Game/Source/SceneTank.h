@@ -24,8 +24,6 @@ private:
 
 	// Physics
 	float m_speed;
-	float m_worldWidth;
-	float m_worldHeight;
 	Vector3 m_gravity;
 	GameObject *m_ghost;
 };

@@ -28,6 +28,11 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	angle(0.0f),
 	wrapMode(SW_CLEAR)
 {
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		isColorable[i] = false;
+		color[i].Set(1, 1, 1);
+	}
 }
 
 GameObject::~GameObject()

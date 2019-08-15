@@ -2,6 +2,7 @@
 #define GAME_OBJECT_H
 
 #include "Vector3.h"
+#include "Material.h"
 
 struct GameObject
 {
@@ -51,17 +52,22 @@ struct GameObject
 	Vector3 vel;
 	Vector3 scale;
 
-	Vector3 /*pop*/corn[4];	// corner
+	Vector3 /*pop*/corn[4];	// corner//Puns good
 	Vector3 norm;			// normal
 	Vector3 perp;			// normal perpendicular
-
 	Vector3 dir;
+	Terrain* terreference;
 	bool active;
 	float mass;
 	float angle;
 	bool hasGravity;
 	bool hasCollider();
 	virtual void Update(double dt);
+	
+	Component color[MAX_TEXTURES];
+	bool isColorable[MAX_TEXTURES];
+
+
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
 };
