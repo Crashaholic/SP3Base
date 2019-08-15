@@ -4,6 +4,17 @@
 void GameObject::Update(double dt)
 {
 	pos += vel * (float)dt;
+	if (hasLifeTime)
+	{
+		lifeTime -= dt;
+		if (lifeTime <= 0.0)
+		{
+			active = false;
+			hasLifeTime = false;
+			lifeTime = 0;
+			return;
+		}
+	}
 	if (hasGravity)
 	{
 		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
@@ -24,7 +35,7 @@ void GameObject::Update(double dt)
 		norm.Set( -dir.y, dir.x);
 		break;
 	case EXPLOSION:
-		int i = 0;
+		transparency = (float)lifeTime;
 		break;
 	}
 }
@@ -38,7 +49,10 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	norm(0, 1, 0),
 	angle(0.0f),
 	defaultPos(0.0f, 0.0f, 0.0f),
-	wrapMode(SW_CLEAR)
+	wrapMode(SW_CLEAR),
+	lifeTime(0.0),
+	hasLifeTime(false),
+	transparency(1.0f)
 {
 	for (int i = 0; i < MAX_TEXTURES; ++i)
 	{

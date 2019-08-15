@@ -189,5 +189,7 @@ void main()
 //		else
 //			color = vec4( fragmentColor, 1 );
 //	}
-	//color.a *= transparency;//M: multiply alpha by transparency
+	if(color.a<=0.1)
+		discard;
+	color.a *= transparency;//M: multiply alpha by transparency
 }

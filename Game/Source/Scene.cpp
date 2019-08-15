@@ -73,6 +73,8 @@ void Scene::Init()
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
+	meshList[GEO_PLAYER_PLANE_KOMET] = MeshBuilder::GenerateQuad("PLAYER_PLANE_KOMET", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_PLANE_KOMET]->textureID[0] = LoadTGA("Image//Komet.tga");
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
@@ -81,6 +83,8 @@ void Scene::Init()
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateSphere("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 0.0f, 1.0f), 10, 10, 1.f);
+	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateQuad("EXPLOSION", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
 }
 
@@ -123,7 +127,7 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 	if (!mesh || mesh->textureID <= 0)
 		return;
 
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
 	ortho.SetToOrtho(0, 80, 0, 60, -10, 10);
 	projectionStack.PushMatrix();
@@ -161,6 +165,7 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 
 void Scene::RenderMesh(Mesh *mesh, bool enableLight)
 {
+	glDisable(GL_DEPTH_TEST);
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -214,6 +219,9 @@ void Scene::RenderGO(GameObject *go)
 	}
 
 	glDisable(GL_CULL_FACE);
+
+	defaultShader.SetFloat("transparency", go->transparency);
+
 	int renders = 1;
 	if (go->wrapMode == GameObject::SW_HYBRID)
 	{
@@ -241,12 +249,14 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::GO_BALL:
 			RenderMesh(meshList[GEO_BALL], false);
 			break;
-		case GameObject::EXPLOSION:
 		case GameObject::GO_CUBE:
 			RenderMesh(meshList[GEO_CUBE], false);
 			break;
 		case GameObject::PLAYER_PLANE_A10:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
+			break;
+		case GameObject::PLAYER_PLANE_KOMET:
+			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
 			break;
 		case GameObject::PLAYER_TANK:
 			RenderMesh(meshList[GEO_PLAYER_TANK], false);
@@ -258,6 +268,9 @@ void Scene::RenderGO(GameObject *go)
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
 		case GameObject::PLAYER_PROJECTILE_BOMB:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_BOMB], false);
+			break;
+		case GameObject::EXPLOSION:
+			RenderMesh(meshList[GEO_EXPLOSION], false);
 			break;
 		}
 		modelStack.PopMatrix();
@@ -272,7 +285,7 @@ void Scene::RenderGO(GameObject *go)
 		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ 1.f,1.f,1.f });
 		//defaultShader.SetVec3("colorableTexture[" + std::to_string(i) + "]", go->isColorable[i]);
 	}
-
+	defaultShader.SetFloat("transparency", 1.0f);
 }
 
 void Scene::checkSwitch()

@@ -380,9 +380,23 @@ void GOManager::terrainResponse(GameObject * go)
 		//GameObject* go2 = fetchGO();
 		go->type = GameObject::EXPLOSION;
 		go->scale = Vector3(1, 1, 1) * 5;
+		for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
+		{
+			go->color[i].Set(1.f, 1.f, 1.f);
+		}
 		go->pos.y = terreference->GetHeight(go->pos).y + 0.01f;
 		go->vel.SetZero();
 		go->hasGravity = false;
+		go->hasLifeTime = true;
+		go->lifeTime = 1.0;
+		for (unsigned int i = 0; i < m_goList.size(); ++i)
+		{
+			if (m_goList[i] == go)
+				continue;
+			float length = (m_goList[i]->pos - go->pos).Length();
+			if (length < go->mass * 0.1f)
+				explosionResponse(m_goList[i]);
+		}
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
@@ -416,9 +430,55 @@ void GOManager::terrainResponse(GameObject * go)
 	}
 }
 
+void GOManager::explosionResponse(GameObject* go)
+{
+	switch (go->type)
+	{
+	case GameObject::PLAYER_PLANE_KOMET:
+	case GameObject::PLAYER_PLANE_A10:
+	{
+		playerDeath(go);
+		break;
+	}
+	case GameObject::ENEMY_BUILDING:
+	case GameObject::ENEMY_TANK_PASSIVE:
+	case GameObject::ENEMY_TANK_AGGRESSIVE:
+	case GameObject::ENEMY_PLANE_AGGRESSIVE:
+	case GameObject::ENEMY_PLANE_PASSIVE:
+		go->active = false;
+	default:
+	{
+		break;
+	}
+	}
+
+}
+
 void GOManager::playerDeath(GameObject * go)
 {
 	--lives;
+	GameObject* go2 = fetchGO();
+	go2->type = GameObject::EXPLOSION;
+	go2->mass = 20.0f;
+	go2->scale = Vector3(1, 1, 1) * go2->mass;
+	for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		go2->color[i].Set(1.f, 1.f, 1.f);
+	}
+	go2->pos = go->pos;
+	go2->vel.SetZero();
+	go2->hasGravity = false;
+	go2->hasLifeTime = true;
+	go2->lifeTime = 1.0;
+	for (unsigned int i = 0; i < m_goList.size(); ++i)
+	{
+		if (m_goList[i] == go || m_goList[i] == go2)
+			continue;
+		float length = (m_goList[i]->pos - go2->pos).Length();
+		if (length < go2->mass * 0.1f)
+			explosionResponse(m_goList[i]);
+	}
+
 	if (lives <= 0)
 	{
 		go->active = false;
@@ -443,6 +503,9 @@ GameObject * GOManager::fetchGO()
 			go->active = true;
 			go->vel.SetZero();
 			go->pos.SetZero();
+			go->hasLifeTime = false;
+			go->lifeTime = 0.0;
+			go->transparency = 1.0f;
 			go->type = GameObject::GO_NONE;
 			return go;
 		}

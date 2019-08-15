@@ -29,6 +29,7 @@ public:
 	bool terrainGate(GameObject * go);
 	bool checkTerrain(GameObject* go);
 	void terrainResponse(GameObject* go);
+	void explosionResponse(GameObject * go);
 
 	void playerDeath(GameObject* go);
 

@@ -78,9 +78,10 @@ void Plane::Init()
 	pos.Set(10.0f, 80.0f, 0.0f);
 	defaultPos = pos;
 	vel.SetZero();
-	scale.Set(5.7f, 1.4f, 1.0f);
+	//scale.Set(5.7f, 1.4f, 1.0f);
+	scale.Set(4.4f, 1.8f, 1.0f);
 	active = true;
-	type = PLAYER_PLANE_A10;
+	type = PLAYER_PLANE_KOMET;
 	wrapMode = SW_HYBRID;
 	GOManager::GetInstance()->addGO(this);
 }

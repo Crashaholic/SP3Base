@@ -19,10 +19,10 @@ public:
 	Mesh* tMesh;
 
 	Vector3 GetNormal(Vector3 ObjectPosition);
+	Vector3 GetHeight(Vector3 TankPos);
 
 	void GenerateRandomHeight(unsigned int worldWidth);
 	void GenerateTerrainMesh();
-	Vector3 GetHeight(Vector3 TankPos);
 
 };
 

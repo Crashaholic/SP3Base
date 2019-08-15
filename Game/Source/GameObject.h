@@ -67,10 +67,12 @@ struct GameObject
 	bool hasCollider();
 	virtual void Update(double dt);
 	void reset();
-	
+	float transparency;
 	Component color[MAX_TEXTURES];
 	bool isColorable[MAX_TEXTURES];
 
+	bool hasLifeTime;
+	double lifeTime;
 
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
