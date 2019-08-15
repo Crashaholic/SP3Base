@@ -37,15 +37,15 @@ void GOManager::update(double dt)
 			updateCorn(go);
 
 			if (go->hasGravity)
+			{
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
-
+			}
 			for (std::vector<GameObject *>::iterator it2 = it + 1; it2 != m_goList.end(); ++it2)
 			{
 				GameObject *go2 = (GameObject *)*it2;
 				if (go2->active)
 				{
 					updateCorn(go2);
-
 					if (checkcollision(go, go2))
 					{
 						collisionresponse(go, go2);
@@ -150,10 +150,7 @@ bool GOManager::checkcollision(GameObject * go1, GameObject * go2)
 
 void GOManager::collisionresponse(GameObject * go1, GameObject * go2)
 {
-	// Testing
-	// go1->vel = 0;
-	// go1->active = false;
-	// go2->active = false;
+
 	printf("collision!\n");
 }
 
@@ -229,11 +226,14 @@ bool GOManager::overlap(float min1, float max1, float min2, float max2)
 
 void GOManager::updateCorn(GameObject * go)
 {
-	go->perp = go->norm.Cross(Vector3(0, 0, 1));
-	Vector3 hori1 = go->norm * go->scale.x;
-	Vector3 vert1 = go->perp * go->scale.y;
-	go->corn[0] = go->pos - hori1 - vert1;
-	go->corn[1] = go->pos + hori1 - vert1;
-	go->corn[2] = go->pos + hori1 + vert1;
-	go->corn[3] = go->pos - hori1 + vert1;
+	if (go->hasCollider())
+	{
+		go->perp = go->norm.Cross(Vector3(0, 0, 1));
+		Vector3 hori1 = go->norm * go->scale.x;
+		Vector3 vert1 = go->perp * go->scale.y;
+		go->corn[0] = go->pos - hori1 - vert1;
+		go->corn[1] = go->pos + hori1 - vert1;
+		go->corn[2] = go->pos + hori1 + vert1;
+		go->corn[3] = go->pos - hori1 + vert1;
+	}
 }

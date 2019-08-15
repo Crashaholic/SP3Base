@@ -71,7 +71,7 @@ void Scene::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//pico8.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
-	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 1.0f);
+	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
@@ -100,7 +100,8 @@ void Scene::RenderText(Mesh* mesh, std::string text, Color color)
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
+		//1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 1.0f, 0, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		//glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 		defaultShader.SetMat4("model", MVP);
@@ -138,7 +139,8 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+		//1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		defaultShader.SetMat4("model", MVP);
 
@@ -207,56 +209,36 @@ void Scene::RenderGO(GameObject *go)
 	}
 
 	glDisable(GL_CULL_FACE);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
+	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 	switch (go->type)
 	{
 	case GameObject::GO_BALL:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, 1);
 		RenderMesh(meshList[GEO_BALL], false);
-		modelStack.PopMatrix();
 		break;
 	case GameObject::GO_CUBE:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_CUBE], false);
-		modelStack.PopMatrix();
 		break;
 	case GameObject::PLAYER_PLANE_A10:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
-		modelStack.Scale(go->scale.x * 2, go->scale.y * 2, go->scale.z * 2);
 		RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
-		modelStack.PopMatrix();
 		break;
 	case GameObject::PLAYER_TANK:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//modelStack.Rotate(Math::RadianToDegree(go->angle) - 90.f, 0, 0, 1);
 		RenderMesh(meshList[GEO_PLAYER_TANK], false);
-		modelStack.PopMatrix();
 		break;
 	case GameObject::PLAYER_TANKGUN:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Rotate(Math::RadianToDegree(atan2(go->norm.y, go->norm.x)), 0, 0, 1);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
-		modelStack.PopMatrix();
 		break;
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
-		modelStack.PushMatrix();
-		modelStack.Translate(go->pos.x, go->pos.y, 0);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
-		modelStack.PopMatrix();
 		break;
 	}
-	debugBalls(go);
+	modelStack.PopMatrix();
+	if (go->hasCollider())
+		debugBalls(go);
+
 	glEnable(GL_CULL_FACE);
 	for (int i = 0; i < MAX_TEXTURES; ++i)
 	{
