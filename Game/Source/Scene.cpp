@@ -252,6 +252,7 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 		break;
 	}
+	debugBalls(go);
 	glEnable(GL_CULL_FACE);
 }
 
