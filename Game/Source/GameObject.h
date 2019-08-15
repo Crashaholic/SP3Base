@@ -52,9 +52,9 @@ struct GameObject
 	GAMEOBJECT_TYPE type;
 	SCREENWRAP_MODE wrapMode;
 	Vector3 pos;
+	Vector3 defaultPos;
 	Vector3 vel;
 	Vector3 scale;
-	Terrain* terreference;
 
 	Vector3 /*pop*/corn[4];	// corner//Puns good
 	Vector3 norm;			// normal
@@ -66,6 +66,7 @@ struct GameObject
 	bool hasGravity;
 	bool hasCollider();
 	virtual void Update(double dt);
+	void reset();
 	
 	Component color[MAX_TEXTURES];
 	bool isColorable[MAX_TEXTURES];

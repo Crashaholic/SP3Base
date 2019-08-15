@@ -11,11 +11,9 @@
 class Plane : public GameObject
 {
 private:
-	//float angle;
-	Vector3 dir;
 	float topSpeed;
-	//float acceleration;
 	float turnSpeed;
+	int maxProjectiles;
 protected:
 	virtual void Primary();
 	virtual void Secondary();
@@ -25,8 +23,6 @@ public:
 	virtual void Update(double dt);
 	void ReadInput(double dt, char left, char right, char pri, char sec);
 	virtual void Init();
-	void Reset();
-	//void SetTerrain(Terrain* terr);
 };
 
 #endif
