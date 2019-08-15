@@ -1,18 +1,6 @@
 
 #include "GameObject.h"
 
-bool GameObject::hasCollider()
-{
-	switch (type)
-	{
-	case GO_NONE:
-	case EXPLOSION:
-	case GO_TOTAL:
-		return false;
-	}
-	return true;
-}
-
 void GameObject::Update(double dt)
 {
 	pos += vel * (float)dt;
@@ -66,11 +54,6 @@ bool GameObject::hasCollider()
 		return false;
 	}
 	return true;
-}
-
-void GameObject::Update(double dt)
-{
-	pos += vel * (float)dt;
 }
 
 void GameObject::reset()
