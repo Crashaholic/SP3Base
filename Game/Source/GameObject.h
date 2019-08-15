@@ -60,6 +60,7 @@ struct GameObject
 	float mass;
 	float angle;
 	bool hasGravity;
+	bool hasCollider();
 	virtual void Update(double dt);
 	GameObject(GAMEOBJECT_TYPE typeValue = GO_NONE);
 	~GameObject();
