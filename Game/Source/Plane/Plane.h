@@ -13,6 +13,7 @@ class Plane : public GameObject
 private:
 	float topSpeed;
 	float turnSpeed;
+	int maxProjectiles;
 protected:
 	virtual void Primary();
 	virtual void Secondary();

@@ -207,6 +207,7 @@ void ScenePlane::Update(double dt)
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;
+		object->hasGravity = false;
 		bulletCooldown = 0.5f;
 	}
 
@@ -264,7 +265,7 @@ void ScenePlane::Update(double dt)
 			switch (go->wrapMode)
 			{
 			case GameObject::SW_CLEAR:
-				if (go->pos.x > m_worldWidth|| go->pos.y > m_worldHeight
+				if (go->pos.x > m_worldWidth
 					|| go->pos.x < 0 || go->pos.y < 0)
 					go->active = false;
 				hit = true;
