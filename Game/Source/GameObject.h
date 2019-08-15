@@ -3,7 +3,7 @@
 
 #include "Vector3.h"
 #include "Material.h"
-
+#include "Terrain.h"
 struct GameObject
 {
 	enum GAMEOBJECT_TYPE
@@ -51,12 +51,12 @@ struct GameObject
 	Vector3 pos;
 	Vector3 vel;
 	Vector3 scale;
+	Terrain* terreference;
 
 	Vector3 /*pop*/corn[4];	// corner//Puns good
 	Vector3 norm;			// normal
 	Vector3 perp;			// normal perpendicular
 	Vector3 dir;
-	Terrain* terreference;
 	bool active;
 	float mass;
 	float angle;
