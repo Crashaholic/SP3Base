@@ -4,6 +4,10 @@
 void GameObject::Update(double dt)
 {
 	pos += vel * (float)dt;
+	if (hasGravity)
+	{
+		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+	}
 	switch (type)
 	{
 	case PLAYER_PROJECTILE_BOMB:
@@ -18,6 +22,9 @@ void GameObject::Update(double dt)
 		}
 		angle = atan2(dir.y, dir.x);
 		norm.Set( -dir.y, dir.x);
+		break;
+	case EXPLOSION:
+		int i = 0;
 		break;
 	}
 }

@@ -207,6 +207,7 @@ void ScenePlane::Update(double dt)
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;
+		object->hasGravity = false;
 		bulletCooldown = 0.5f;
 	}
 

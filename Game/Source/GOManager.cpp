@@ -44,10 +44,7 @@ void GOManager::update(double dt)
 			go->pos += go->vel * static_cast<float>(dt);
 			updateCorn(go);
 
-			if (go->hasGravity)
-			{
-				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
-			}
+
 
 			if (terrainGate(go))
 			{
@@ -382,7 +379,27 @@ void GOManager::terrainResponse(GameObject * go)
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_BOMB:
+	{
+		//go->active = false;
+		//GameObject* go2 = fetchGO();
+		go->type = GameObject::EXPLOSION;
+		go->scale = Vector3(1, 1, 1) * 5;
+		go->pos.y = terreference->getHeight(go->pos).y + 0.01f;
+		go->vel.SetZero();
+		go->hasGravity = false;
+		break;
+	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
+	{
+		//go->active = false;
+		//GameObject* go2 = fetchGO();
+		go->type = GameObject::EXPLOSION;
+		go->scale = Vector3(1, 1, 1) * 50;
+		go->pos.y = terreference->getHeight(go->pos).y;
+		go->vel.SetZero();
+		go->hasGravity = false;
+		break;
+	}
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::PLAYER_PROJECTILE_MISSILE:
 	{

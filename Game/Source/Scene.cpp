@@ -241,6 +241,7 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::GO_BALL:
 			RenderMesh(meshList[GEO_BALL], false);
 			break;
+		case GameObject::EXPLOSION:
 		case GameObject::GO_CUBE:
 			RenderMesh(meshList[GEO_CUBE], false);
 			break;
@@ -262,7 +263,7 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 	}
 	
-	if (go->hasCollider() && false)
+	if (go->hasCollider())
 		debugBalls(go);
 
 	glEnable(GL_CULL_FACE);
