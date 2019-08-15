@@ -38,6 +38,9 @@ struct GameObject
 
 		EXPLOSION,
 
+		SPAWNPOINT_ENEMY_TANK,
+		SPAWNPOINT_ENEMY_PLANE,
+
 		GO_TOTAL, //must be last
 	};
 	enum SCREENWRAP_MODE {

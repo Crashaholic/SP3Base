@@ -34,7 +34,11 @@ void resize_callback(GLFWwindow* window, int w, int h)
 
 bool Application::IsKeyPressed(unsigned short key)
 {
-    return ((GetAsyncKeyState(key) & 0x8001) != 0);
+	if (glfwGetWindowAttrib(m_window, GLFW_FOCUSED))
+	{
+		// window has input focus
+		return ((GetAsyncKeyState(key) & 0x8001) != 0);
+	}
 }
 bool Application::IsMousePressed(unsigned short key) //0 - Left, 1 - Right, 2 - Middle
 {
@@ -79,10 +83,12 @@ void Application::Init()
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
 
+	glfwWindowHint(GLFW_RESIZABLE, false);
+
 
 	//Create a window and create its OpenGL context
-	m_width = 800;
-	m_height = 600;
+	m_width = 1280;
+	m_height = 720;
 	m_window = glfwCreateWindow(m_width, m_height, "Physics", NULL, NULL);
 
 	//If the window couldn't be created

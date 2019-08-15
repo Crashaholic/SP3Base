@@ -2,9 +2,9 @@
 #include "Vector3.h"
 #include "MeshBuilder.h"
 
-#define TERRAIN_SIZE 32
-#define TERRAIN_UP 5
-#define TERRAIN_DN -5
+#define TERRAIN_SIZE 16
+#define TERRAIN_UP 3
+#define TERRAIN_DN -3
 
 class Terrain
 {

@@ -34,6 +34,7 @@ void ScenePlane::Init()
 	m_speed = 1.f;
 	m_gravity.Set(0, -9.8f, 0); 
 	bulletCooldown = 0.f;
+	tankSpeed = 5.f;
 	Math::InitRNG();
 
 	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
@@ -62,20 +63,31 @@ void ScenePlane::Init()
 	// Tank
 	tank = GOManager::GetInstance()->fetchGO();
 	tank->type = GameObject::PLAYER_TANK;
-	tank->scale.Set(7.5f, 2.0f, 1.0f);
-	tank->angle = 0.0f;
+	tank->scale.Set(3.5f, 1.2f, 1.0f);
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
 
 	tank2 = GOManager::GetInstance()->fetchGO();
 	tank2->type = GameObject::PLAYER_TANKGUN;
-	tank2->scale.Set(3.5f, 1.0f, 1.0f);
+	tank2->scale.Set(1.5f, 0.6f, 1.0f);
 	tank2->angle = 89.0f;
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
-	tank2->pos.Set(center.x - 53.f, center.y - 26.0f, center.z); 
+	tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
 
 	tank->pos.y = terr.getHeight(tank->pos).y;
 	tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+	vec3 n = terr.GetNormal(tank->pos);
+	if (n <= 0)
+	{
+		tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
+	}
+	else
+		tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
+
+	plane->terreference = &terr;
+
+	SpawnPos1 = vec3(-2, terr.getHeight({-2, 0, 0}).y, 0);
+	SpawnPos2 = vec3(m_worldWidth + 2, terr.getHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
@@ -117,38 +129,53 @@ void ScenePlane::Update(double dt)
 		//defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 	}
 
+	vec3 n = terr.GetNormal(tank->pos);
 	// Tank Movement
 	if (Application::IsKeyPressed('J')) // Left
 	{
-		tank->pos -= 5 * static_cast<float>(dt);
+		tank->pos -= tankSpeed * static_cast<float>(dt);
 		tank->pos.y = terr.getHeight(tank->pos).y;
 
-		tank2->pos -= 5 * static_cast<float>(dt);
+		tank2->pos -= tankSpeed * static_cast<float>(dt);
 		tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+
+		if (n <= 0)
+		{
+			tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
+		}
+		else
+			tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 	}
 	if (Application::IsKeyPressed('L')) // Right
 	{
-		tank->pos += 5 * static_cast<float>(dt);
+		tank->pos += tankSpeed * static_cast<float>(dt);
 		tank->pos.y = terr.getHeight(tank->pos).y;
 
-		tank2->pos += 5 * static_cast<float>(dt);
+		tank2->pos += tankSpeed * static_cast<float>(dt);
 		tank2->pos.y = terr.getHeight(tank->pos).y + 2;
+
+		if (n <= 0)
+		{
+			tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
+		}
+		else
+			tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 	}
-	if (tank->pos.x <= 7.5f)
+	if (tank->pos.x <= 4.f)
 	{
-		tank->pos.x = 7.5f;
+		tank->pos.x = 4.f;
 	}
-	if (tank->pos.x >= 125)
+	if (tank->pos.x >= 130)
 	{
-		tank->pos.x = 125;
+		tank->pos.x = 130;
 	}
-	if (tank2->pos.x <= 9.5f)
+	if (tank2->pos.x <= 4.f)
 	{
-		tank2->pos.x = 9.5f;
+		tank2->pos.x = 4.f;
 	}
-	if (tank2->pos.x >= 127)
+	if (tank2->pos.x >= 130)
 	{
-		tank2->pos.x = 127;
+		tank2->pos.x = 130;
 	}
 	// Tank barrel control
 	if (Application::IsKeyPressed('I')) // Left
@@ -167,6 +194,7 @@ void ScenePlane::Update(double dt)
 	{
 		tank2->angle = 150.0f;
 	}
+	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 
 	// Tank shoot
@@ -204,7 +232,7 @@ void ScenePlane::Update(double dt)
 		//	static_cast<float>(0.0f))
 		//);
 
-		//LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f);
+		//LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f); //Commented out because we don't always need the information
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -350,15 +378,11 @@ void ScenePlane::Render()
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
-	defaultShader.SetVec3("colorableTexture[0]", true);
-	defaultShader.SetVec3("colorableTexture[1]", true);
 	modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
 		modelStack.Scale(57, 14, 1);
 		//RenderMesh(meshList[GEO_A10], false);
 	modelStack.PopMatrix();
-	defaultShader.SetVec3("colorableTexture[0]", false);
-	defaultShader.SetVec3("colorableTexture[1]", false);
 
 	//On screen text
 	std::ostringstream ss;
@@ -386,4 +410,26 @@ void ScenePlane::Exit()
 	}
 
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+}
+
+void ScenePlane::EndWave()
+{
+	enemyCount = 0;
+	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateTerrainMesh();
+}
+
+void ScenePlane::SpawnEnemy()
+{
+	int tempcount = startCount + 1 * waveNo;
+	if (enemyCount >= tempcount)
+	{
+		return;
+	}
+	else
+	{
+		GameObject* t = GOManager::GetInstance()->fetchGO();
+		t->pos = (rand() % 2 ? SpawnPos1 : SpawnPos2);
+		++enemyCount;
+	}
 }
