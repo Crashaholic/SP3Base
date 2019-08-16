@@ -101,7 +101,6 @@
     <ClCompile Include="Source\SceneMenu.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
-    <ClCompile Include="Source\Weapon\Bomb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Plane\A10.h" />
@@ -130,7 +129,6 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
-    <ClInclude Include="Source\Weapon\Bomb.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />
