@@ -29,9 +29,11 @@ public:
 	bool terrainGate(GameObject * go);
 	bool checkTerrain(GameObject* go);
 	void terrainResponse(GameObject* go);
-	void explosionResponse(GameObject * go);
 
-	void playerDeath(GameObject* go);
+	void planeDeath(GameObject* go);
+	void tankDeath();
+	void toExplosion(GameObject* go);
+	void exResponse(GameObject* go);
 
 	GameObject* fetchGO();
 	std::vector<GameObject*>& getlist();
@@ -42,15 +44,36 @@ public:
 	bool overlap(float min1, float max1, float min2, float max2);
 	void updateCorn(GameObject* go);
 
-	int lives;			// Replaces UPGRADE_3 in collision response (++lives)
-	int upgrade_1;		// Blast radius OR Reload speed
-	int upgrade_2;		// Bomb count OR Movement speed
-	int attackCount;	// No. of times the player has fired a weapon (bursts count as one)
-	int kills;
-	float accuracy;
-	int highScore;
+	// Replaces UPGRADE_3 in collision response
+	int planeLives;
+	int tankLives;
+	
+	// Komet	: Bomb count
+	// A10		: Bullets per burst
+	// Tank		: Reload speed
+	int upgrade_1;
+
+	// Komet	: Nuke count
+	// A10		: Missile count
+	// Tank		: Movement speed
+	int upgrade_2;		
+
+	// No. of times the player has fired a weapon (bursts count as one)
+	int attackCount;
+
+	int planeKills;
+	int tankKills;
+	float planeAccuracy;
+	float tankAccuracy;
+	int planeHighscore;
+	int tankHighscore;
 
 	Terrain* terreference;
+
+	bool tankup1, tankup2, tankup3;
+	bool tUpgrade;
+	int tlives;
+	int random, tUp;
 };
 
 #endif

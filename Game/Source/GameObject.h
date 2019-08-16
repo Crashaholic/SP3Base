@@ -32,6 +32,7 @@ struct GameObject
 		PLAYER_PROJECTILE_NUKE,
 		PLAYER_PROJECTILE_MACHINE,	// Machine gun
 		PLAYER_PROJECTILE_MISSILE,
+		PLAYER_PROJECTILE_SHELL,
 
 		ENEMY_PROJECTILE_BOMB,
 		ENEMY_PROJECTILE_MACHINE,	// Machine gun
@@ -52,20 +53,26 @@ struct GameObject
 	GAMEOBJECT_TYPE type;
 	SCREENWRAP_MODE wrapMode;
 	Vector3 pos;
-	Vector3 defaultPos;
 	Vector3 vel;
 	Vector3 scale;
+
+	// To reset the player position
+	Vector3 defaultPos;
+
+	// To audit initial explosion radius
+	Vector3 defaultScale;
 
 	Vector3 /*pop*/corn[4];	// corner//Puns good
 	Vector3 norm;			// normal
 	Vector3 perp;			// normal perpendicular
 	Vector3 dir;
 	bool active;
-	float mass;
+	float exRadius;
 	float angle;
 	bool hasGravity;
 	bool hasCollider();
 	virtual void Update(double dt);
+	virtual void Init();
 	void reset();
 	float transparency;
 	Component color[MAX_TEXTURES];

@@ -36,7 +36,6 @@ void A10::Secondary()
 		missile->scale.Set(1, 2, 1);
 		missile->hasGravity = true;
 		missile->wrapMode = SW_CLEAR;
-		missile->mass = 40.f;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			missile->color[i] = color[i];
 
@@ -63,7 +62,6 @@ void A10::Update(double dt)
 		bullet->scale.Set(1, 2, 1);
 		bullet->hasGravity = false;
 		bullet->wrapMode = SW_CLEAR;
-		bullet->mass = 20.f;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			bullet->color[i] = color[i];
 		}
