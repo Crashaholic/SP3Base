@@ -69,6 +69,11 @@ public:
 	int tankHighscore;
 
 	Terrain* terreference;
+
+	bool tankup1, tankup2, tankup3;
+	bool tUpgrade;
+	int tlives;
+	int random, tUp;
 };
 
 #endif

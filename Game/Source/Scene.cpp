@@ -69,7 +69,7 @@ void Scene::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(0.2f, 0.2f, 0.2f), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0.2f, 0.2f, 0.2f), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//pico8.tga");
+	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//Consolas.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
@@ -86,6 +86,9 @@ void Scene::Init()
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateQuad("EXPLOSION", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
+	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_3] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
 
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
@@ -278,6 +281,15 @@ void Scene::RenderGO(GameObject *go)
 			break;
 		case GameObject::EXPLOSION:
 			RenderMesh(meshList[GEO_EXPLOSION], false);
+			break;
+		case GameObject::UPGRADE_1:
+			RenderMesh(meshList[GEO_UPGRADE_1], false);
+			break;
+		case GameObject::UPGRADE_2:
+			RenderMesh(meshList[GEO_UPGRADE_2], false);
+			break;
+		case GameObject::UPGRADE_3:
+			RenderMesh(meshList[GEO_UPGRADE_3], false);
 			break;
 		}
 		modelStack.PopMatrix();

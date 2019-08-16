@@ -4,6 +4,9 @@
 #include "GOManager.h"
 #include "SceneManager.h"
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 GOManager::GOManager()
 {
 }
@@ -41,6 +44,11 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
+	if (random == 1)
+	{
+		tUpgrade = true;
+	}
+
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
