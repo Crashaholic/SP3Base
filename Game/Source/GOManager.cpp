@@ -375,11 +375,14 @@ void GOManager::terrainResponse(GameObject * go)
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
 	{
 		//go->active = false;
 		//GameObject* go2 = fetchGO();
 		go->type = GameObject::EXPLOSION;
-		go->scale = Vector3(1, 1, 1) * 5;
+		go->scale = Vector3(1, 1, 1) * go->mass * 0.1f;
 		for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
 		{
 			go->color[i].Set(1.f, 1.f, 1.f);
@@ -389,6 +392,8 @@ void GOManager::terrainResponse(GameObject * go)
 		go->hasGravity = false;
 		go->hasLifeTime = true;
 		go->lifeTime = 1.0;
+		go->angle = Math::RandFloatMinMax(0.0f,360.0f);
+		go->norm.Set(cos(go->angle), sin(go->angle), 0);
 		for (unsigned int i = 0; i < m_goList.size(); ++i)
 		{
 			if (m_goList[i] == go)
@@ -399,23 +404,16 @@ void GOManager::terrainResponse(GameObject * go)
 		}
 		break;
 	}
-	case GameObject::PLAYER_PROJECTILE_NUKE:
-	{
-		//go->active = false;
-		//GameObject* go2 = fetchGO();
-		go->type = GameObject::EXPLOSION;
-		go->scale = Vector3(1, 1, 1) * 50;
-		go->pos.y = terreference->GetHeight(go->pos).y;
-		go->vel.SetZero();
-		go->hasGravity = false;
-		break;
-	}
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
-	case GameObject::PLAYER_PROJECTILE_MISSILE:
-	{
-		go->active = false;
-		break;
-	}
+	//{
+	//	//go->active = false;
+	//	//GameObject* go2 = fetchGO();
+	//	go->type = GameObject::EXPLOSION;
+	//	go->scale = Vector3(1, 1, 1) * go->mass * 0.1f;
+	//	go->pos.y = terreference->GetHeight(go->pos).y;
+	//	go->vel.SetZero();
+	//	go->hasGravity = false;
+	//	break;
+	//}
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
@@ -505,7 +503,9 @@ GameObject * GOManager::fetchGO()
 			go->pos.SetZero();
 			go->hasLifeTime = false;
 			go->lifeTime = 0.0;
+			go->mass = 10.0f;
 			go->transparency = 1.0f;
+			go->wrapMode = GameObject::SW_CLEAR;
 			go->type = GameObject::GO_NONE;
 			return go;
 		}

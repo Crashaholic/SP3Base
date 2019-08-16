@@ -23,7 +23,9 @@ void ScenePlane::Init()
 {
 	Scene::Init();
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
-	plane = new Plane;
+	//plane = new Plane;
+	//plane = dynamic_cast<Komet*>(new Plane);
+	plane = new Komet;
 	plane->Init();
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -422,7 +424,7 @@ void ScenePlane::EndWave()
 	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
-	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateRandomHeight((unsigned  int)m_worldWidth);
 	terr.GenerateTerrainMesh();
 	tank->pos = terr.GetHeight(tank->pos);
 	tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};

@@ -77,6 +77,7 @@
     <ClCompile Include="Source\HighScoreSystem.cpp" />
     <ClCompile Include="Source\HighscoreSystem.h" />
     <ClCompile Include="Source\Plane\A10.cpp" />
+    <ClCompile Include="Source\Plane\Komet.cpp" />
     <ClCompile Include="Source\Plane\Plane.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\SceneEnd.cpp" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Plane\A10.h" />
+    <ClInclude Include="Source\Plane\Komet.h" />
     <ClInclude Include="Source\SceneEnd.h" />
     <ClInclude Include="Source\ScenePSelect.h" />
     <ClInclude Include="Source\SceneScore.h" />
