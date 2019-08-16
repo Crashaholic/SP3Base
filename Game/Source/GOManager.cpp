@@ -427,14 +427,15 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
+	go->active = false;
 	--planeLives;
 	GameObject* ex = fetchGO();
-	ex->exRadius = 20.0f;
-	toExplosion(go, ex);
+	ex->exRadius = 10.0f;
+	ex->pos = go->pos;
+	toExplosion(ex);
 
 	if (planeLives <= 0)
 	{
-		go->active = false;
 		// TODO: Ryan & Yan Quan
 		// Switch scene and pass high score to YQ's function
 		planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
@@ -442,6 +443,7 @@ void GOManager::planeDeath(GameObject * go)
 	else
 	{
 		go->reset();
+		go->active = true;
 	}
 }
 
@@ -478,33 +480,6 @@ void GOManager::toExplosion(GameObject * go)
 	}
 }
 
-void GOManager::toExplosion(GameObject * go, GameObject * go2)
-{
-	go2->type = GameObject::EXPLOSION;
-	go2->scale = Vector3(1, 1, 1) * go2->exRadius;
-	go2->defaultScale = go->scale;
-	for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
-	{
-		go2->color[i].Set(1.f, 1.f, 1.f);
-	}
-	go2->pos = go->pos;
-	go2->vel.SetZero();
-	go2->hasGravity = false;
-	go2->hasLifeTime = true;
-	go2->lifeTime = 0.7;
-	for (unsigned int i = 0; i < m_goList.size(); ++i)
-	{
-		GameObject *a = m_goList[i];
-		if (a == go || a == go2)
-			continue;
-		float length = (a->pos - go2->pos).Length();
-		if (length < go2->exRadius * 0.1f)
-		{
-			exResponse(a);
-		}
-	}
-}
-
 void GOManager::exResponse(GameObject * go)
 {
 	if (go->active == true)
@@ -515,14 +490,12 @@ void GOManager::exResponse(GameObject * go)
 		case GameObject::PLAYER_PLANE_A10:
 		{
 			++tankKills;
-			--planeLives;
 			planeDeath(go);
 			break;
 		}
 		case GameObject::PLAYER_TANK:
 		{
 			++planeKills;
-			--tankLives;
 			tankDeath();
 			break;
 		}
@@ -557,7 +530,6 @@ GameObject * GOManager::fetchGO()
 			go->pos.SetZero();
 			go->hasLifeTime = false;
 			go->lifeTime = 0.0;
-			go->mass = 10.0f;
 			go->transparency = 1.0f;
 			go->wrapMode = GameObject::SW_CLEAR;
 			go->type = GameObject::GO_NONE;

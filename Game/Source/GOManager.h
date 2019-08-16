@@ -33,7 +33,6 @@ public:
 	void planeDeath(GameObject* go);
 	void tankDeath();
 	void toExplosion(GameObject* go);
-	void toExplosion(GameObject* go, GameObject* go2);
 	void exResponse(GameObject* go);
 
 	GameObject* fetchGO();
