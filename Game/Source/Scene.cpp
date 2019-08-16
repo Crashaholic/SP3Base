@@ -86,6 +86,9 @@ void Scene::Init()
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateQuad("EXPLOSION", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
+	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_3] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -271,6 +274,15 @@ void Scene::RenderGO(GameObject *go)
 			break;
 		case GameObject::EXPLOSION:
 			RenderMesh(meshList[GEO_EXPLOSION], false);
+			break;
+		case GameObject::UPGRADE_1:
+			RenderMesh(meshList[GEO_UPGRADE_1], false);
+			break;
+		case GameObject::UPGRADE_2:
+			RenderMesh(meshList[GEO_UPGRADE_2], false);
+			break;
+		case GameObject::UPGRADE_3:
+			RenderMesh(meshList[GEO_UPGRADE_3], false);
 			break;
 		}
 		modelStack.PopMatrix();

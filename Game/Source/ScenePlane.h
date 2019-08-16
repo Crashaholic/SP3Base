@@ -51,6 +51,7 @@ private:
 	float angle;
 	float tankSpeed;
 	double bulletCooldown;
+	bool tUpgrade;
 };
 
 #endif

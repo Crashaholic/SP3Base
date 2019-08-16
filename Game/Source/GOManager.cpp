@@ -3,6 +3,9 @@
 #include "Mtx44.h"
 #include "GOManager.h"
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 GOManager::GOManager()
 {
 }
@@ -24,16 +27,26 @@ void GOManager::init()
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
 	lives = 2;
+	tlives = 2;
 	upgrade_1 = 0;
 	upgrade_2 = 0;
 	attackCount = 0;
 	kills = 0;
 	accuracy = 0.0f;
 	highScore = 0;
+	tankup1 = tankup2 = tankup3 = false;
+	srand(time(NULL));
+	random = rand() % 2 + 1;
+	tUp = rand() % 3 + 1;
 }
 
 void GOManager::update(double dt)
 {
+	if (random == 1)
+	{
+		tUpgrade = true;
+	}
+
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
@@ -111,6 +124,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
 		case GameObject::ENEMY_BUILDING:
+		case GameObject::PLAYER_PLANE_KOMET: // test
 			return true;
 		}
 		break;
@@ -264,7 +278,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		case GameObject::UPGRADE_3:
 		{
-			++lives;
+			++tlives;
 			go2->active = false;
 			break;
 		}
@@ -293,6 +307,23 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			++kills;
 			go2->active = false;
+			break;
+		}
+		// if bullet collide with plane
+		case GameObject::PLAYER_PLANE_KOMET:
+		{
+			go2->active = false;
+			// 50% chance to spawn upgrade
+			if (tUpgrade)
+			{
+				// chance to spawn either of the 3 upgrades
+				if (tUp == 1)
+					tankup1 = true;
+				if (tUp == 2)
+					tankup2 = true;
+				if (tUp == 3)
+					tankup3 = true;
+			}
 			break;
 		}
 		}
