@@ -177,7 +177,7 @@ void SceneTank::Exit()
 	}
 }
 
-void ScenePlane::EndWave()
+void SceneTank::EndWave()
 {
 	enemyCount = 0;
 	spawnTimer = (float)SPAWNTIMER;
@@ -189,7 +189,7 @@ void ScenePlane::EndWave()
 	//tank2->pos = terr.GetHeight(tank->pos) + vec3{ 0, 2, 0 };
 }
 
-void ScenePlane::SpawnEnemy()
+void SceneTank::SpawnEnemy()
 {
 	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
