@@ -6,7 +6,7 @@ void A10::Init()
 {
 	Plane::Init();
 	turnSpeed = 5.0f;
-	type = PLAYER_PLANE_A10;
+	GOref->type = GameObject::PLAYER_PLANE_A10;
 	priAmmo = 30;
 }
 
@@ -26,18 +26,18 @@ void A10::Secondary()
 		//--secAmmo;
 		GameObject* missile = GOManager::GetInstance()->fetchGO();
 		missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
-		if(dir.x>=0)
-			missile->vel = Vector3(dir.y, -dir.x);
+		if(GOref->dir.x>=0)
+			missile->vel = Vector3(GOref->dir.y, -GOref->dir.x);
 		else
-			missile->vel = Vector3(-dir.y, dir.x);
-		missile->vel += vel;
-		missile->dir = dir;
-		missile->pos = pos;
+			missile->vel = Vector3(-GOref->dir.y, GOref->dir.x);
+		missile->vel += GOref->vel;
+		missile->dir = GOref->dir;
+		missile->pos = GOref->pos;
 		missile->scale.Set(1, 2, 1);
 		missile->hasGravity = true;
-		missile->wrapMode = SW_CLEAR;
+		missile->wrapMode = GameObject::SW_CLEAR;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
-			missile->color[i] = color[i];
+			missile->color[i] = GOref->color[i];
 
 	}
 }
@@ -55,15 +55,15 @@ void A10::Update(double dt)
 			--currentSpray;
 		GameObject* bullet = GOManager::GetInstance()->fetchGO();
 		bullet->type = GameObject::PLAYER_PROJECTILE_MACHINE;
-		float bulletangle = angle;
+		float bulletangle = GOref->angle;
 		bulletangle += Math::RandFloatMinMax(-Math::DegreeToRadian(inaccuracy), Math::DegreeToRadian(inaccuracy));
 		bullet->vel = Vector3(cos(bulletangle), sin(bulletangle), 0) * 100;
-		bullet->pos = pos;
+		bullet->pos = GOref->pos;
 		bullet->scale.Set(1, 2, 1);
 		bullet->hasGravity = false;
-		bullet->wrapMode = SW_CLEAR;
+		bullet->wrapMode = GameObject::SW_CLEAR;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
-			bullet->color[i] = color[i];
+			bullet->color[i] = GOref->color[i];
 		}
 	}
 	else

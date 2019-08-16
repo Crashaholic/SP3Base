@@ -8,8 +8,9 @@
 #include "../GOManager.h"
 #include "Vector3.h"
 #include <vector>
+struct GameObject;
 
-class Plane : public GameObject
+class Plane 
 {
 protected:
 	float topSpeed;
@@ -22,6 +23,9 @@ protected:
 	virtual void Secondary();
 	std::vector<GameObject*> priprojectiles;
 public:
+	virtual void SetGORef(GameObject* GOref);
+
+	GameObject* GOref;
 	Plane();
 	~Plane();
 	virtual void Init();

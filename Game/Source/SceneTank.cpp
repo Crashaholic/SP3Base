@@ -11,6 +11,8 @@
 #include "SceneManager.h"
 #include <Logging.h>
 
+#include "Tank/PlayerTank.h"
+
 SceneTank::SceneTank()
 {
 }
@@ -24,6 +26,11 @@ void SceneTank::Init()
 	Scene::Init();
 	glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
 
+	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
+	terr.GenerateTerrainMesh();
+	GOManager::GetInstance()->terreference = &terr;
+	player = new PlayerTank;
+	player->Init();
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -34,8 +41,6 @@ void SceneTank::Init()
 	m_speed = 1.f;
 	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
-	m_ghost = new GameObject(GameObject::GO_BALL);
-	m_ghost->active = true;
 
 	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
@@ -51,6 +56,7 @@ void SceneTank::Init()
 
 void SceneTank::Update(double dt)
 {
+	player->Update(dt);
 	//Keyboard Section
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -128,6 +134,7 @@ void SceneTank::Update(double dt)
 
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
+	GOManager::GetInstance()->update(dt);
 }
 
 void SceneTank::Render()
@@ -151,6 +158,23 @@ void SceneTank::Render()
 
 	RenderMesh(meshList[GEO_AXES], false);
 
+	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject*)*it;
+		if (go->active)
+		{
+			RenderGO(go);
+		}
+	}
+
+	//RenderGO(tank);
+	//RenderGO(tank2);
+
+	modelStack.PushMatrix();
+	RenderMesh(terr.tMesh, false);
+	modelStack.PopMatrix();
+
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
@@ -169,12 +193,6 @@ void SceneTank::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-
-	if (m_ghost)
-	{
-		delete m_ghost;
-		m_ghost = NULL;
-	}
 }
 
 void SceneTank::EndWave()

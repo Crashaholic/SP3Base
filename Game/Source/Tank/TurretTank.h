@@ -7,7 +7,7 @@ class TurretTank : public Tank
 {
 protected:
 	float turretAngle;
-
+	float turretOffset;
 public:
 	TurretTank();
 	~TurretTank();

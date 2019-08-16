@@ -3,7 +3,7 @@
 #include "../../Source/Plane/Plane.h"
 #include "../EnemyBase.h"
 
-class GameObject;
+struct GameObject;
 
 class PlaneEnemy : public Plane, public EnemyBase
 {

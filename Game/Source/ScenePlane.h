@@ -28,10 +28,12 @@ public:
 
 private:
 	Plane *plane;
+	Tank* player;
+	Terrain terr;
+
 	Camera camera;
 
 	float fps;
-
 
 	//=== Wave ===
 	unsigned int waveNo;
@@ -48,11 +50,9 @@ private:
 	std::vector<GameObject *> m_goList;
 	float m_speed;
 	Vector3 m_gravity;
-	Terrain terr;
 
 	unsigned decal1;
 
-	Tank* player;
 
 	//GameObject *tank, *tank2;
 	float angle;

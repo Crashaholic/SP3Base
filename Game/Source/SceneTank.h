@@ -23,6 +23,8 @@ public:
 
 private:
 	//Mesh* meshList[NUM_GEOMETRY];
+	Tank* player;
+	Terrain terr;
 
 	Camera camera;
 
@@ -41,8 +43,6 @@ private:
 	// Physics
 	float m_speed;
 	Vector3 m_gravity;
-	GameObject *m_ghost;
-	Terrain terr;
 };
 
 #endif

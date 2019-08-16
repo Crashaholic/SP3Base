@@ -5,53 +5,58 @@ void Plane::Primary()
 {
 	GameObject* bomb = GOManager::GetInstance()->fetchGO();
 	bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
-	bomb->vel = vel;
-	bomb->pos = pos;
+	bomb->vel = GOref->vel;
+	bomb->pos = GOref->pos;
 	bomb->scale.Set(1, 2, 1);
 	bomb->hasGravity = true;
-	bomb->wrapMode = SW_CLEAR;
+	bomb->wrapMode = GameObject::SW_CLEAR;
 	for(int i = 0;i<MAX_TEXTURES;++i)
-		bomb->color[i] = color[i];
+		bomb->color[i] = GOref->color[i];
 }
 
 void Plane::Secondary()
 {
 	GameObject* bomb = GOManager::GetInstance()->fetchGO();
 	bomb->type = GameObject::PLAYER_PROJECTILE_NUKE;
-	bomb->vel = vel;
-	bomb->pos = pos;
+	bomb->vel = GOref->vel;
+	bomb->pos = GOref->pos;
 	bomb->scale.Set(1, 2, 1);
 	bomb->hasGravity = true;
-	bomb->wrapMode = SW_BOUNCE;
+	bomb->wrapMode = GameObject::SW_BOUNCE;
 	for (int i = 0; i < MAX_TEXTURES; ++i)
 		bomb->color[i].Set(1, 0, 0);
 	//bomb = dynamic_cast<GameObject*>(bomb);
+}
+
+void Plane::SetGORef(GameObject * GOref)
+{
+	this->GOref = GOref;
 }
 
 void Plane::Update(double dt)
 {
 	//GameObject::Update(dt);
 	ReadInput(dt, 'A', 'D', 'Q', 'E');
-	dir.Set(cos(angle), sin(angle), 0.0f);
-	vel = dir * topSpeed;
-	pos += vel * (float)dt;
-	norm = dir;
-	if (dir.x < 0)
+	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
+	GOref->vel = GOref->dir * topSpeed;
+	GOref->pos += GOref->vel * (float)dt;
+	GOref->norm = GOref->dir;
+	if (GOref->dir.x < 0)
 	{
-		scale.y = -1.4f;
+		GOref->scale.y = -1.4f;
 	}
 	else
 	{
-		scale.y = 1.4f;
+		GOref->scale.y = 1.4f;
 	}
 }
 
 void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 {
 	if (Application::IsKeyPressed(left))
-		angle += turnSpeed * (float)dt;
+		GOref->angle += turnSpeed * (float)dt;
 	else if (Application::IsKeyPressed(right))
-		angle -= turnSpeed * (float)dt;
+		GOref->angle -= turnSpeed * (float)dt;
 
 	static bool press1 = false, press2 = false;
 	if (Application::IsKeyPressed(pri) && !press1)
@@ -77,20 +82,21 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 }
 
 void Plane::Init()
-{
-	angle = 0.0f;
-	dir.Set(cos(angle), sin(angle), 0.0f);
+{	
+	SetGORef(GOManager::GetInstance()->fetchGO());
+	GOref->angle = 0.0f;
+	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 	topSpeed = 10.0f;
 	turnSpeed = 5.0f;
-	pos.Set(10.0f, 80.0f, 0.0f);
-	defaultPos = pos;
-	vel.SetZero();
+	GOref->pos.Set(10.0f, 80.0f, 0.0f);
+	GOref->defaultPos = GOref->pos;
+	GOref->vel.SetZero();
 	//scale.Set(5.7f, 1.4f, 1.0f);
-	scale.Set(4.4f, 1.8f, 1.0f);
-	active = true;
-	type = PLAYER_PLANE_KOMET;
-	wrapMode = SW_HYBRID;
-	GOManager::GetInstance()->addGO(this);
+	GOref->scale.Set(4.4f, 1.8f, 1.0f);
+	GOref->active = true;
+	GOref->type = GameObject::PLAYER_PLANE_KOMET;
+	GOref->wrapMode = GameObject::SW_HYBRID;
+	//GOManager::GetInstance()->addGO(this);
 	priAmmo = 1;
 	AddPri(priAmmo);
 	secAmmo = 0;

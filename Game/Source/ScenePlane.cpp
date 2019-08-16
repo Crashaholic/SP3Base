@@ -43,8 +43,11 @@ void ScenePlane::Init()
 
 	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
 	terr.GenerateTerrainMesh();
-	decal1 = LoadTGA("Image//A10decal2.tga");
+	GOManager::GetInstance()->terreference = &terr;
+	player = new PlayerTank;
+	player->Init();
 
+	decal1 = LoadTGA("Image//A10decal2.tga");
 	// Testing cubes
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
 
@@ -61,42 +64,8 @@ void ScenePlane::Init()
 	g2->type = GameObject::GO_CUBE;
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
-	//g2->vel.Set(0, -5.0f, 0);
+
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
-	//Tank* player = new Tank;
-	//player = static_cast<Tank*>(GOManager::GetInstance()->fetchGO());
-	GOManager::GetInstance()->terreference = &terr;
-	player = new PlayerTank;
-	player->Init();
-	//// Tank
-	//tank = GOManager::GetInstance()->fetchGO();
-	//tank->type = GameObject::PLAYER_TANK;
-	//tank->scale.Set(3.5f, 1.4f, 1.0f);
-	//tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
-	//tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
-	//tank->defaultPos = tank->pos;
-
-	//tank2 = GOManager::GetInstance()->fetchGO();
-	//tank2->type = GameObject::PLAYER_TANKGUN;
-	//tank2->scale.Set(1.5f, 0.6f, 1.0f);
-	//tank2->angle = 89.0f;
-	//tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
-	//tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
-	//tank2->defaultPos = tank2->pos;
-
-	//tank->pos.y = terr.GetHeight(tank->pos).y;
-	//tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-	//vec3 n = terr.GetNormal(tank->pos);
-	//if (n <= 0)
-	//{
-	//	tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
-	//}
-	//else
-	//	tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
-
-	// Set terrain reference in GOManager
-
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 	spawnTimer = (float)SPAWNTIMER;
@@ -107,6 +76,7 @@ void ScenePlane::Init()
 void ScenePlane::Update(double dt)
 {
 	player->Update(dt);
+	plane->Update(dt);
 	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -134,8 +104,8 @@ void ScenePlane::Update(double dt)
 
 	if(Application::IsKeyPressed('V'))
 	{
-		plane->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-		plane->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
+		plane->GOref->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
+		plane->GOref->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
 	}
 
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
@@ -399,7 +369,7 @@ void ScenePlane::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
-
+	delete player;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }
 
