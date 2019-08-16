@@ -427,11 +427,11 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
-	go->active = false;
 	--planeLives;
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	go->active = false;
 	toExplosion(ex);
 
 	if (planeLives <= 0)
