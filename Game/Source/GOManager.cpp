@@ -90,7 +90,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 {
 	switch (go1->type)
 	{
-		// Player to Enemy + Player to Upgrade
+	// Player to Enemy + Player to Upgrade
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
@@ -119,7 +119,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 	{
 		switch (go2->type)
 		{
-			// Enemy & other player
+		// Enemy & other player
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
@@ -288,7 +288,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 			case GameObject::PLAYER_TANKGUN:
 			{
 				++tankKills;
-				tankDeath();
+				tankDeath(go1);
 				break;
 			}
 			}
@@ -455,10 +455,26 @@ void GOManager::planeDeath(GameObject * go)
 	}
 }
 
-void GOManager::tankDeath()
+void GOManager::tankDeath(GameObject* go)
 {
-	// TODO: Ryan
-	// Add tank death codes
+	--tankLives;
+	GameObject* ex = fetchGO();
+	ex->exRadius = 10.0f;
+	ex->pos = go->pos;
+	go->active = false;
+	toExplosion(ex);
+
+	if (tankLives <= 0)
+	{
+		// TODO: Ryan & Yan Quan
+		// Switch scene and pass high score to YQ's function
+		tankHighscore = tankKills + static_cast<int>(tankAccuracy / 10.0f) * tankKills;
+	}
+	else
+	{
+		go->reset();
+		go->active = true;
+	}
 }
 
 void GOManager::toExplosion(GameObject * go)
@@ -475,6 +491,8 @@ void GOManager::toExplosion(GameObject * go)
 	go->hasGravity = false;
 	go->hasLifeTime = true;
 	go->lifeTime = 0.7;
+	go->angle = Math::RandFloatMinMax(0.0f, 360.0f);
+	go->norm.Set(cos(go->angle), sin(go->angle), 0.0f);
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *a = m_goList[i];
@@ -504,7 +522,7 @@ void GOManager::exResponse(GameObject * go)
 		case GameObject::PLAYER_TANK:
 		{
 			++planeKills;
-			tankDeath();
+			tankDeath(go);
 			break;
 		}
 		case GameObject::ENEMY_PLANE_PASSIVE:
@@ -531,7 +549,7 @@ GameObject * GOManager::fetchGO()
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject *)*it;
-		if (!go->active)
+		if ((!go->active) && (!go->reserved))
 		{
 			go->active = true;
 			go->vel.SetZero();

@@ -66,15 +66,20 @@ struct GameObject
 	Vector3 norm;			// normal
 	Vector3 perp;			// normal perpendicular
 	Vector3 dir;
+
+	bool reserved;
 	bool active;
 	float exRadius;
 	float angle;
 	bool hasGravity;
 	bool hasCollider();
+
 	virtual void Update(double dt);
 	virtual void Init();
+
 	void reset();
 	float transparency;
+
 	Component color[MAX_TEXTURES];
 	bool isColorable[MAX_TEXTURES];
 

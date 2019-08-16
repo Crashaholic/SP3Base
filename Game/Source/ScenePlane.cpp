@@ -41,7 +41,7 @@ void ScenePlane::Init()
 	tankSpeed = 5.f;
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;
@@ -64,8 +64,12 @@ void ScenePlane::Init()
 	g2->type = GameObject::GO_CUBE;
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
-
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
+
+	GOManager::GetInstance()->terreference = &terr;
+	player = new PlayerTank;
+	player->Init();
+
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 	spawnTimer = (float)SPAWNTIMER;
@@ -379,7 +383,7 @@ void ScenePlane::EndWave()
 	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
-	terr.GenerateRandomHeight((unsigned int)m_worldWidth);
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	//tank->pos = terr.GetHeight(tank->pos);
 	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};

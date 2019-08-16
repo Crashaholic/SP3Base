@@ -42,7 +42,7 @@ void SceneTank::Init()
 	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;

@@ -31,7 +31,7 @@ public:
 	void terrainResponse(GameObject* go);
 
 	void planeDeath(GameObject* go);
-	void tankDeath();
+	void tankDeath(GameObject* go);
 	void toExplosion(GameObject* go);
 	void exResponse(GameObject* go);
 
