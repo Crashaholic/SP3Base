@@ -50,6 +50,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Common\Source;$(SolutionDir)glfw\include;$(SolutionDir)glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)glew\lib;$(SolutionDir)glfw\lib-vc2017;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -75,6 +76,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Tank\PlayerTank.cpp" />
+    <ClCompile Include="Enemy\Plane\PlaneEnemy.cpp" />
+    <ClCompile Include="Source\Button\Button.cpp" />
     <ClCompile Include="Source\HighScoreSystem.cpp" />
     <ClCompile Include="Source\HighscoreSystem.h" />
     <ClCompile Include="Source\Plane\A10.cpp" />
@@ -106,7 +109,10 @@
     <ClCompile Include="Source\Tank\Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy\EnemyBase.h" />
+    <ClInclude Include="Enemy\Plane\PlaneEnemy.h" />
     <ClInclude Include="Source\Tank\PlayerTank.h" />
+    <ClInclude Include="Source\Button\Button.h" />
     <ClInclude Include="Source\Plane\A10.h" />
     <ClInclude Include="Source\Plane\Komet.h" />
     <ClInclude Include="Source\SceneEnd.h" />

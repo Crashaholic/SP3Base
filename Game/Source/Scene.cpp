@@ -69,7 +69,7 @@ void Scene::Init()
 	meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(0.2f, 0.2f, 0.2f), 10, 10, 1.f);
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0.2f, 0.2f, 0.2f), 2.f);
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//pico8.tga");
+	meshList[GEO_TEXT]->textureID[0] = LoadTGA("Image//Consolas.tga");
 	meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
 	meshList[GEO_PLAYER_PLANE_A10] = MeshBuilder::GenerateQuad("PLAYER_PLANE_A10", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
@@ -93,6 +93,9 @@ void Scene::Init()
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
 	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
 	meshList[GEO_UPGRADE_3] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
+
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -156,7 +159,7 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 	{
 		Mtx44 characterSpacing;
 		//1.0f is the spacing of each character, you may change this value
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0);
+		characterSpacing.SetToTranslation(i * 0.5f + 0.5f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		defaultShader.SetMat4("model", MVP);
 
@@ -369,4 +372,50 @@ void Scene::debugBalls(GameObject * go)
 	modelStack.Scale(0.5f, 0.5f, 0.5f);
 	RenderMesh(meshList[GEO_DEBUG], false);
 	modelStack.PopMatrix();
+}
+
+void Scene::addButton(Button * button)
+{
+	buttonList.push_back(button);
+}
+
+void Scene::cleanButton()
+{
+	while (buttonList.size() > 0)
+	{
+		Button *button = buttonList.back();
+		delete button;
+		buttonList.pop_back();
+	}
+}
+
+void Scene::renderButton()
+{
+	for (std::vector<Button *>::iterator it = buttonList.begin(); it != buttonList.end(); ++it)
+	{
+		Button *button = *it;
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[0].x, button->balls[0].y, button->balls[0].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[1].x, button->balls[1].y, button->balls[1].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[2].x, button->balls[2].y, button->balls[2].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[3].x, button->balls[3].y, button->balls[3].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+	}
 }

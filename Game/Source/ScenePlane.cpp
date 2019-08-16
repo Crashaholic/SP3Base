@@ -409,7 +409,7 @@ void ScenePlane::EndWave()
 	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
-	terr.GenerateRandomHeight((unsigned  int)m_worldWidth);
+	terr.GenerateRandomHeight((unsigned int)m_worldWidth);
 	terr.GenerateTerrainMesh();
 	//tank->pos = terr.GetHeight(tank->pos);
 	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};

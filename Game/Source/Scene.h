@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "GameObject.h"
 #include "shader.hpp"
+#include "Button/Button.h"
 #include <vector>
 #include "Tank/Tank.h"
 
@@ -72,13 +73,17 @@ public:
 	void checkSwitch();
 	void debugBalls(GameObject *go);
 
+	void addButton(Button* button);
+	void cleanButton();
+	void renderButton();
+
 protected:
 	Shader defaultShader;
 
 	unsigned m_vertexArrayID;
 
 	Light lights[1];
-
+	std::vector<Button*>buttonList;
 
 	MS modelStack;
 	MS viewStack;

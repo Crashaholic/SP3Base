@@ -3,6 +3,9 @@
 #define SCENE_MENU_H
 
 #include "Scene.h"
+#include <string>
+
+using namespace std;
 
 class SceneMenu : public Scene
 {
@@ -17,15 +20,18 @@ public:
 
 private:
 	//Mesh* meshList[NUM_GEOMETRY];
-
 	Camera camera;
-
 	float fps;
 
-	// Physics
-	float m_speed;
-	Vector3 m_gravity;
-	GameObject *m_ghost;
+	// Buttons
+	Button* bArray[5];
+
+	// Text
+	string sArray[5];
+	string sArrayI[5];
+	string sArrayA[5];
+	bool muted;
+	int choice;
 };
 
 #endif
