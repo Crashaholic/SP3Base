@@ -4,8 +4,9 @@
 
 //#include "GameObject.h"
 //#include "Vector3.h"
-#include "../Weapon/Bomb.h"
-#include <Windows.h>
+
+#include "../GOManager.h"
+#include "Vector3.h"
 #include <vector>
 
 class Plane : public GameObject

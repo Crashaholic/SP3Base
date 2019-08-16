@@ -1,21 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{69e9a32e-2bcf-48b4-b5bd-c92038540d23}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Source\HighScoreSystem.cpp" />
+    <ClCompile Include="Source\HighscoreSystem.h" />
+    <ClCompile Include="Source\Plane\A10.cpp" />
+    <ClCompile Include="Source\Plane\Komet.cpp" />
+    <ClCompile Include="Source\Plane\Plane.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
+    <ClCompile Include="Source\SceneEnd.cpp" />
+    <ClCompile Include="Source\ScenePSelect.cpp" />
+    <ClCompile Include="Source\SceneScore.cpp" />
+    <ClCompile Include="Source\SceneTank.cpp" />
+    <ClCompile Include="Source\SceneTSelect.cpp" />
+    <ClCompile Include="Source\Terrain.cpp" />
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\GOManager.cpp" />
+    <ClCompile Include="Source\LoadOBJ.cpp" />
+    <ClCompile Include="Source\LoadTGA.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Material.cpp" />
+    <ClCompile Include="Source\Mesh.cpp" />
+    <ClCompile Include="Source\MeshBuilder.cpp" />
+    <ClCompile Include="Source\ScenePlane.cpp" />
+    <ClCompile Include="Source\SceneManager.cpp" />
+    <ClCompile Include="Source\SceneMenu.cpp" />
+    <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\Utility.cpp" />
+    <ClCompile Include="Source\Tank\PlayerTank.cpp" />
+    <ClCompile Include="Source\Tank\Tank.cpp" />
+    <ClCompile Include="Source\Tank\TurretTank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -212,14 +227,39 @@
     <ClInclude Include="Source\Button\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Plane\A10.h" />
+    <ClInclude Include="Source\Plane\Komet.h" />
+    <ClInclude Include="Source\SceneEnd.h" />
+    <ClInclude Include="Source\ScenePSelect.h" />
+    <ClInclude Include="Source\SceneScore.h" />
+    <ClInclude Include="Source\SceneTank.h" />
+    <ClInclude Include="Source\SceneTSelect.h" />
+    <ClInclude Include="Source\Plane\Plane.h" />
+    <ClInclude Include="Source\Terrain.h" />
+    <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\GOManager.h" />
+    <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\LoadOBJ.h" />
+    <ClInclude Include="Source\LoadTGA.h" />
+    <ClInclude Include="Source\Material.h" />
+    <ClInclude Include="Source\Mesh.h" />
+    <ClInclude Include="Source\MeshBuilder.h" />
+    <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\ScenePlane.h" />
+    <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\SceneMenu.h" />
+    <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\Utility.h" />
+    <ClInclude Include="Source\Vertex.h" />
+    <ClInclude Include="Source\Tank\PlayerTank.h" />
+    <ClInclude Include="Source\Tank\Tank.h" />
+    <ClInclude Include="Source\Tank\TurretTank.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\comg.frag">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\comg.vert">
-      <Filter>Shader</Filter>
-    </None>
+    <None Include="Shader\comg.frag" />
+    <None Include="Shader\comg.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Scores\highscores.txt" />
