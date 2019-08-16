@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy\Plane\PlaneEnemy.cpp" />
     <ClCompile Include="Source\HighScoreSystem.cpp" />
     <ClCompile Include="Source\HighscoreSystem.h" />
     <ClCompile Include="Source\Plane\A10.cpp" />
@@ -104,6 +105,8 @@
     <ClCompile Include="Source\Weapon\Bomb.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy\EnemyBase.h" />
+    <ClInclude Include="Enemy\Plane\PlaneEnemy.h" />
     <ClInclude Include="Source\Plane\A10.h" />
     <ClInclude Include="Source\Plane\Komet.h" />
     <ClInclude Include="Source\SceneEnd.h" />
