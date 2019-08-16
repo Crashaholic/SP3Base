@@ -36,8 +36,10 @@ void GameObject::Update(double dt)
 		break;
 	case EXPLOSION:
 		transparency = (float)lifeTime;
-		// TODO: Matthew pls fix thanks
-		scale = Vector3(1, 1, 1) * (1 - lifeTime) * mass;
+		if (lifeTime > 0.0)
+		{
+			scale += defaultScale * 0.7f * static_cast<float>(dt);
+		}
 		break;
 	}
 }
@@ -46,11 +48,12 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	: type(typeValue),
 	scale(1, 1, 1),
 	active(false),
-	mass(1.f),
+	exRadius(1.f),
 	hasGravity(false),
 	norm(0, 1, 0),
 	angle(0.0f),
 	defaultPos(0.0f, 0.0f, 0.0f),
+	defaultScale(1.0f, 1.0f, 1.0f),
 	wrapMode(SW_CLEAR),
 	lifeTime(0.0),
 	hasLifeTime(false),

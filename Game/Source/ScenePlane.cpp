@@ -66,6 +66,7 @@ void ScenePlane::Init()
 	tank->scale.Set(3.5f, 1.4f, 1.0f);
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
+	tank->defaultPos = tank->pos;
 
 	tank2 = GOManager::GetInstance()->fetchGO();
 	tank2->type = GameObject::PLAYER_TANKGUN;
@@ -73,6 +74,7 @@ void ScenePlane::Init()
 	tank2->angle = 89.0f;
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 	tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
+	tank2->defaultPos = tank2->pos;
 
 	tank->pos.y = terr.GetHeight(tank->pos).y;
 	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
@@ -195,7 +197,7 @@ void ScenePlane::Update(double dt)
 	{
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
-		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
+		object->type = GameObject::PLAYER_PROJECTILE_SHELL;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;

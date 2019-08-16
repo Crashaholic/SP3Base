@@ -10,10 +10,8 @@ void Plane::Primary()
 	bomb->scale.Set(1, 2, 1);
 	bomb->hasGravity = true;
 	bomb->wrapMode = SW_CLEAR;
-	bomb->mass = 50;//RMB that this will be affected by Upgrade 1(mass is used to determine explosion radius)
 	for(int i = 0;i<MAX_TEXTURES;++i)
 		bomb->color[i] = color[i];
-	//bomb = dynamic_cast<GameObject*>(bomb);
 }
 
 void Plane::Secondary()
