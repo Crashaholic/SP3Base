@@ -9,6 +9,11 @@ class ScenePlane : public Scene
 {
 	static const int MAX_SPEED = 20;
 	static const int BULLET_SPEED = 50;
+	static const unsigned int SPAWNTIMER = 3;
+	static const unsigned int STARTINGCOUNT = 3 /*MINUS 1*/- 1;
+	static const unsigned int ENEMYSPAWNCHNCRANGE_MIN = 0;
+	static const unsigned int ENEMYSPAWNCHNCRANGE_MAX = 2;
+	static const unsigned int ENEMYSPAWNCHNC = 1;
 
 public:
 	ScenePlane();

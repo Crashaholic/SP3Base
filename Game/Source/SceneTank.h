@@ -6,6 +6,12 @@
 
 class SceneTank : public Scene
 {
+private:
+	static const unsigned int SPAWNTIMER = 3;
+	static const unsigned int STARTINGCOUNT = 3 /*MINUS 1*/ - 1;
+	static const unsigned int ENEMYSPAWNCHNCRANGE_MIN = 0;
+	static const unsigned int ENEMYSPAWNCHNCRANGE_MAX = 2;
+	static const unsigned int ENEMYSPAWNCHNC = 1;
 public:
 	SceneTank();
 	~SceneTank();
@@ -22,10 +28,21 @@ private:
 
 	float fps;
 
+	//=== Wave ===
+	unsigned int waveNo;
+	unsigned int enemyCount;
+	unsigned int startCount;
+	void EndWave();
+	void SpawnEnemy();
+	vec3 SpawnPos1;
+	vec3 SpawnPos2;
+	double spawnTimer;
+
 	// Physics
 	float m_speed;
 	Vector3 m_gravity;
 	GameObject *m_ghost;
+	Terrain terr;
 };
 
 #endif

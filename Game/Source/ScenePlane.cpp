@@ -85,16 +85,14 @@ void ScenePlane::Init()
 	else
 		tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 
-	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
-
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
+
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
-	spawnTimer = 3.f; // TODO: REPLACE WITH A CONST
+	spawnTimer = (float)SPAWNTIMER;
 
-	startCount = 2;//TODO: REPLACE WITH A CONST
+	startCount = STARTINGCOUNT;
 }
 
 void ScenePlane::Update(double dt)
@@ -135,7 +133,7 @@ void ScenePlane::Update(double dt)
 
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
 
-	if (spawnTimer == 0 && Math::RandFloatMinMax(0.f, 1.f) > 0.5f) // TODO: REPLACE APPROPRIATE VALUES WITH A CONST
+	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
 	{
 		SpawnEnemy();
 	}
@@ -421,7 +419,7 @@ void ScenePlane::Exit()
 void ScenePlane::EndWave()
 {
 	enemyCount = 0;
-	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
 	terr.GenerateRandomHeight(m_worldWidth);
@@ -432,7 +430,7 @@ void ScenePlane::EndWave()
 
 void ScenePlane::SpawnEnemy()
 {
-	int tempcount = startCount + 1 * waveNo;
+	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
 		return;
@@ -446,6 +444,6 @@ void ScenePlane::SpawnEnemy()
 		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
-		spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+		spawnTimer = (float)SPAWNTIMER;
 	}
 }
