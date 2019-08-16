@@ -23,7 +23,9 @@ void ScenePlane::Init()
 {
 	Scene::Init();
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
-	plane = new Plane;
+	//plane = new Plane;
+	//plane = dynamic_cast<Komet*>(new Plane);
+	plane = new Komet;
 	plane->Init();
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -209,6 +211,7 @@ void ScenePlane::Update(double dt)
 	{
 		if (!hPressed)
 		{
+			EndWave();
 			hPressed = true;
 		}
 	}
@@ -424,13 +427,16 @@ void ScenePlane::EndWave()
 	enemyCount = 0;
 	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
 	waveNo++;
-	terr.GenerateRandomHeight(m_worldWidth);
+	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
+	terr.GenerateRandomHeight((unsigned  int)m_worldWidth);
 	terr.GenerateTerrainMesh();
+	tank->pos = terr.GetHeight(tank->pos);
+	tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
 {
-	int tempcount = startCount + 1 * waveNo;
+	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
 		return;
@@ -442,7 +448,7 @@ void ScenePlane::SpawnEnemy()
 		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
 		//TODO: TANK TARGET/MOVE CODE HERE
 		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
-		LOG_NONE("SPAWNED AT: %", (int)spawner + 1);
+		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
 	}

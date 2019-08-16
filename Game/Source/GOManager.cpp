@@ -557,7 +557,9 @@ GameObject * GOManager::fetchGO()
 			go->pos.SetZero();
 			go->hasLifeTime = false;
 			go->lifeTime = 0.0;
+			go->mass = 10.0f;
 			go->transparency = 1.0f;
+			go->wrapMode = GameObject::SW_CLEAR;
 			go->type = GameObject::GO_NONE;
 			return go;
 		}
