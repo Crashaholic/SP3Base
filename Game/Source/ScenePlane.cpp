@@ -207,6 +207,7 @@ void ScenePlane::Update(double dt)
 	{
 		if (!hPressed)
 		{
+			EndWave();
 			hPressed = true;
 		}
 	}
@@ -422,8 +423,11 @@ void ScenePlane::EndWave()
 	enemyCount = 0;
 	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
 	waveNo++;
+	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
+	tank->pos = terr.GetHeight(tank->pos);
+	tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
@@ -440,7 +444,7 @@ void ScenePlane::SpawnEnemy()
 		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
 		//TODO: TANK TARGET/MOVE CODE HERE
 		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
-		LOG_NONE("SPAWNED AT: %", (int)spawner + 1);
+		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
 	}
