@@ -65,19 +65,23 @@ void GOManager::update(double dt)
 					terrainResponse(go);
 				}
 			}
-
-			for (unsigned int j = 0; j < m_goList.size(); ++j)
+			if (go->Iframes <= 0.0)
 			{
-				GameObject *go2 = m_goList[j];
-				if (go2->active)
+				for (unsigned int j = 0; j < m_goList.size(); ++j)
 				{
-					updateCorn(go2);
-					
-					if (collisionGate(go, go2))
+					GameObject *go2 = m_goList[j];
+					if (go2->active)
 					{
-						if (checkCollision(go, go2))
+						updateCorn(go2);
+						if (go2->Iframes <= 0.0)
 						{
-							collisionResponse(go, go2);
+							if (collisionGate(go, go2))
+							{
+								if (checkCollision(go, go2))
+								{
+									collisionResponse(go, go2);
+								}
+							}
 						}
 					}
 				}
@@ -112,6 +116,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		break;
 	}
 	// Player Plane Projectile To
+	case GameObject::EXPLOSION:
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
@@ -264,6 +269,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
 	case GameObject::PLAYER_TANKGUN:
+	case GameObject::EXPLOSION: 
 	{
 		switch (go2->type)
 		{
@@ -284,7 +290,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 				planeDeath(go1);
 				break;
 			}
-			case GameObject::PLAYER_TANK:
+			//case GameObject::PLAYER_TANK:
 			case GameObject::PLAYER_TANKGUN:
 			{
 				++tankKills;
@@ -323,14 +329,17 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
+
 	// Projectiles
 	case GameObject::PLAYER_PROJECTILE_SHELL:
 	case GameObject::PLAYER_PROJECTILE_MISSILE:
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_BOMB:
+	//case GameObject::EXPLOSION:
 	{
-		go1->exRadius = 7.0f;
+		go1->exRadius = 5.0f;
 		toExplosion(go1);
+		collisionResponse(go1, go2);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
@@ -351,6 +360,25 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		break;
 	}
 	}
+	switch (go1->type)
+	{
+
+	case GameObject::EXPLOSION:
+		switch (go2->type)
+		{
+		case GameObject::PLAYER_TANK:
+			tankDeath(go2);
+			break;
+		case GameObject::ENEMY_BUILDING:
+			exResponse(go2);
+			break;
+		}
+	}
+	//if ((go1->type ==  )&&  == GameObject::EXPLOSION)
+	//	tankDeath(go1);
+	//if (go2->type == GameObject::PLAYER_TANK && go1->type == GameObject::EXPLOSION)
+	//	tankDeath(go2);
+
 }
 
 bool GOManager::terrainGate(GameObject * go)
@@ -435,45 +463,52 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
-	--planeLives;
-	GameObject* ex = fetchGO();
-	ex->exRadius = 10.0f;
-	ex->pos = go->pos;
-	go->active = false;
-	toExplosion(ex);
-
-	if (planeLives <= 0)
+	if (go->Iframes <= 0.0)
 	{
-		// TODO: Ryan & Yan Quan
-		// Switch scene and pass high score to YQ's function
-		planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
-	}
-	else
-	{
-		go->reset();
-		go->active = true;
+		--planeLives;
+		GameObject* ex = fetchGO();
+		ex->exRadius = 10.0f;
+		ex->pos = go->pos;
+		go->active = false;
+		toExplosion(ex);
+		go->Iframes = 5.0;
+		if (planeLives <= 0)
+		{
+			// TODO: Ryan & Yan Quan
+			// Switch scene and pass high score to YQ's function
+			planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
+		}
+		else
+		{
+			go->reset();
+			go->Iframes = 5.0;
+			go->active = true;
+		}
 	}
 }
 
 void GOManager::tankDeath(GameObject* go)
 {
-	--tankLives;
-	GameObject* ex = fetchGO();
-	ex->exRadius = 10.0f;
-	ex->pos = go->pos;
-	go->active = false;
-	toExplosion(ex);
-
-	if (tankLives <= 0)
+	if (go->Iframes <= 0.0)
 	{
-		// TODO: Ryan & Yan Quan
-		// Switch scene and pass high score to YQ's function
-		tankHighscore = tankKills + static_cast<int>(tankAccuracy / 10.0f) * tankKills;
-	}
-	else
-	{
-		go->reset();
-		go->active = true;
+		--tankLives;
+		GameObject* ex = fetchGO();
+		ex->exRadius = 10.0f;
+		ex->pos = go->pos;
+		go->active = false;
+		toExplosion(ex);
+		if (tankLives <= 0)
+		{
+			// TODO: Ryan & Yan Quan
+			// Switch scene and pass high score to YQ's function
+			tankHighscore = tankKills + static_cast<int>(tankAccuracy / 10.0f) * tankKills;
+		}
+		else
+		{
+			go->reset();
+			go->Iframes = 5.0;
+			go->active = true;
+		}
 	}
 }
 
@@ -496,13 +531,42 @@ void GOManager::toExplosion(GameObject * go)
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *a = m_goList[i];
-		if (a == go)
+		if (a == go && !a->active)
 			continue;
 		float length = (a->pos - go->pos).Length();
 		if (length < go->exRadius)
 		{
 			exResponse(a);
 		}
+
+		//New explosion code
+		//Vector3 circleDistance(fabsf(go->pos.x - a->pos.x), fabsf(go->pos.y - a->pos.y));
+		//
+		//if (circleDistance.x > (a->scale.x / 2 + go->exRadius))
+		//{
+		//	break;
+		//}
+		//else if (circleDistance.y > (a->scale.y / 2 + go->exRadius))
+		//{
+		//	break;
+		//}
+		//
+		//if (circleDistance.x <= (a->scale.x / 2))
+		//{
+		//	exResponse(a);
+		//}
+		//else if (circleDistance.y <= (a->scale.y / 2))
+		//{
+		//	exResponse(a);
+		//}
+		//
+		//float cornerDistance_sq = (circleDistance.x - a->scale.x / 2) *(circleDistance.x - a->scale.x / 2) +
+		//	(circleDistance.y - a->scale.y / 2) * (circleDistance.y - a->scale.y / 2);
+		//
+		//if (cornerDistance_sq <= (go->exRadius * go->exRadius))
+		//{
+		//	exResponse(a);
+		//}
 	}
 }
 

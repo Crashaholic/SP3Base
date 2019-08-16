@@ -229,9 +229,10 @@ void Scene::RenderGO(GameObject *go)
 	}
 
 	glDisable(GL_CULL_FACE);
-
-	defaultShader.SetFloat("transparency", go->transparency);
-
+	if (go->Iframes <= 0.0)
+		defaultShader.SetFloat("transparency", go->transparency);
+	else
+		defaultShader.SetFloat("transparency", 0.5f);
 	int renders = 1;
 	if (go->wrapMode == GameObject::SW_HYBRID)
 	{
@@ -262,6 +263,9 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::GO_CUBE:
 			RenderMesh(meshList[GEO_CUBE], false);
 			break;
+		case GameObject::ENEMY_BUILDING:
+			RenderMesh(meshList[GEO_ENEMY_BUILDING], false);
+			break;
 		case GameObject::PLAYER_PLANE_A10:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
 			break;
@@ -282,6 +286,7 @@ void Scene::RenderGO(GameObject *go)
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
 			break;
 		case GameObject::PLAYER_PROJECTILE_BOMB:
+		case GameObject::PLAYER_PROJECTILE_NUKE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_BOMB], false);
 			break;
 		case GameObject::PLAYER_PROJECTILE_SHELL:

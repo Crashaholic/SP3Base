@@ -43,38 +43,40 @@ void A10::Secondary()
 }
 
 void A10::Update(double dt)
-{
-	Plane::Update(dt);
+{	
+	if (GOref->active)
+	{
+		Plane::Update(dt);
 
-	reload -= dt;
-	if (currentSpray >0)
-	{
-		if(reload<=0.0)
+		reload -= dt;
+		if (currentSpray > 0)
 		{
-			reload = reloadSpeed;
-			--currentSpray;
-		GameObject* bullet = GOManager::GetInstance()->fetchGO();
-		bullet->type = GameObject::PLAYER_PROJECTILE_MACHINE;
-		float bulletangle = GOref->angle;
-		bulletangle += Math::RandFloatMinMax(-Math::DegreeToRadian(inaccuracy), Math::DegreeToRadian(inaccuracy));
-		bullet->vel = Vector3(cos(bulletangle), sin(bulletangle), 0) * 100;
-		bullet->pos = GOref->pos;
-		bullet->scale.Set(1, 2, 1);
-		bullet->hasGravity = false;
-		bullet->wrapMode = GameObject::SW_CLEAR;
-		for (int i = 0; i < MAX_TEXTURES; ++i)
-			bullet->color[i] = GOref->color[i];
+			if (reload <= 0.0)
+			{
+				reload = reloadSpeed;
+				--currentSpray;
+				GameObject* bullet = GOManager::GetInstance()->fetchGO();
+				bullet->type = GameObject::PLAYER_PROJECTILE_MACHINE;
+				float bulletangle = GOref->angle;
+				bulletangle += Math::RandFloatMinMax(-Math::DegreeToRadian(inaccuracy), Math::DegreeToRadian(inaccuracy));
+				bullet->vel = Vector3(cos(bulletangle), sin(bulletangle), 0) * 100;
+				bullet->pos = GOref->pos;
+				bullet->scale.Set(1, 2, 1);
+				bullet->hasGravity = false;
+				bullet->wrapMode = GameObject::SW_CLEAR;
+				for (int i = 0; i < MAX_TEXTURES; ++i)
+					bullet->color[i] = GOref->color[i];
+			}
+		}
+		else
+		{
+			if (fire)
+			{
+				fire = false;
+				reload = sprayRecoverTime;
+			}
 		}
 	}
-	else
-	{
-		if (fire)
-		{
-			fire = false;
-			reload = sprayRecoverTime;
-		}
-	}
-	
 }
 
 A10::A10()

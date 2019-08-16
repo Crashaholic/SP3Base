@@ -67,6 +67,8 @@ struct GameObject
 	Vector3 perp;			// normal perpendicular
 	Vector3 dir;
 
+	double Iframes;//Invincibility
+
 	bool reserved;
 	bool active;
 	float exRadius;

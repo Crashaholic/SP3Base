@@ -36,18 +36,21 @@ void Plane::SetGORef(GameObject * GOref)
 void Plane::Update(double dt)
 {
 	//GameObject::Update(dt);
-	ReadInput(dt, 'A', 'D', 'Q', 'E');
-	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
-	GOref->vel = GOref->dir * topSpeed;
-	GOref->pos += GOref->vel * (float)dt;
-	GOref->norm = GOref->dir;
-	if (GOref->dir.x < 0)
+	if (GOref->active)
 	{
-		GOref->scale.y = -1.4f;
-	}
-	else
-	{
-		GOref->scale.y = 1.4f;
+		ReadInput(dt, 'A', 'D', 'Q', 'E');
+		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
+		GOref->vel = GOref->dir * topSpeed;
+		GOref->pos += GOref->vel * (float)dt;
+		GOref->norm = GOref->dir;
+		if (GOref->dir.x < 0)
+		{
+			GOref->scale.y = -1.4f;
+		}
+		else
+		{
+			GOref->scale.y = 1.4f;
+		}
 	}
 }
 
@@ -84,6 +87,7 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 void Plane::Init()
 {	
 	SetGORef(GOManager::GetInstance()->fetchGO());
+	GOref->reserved = true;
 	GOref->angle = 0.0f;
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 	topSpeed = 10.0f;

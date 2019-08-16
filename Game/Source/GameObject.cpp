@@ -15,7 +15,8 @@ GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	wrapMode(SW_CLEAR),
 	lifeTime(0.0),
 	hasLifeTime(false),
-	transparency(1.0f)
+	transparency(1.0f),
+	Iframes(0.0)
 {
 	for (int i = 0; i < MAX_TEXTURES; ++i)
 	{
@@ -34,6 +35,10 @@ void GameObject::Init()
 
 void GameObject::Update(double dt)
 {
+	if (Iframes > 0)
+		Iframes -= dt;
+	else
+		Iframes = 0;
 	pos += vel * (float)dt;
 	if (hasLifeTime)
 	{

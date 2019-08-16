@@ -27,7 +27,7 @@ void ScenePlane::Init()
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
 	//plane = dynamic_cast<Komet*>(new Plane);
-	plane = new A10;
+	plane = new Komet;
 	plane->Init();
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -47,6 +47,7 @@ void ScenePlane::Init()
 	player = new PlayerTank;
 	player->Init();
 
+
 	decal1 = LoadTGA("Image//A10decal2.tga");
 	// Testing cubes
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
@@ -65,10 +66,6 @@ void ScenePlane::Init()
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
-
-	GOManager::GetInstance()->terreference = &terr;
-	player = new PlayerTank;
-	player->Init();
 
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
@@ -383,8 +380,31 @@ void ScenePlane::EndWave()
 	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
+	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
+	for (int i = 0; i < m_goList.size(); ++i)
+	{
+		GameObject* go = m_goList[i];
+		if (!go->reserved)
+		{
+			go->active = false;
+		}
+	}
+	//GOManager::GetInstance()->cleanList();
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
+	for (int i = 0; i < 5; ++i)
+	{
+		GameObject* building = GOManager::GetInstance()->fetchGO();
+		building->type = GameObject::ENEMY_BUILDING;
+		building->pos.x = Math::RandFloatMinMax(m_worldWidth / 10, m_worldWidth / 10 * 9);
+		building->pos.y = terr.GetHeight(building->pos).y+3.0f;
+		building->vel.SetZero();
+		building->hasGravity = false;
+		building->scale = Vector3(1, 1, 1)*10;
+		building->norm.Set(1, 0, 0);
+		//building->
+	}
+
 	//tank->pos = terr.GetHeight(tank->pos);
 	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
