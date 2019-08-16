@@ -34,7 +34,7 @@ Vector3 Terrain::GetNormal(Vector3 ObjectPosition)
 	return vec3(v.y, -v.x, 0);
 }
 
-void Terrain::GenerateRandomHeight(unsigned int worldWidth)
+void Terrain::GenerateRandomHeight(float worldWidth)
 {
 	float lastY = 0;
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
