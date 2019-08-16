@@ -63,7 +63,7 @@ void ScenePlane::Init()
 	// Tank
 	tank = GOManager::GetInstance()->fetchGO();
 	tank->type = GameObject::PLAYER_TANK;
-	tank->scale.Set(3.5f, 1.2f, 1.0f);
+	tank->scale.Set(3.5f, 1.4f, 1.0f);
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
 
@@ -140,11 +140,6 @@ void ScenePlane::Update(double dt)
 		SpawnEnemy();
 	}
 
-	double x, y;
-	Application::GetCursorPos(&x, &y);
-	int w = Application::GetWindowWidth();
-	int h = Application::GetWindowHeight();
-
 	vec3 n = terr.GetNormal(tank->pos);
 
 	// Tank Movement
@@ -178,22 +173,8 @@ void ScenePlane::Update(double dt)
 		else
 			tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 	}
-	if (tank->pos.x <= 4.f)
-	{
-		tank->pos.x = 4.f;
-	}
-	if (tank->pos.x >= 130)
-	{
-		tank->pos.x = 130;
-	}
-	if (tank2->pos.x <= 4.f)
-	{
-		tank2->pos.x = 4.f;
-	}
-	if (tank2->pos.x >= 130)
-	{
-		tank2->pos.x = 130;
-	}
+	tank->pos.x = Math::Clamp(tank->pos.x, 4.f, 130.f);
+	tank2->pos.x = Math::Clamp(tank2->pos.x, 4.f, 130.f);
 	// Tank barrel control
 	if (Application::IsKeyPressed('I')) // Left
 	{
@@ -203,14 +184,7 @@ void ScenePlane::Update(double dt)
 	{
 		tank2->angle -= 30.0f * static_cast<float>(dt);
 	}
-	if (tank2->angle <= 30.0f)
-	{
-		tank2->angle = 30.0f;
-	}
-	if (tank2->angle >= 150.0f)
-	{
-		tank2->angle = 150.0f;
-	}
+	tank2->angle = Math::Clamp(tank2->angle, 30.f, 150.f);
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 
