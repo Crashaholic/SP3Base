@@ -5,7 +5,8 @@ struct GameObject;
 
 class Tank
 {
-
+protected:
+	float heightOffset;
 public:
 	Tank();
 	~Tank();

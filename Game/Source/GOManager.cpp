@@ -470,7 +470,7 @@ void GOManager::toExplosion(GameObject * go)
 	{
 		go->color[i].Set(1.f, 1.f, 1.f);
 	}
-	go->pos.y = terreference->GetHeight(go->pos).y + 0.01f;
+	go->pos.y = Math::Max(terreference->GetHeight(go->pos).y + 0.01f, go->pos.y);
 	go->vel.SetZero();
 	go->hasGravity = false;
 	go->hasLifeTime = true;

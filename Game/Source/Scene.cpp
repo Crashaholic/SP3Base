@@ -81,10 +81,14 @@ void Scene::Init()
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[1] = LoadTGA("Image//Bomb1decal.tga");
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_TANK]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_TANKGUN]->textureID[0] = LoadTGA("Image//Turret1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_SHELL] = MeshBuilder::GenerateSphere("PLAYER_PROJECTILE_SHELL", Color(1.0f, 0.0f, 1.0f), 10, 10, 1.f);
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateQuad("EXPLOSION", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
+	meshList[GEO_ENEMY_BUILDING] = MeshBuilder::GenerateQuad("ENEMY_BUILDING", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_ENEMY_BUILDING]->textureID[0] = LoadTGA("Image//Enemybuilding1.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
 	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
@@ -263,9 +267,13 @@ void Scene::RenderGO(GameObject *go)
 			break;
 		case GameObject::PLAYER_TANK:
 			RenderMesh(meshList[GEO_PLAYER_TANK], false);
-			break;
-		case GameObject::PLAYER_TANKGUN:
+			modelStack.PopMatrix();
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
+
 			break;
 		case GameObject::PLAYER_PROJECTILE_MACHINE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);

@@ -86,6 +86,7 @@
     <ClCompile Include="Source\SceneScore.cpp" />
     <ClCompile Include="Source\SceneTank.cpp" />
     <ClCompile Include="Source\SceneTSelect.cpp" />
+    <ClCompile Include="Source\Tank\TurretTank.cpp" />
     <ClCompile Include="Source\Terrain.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
@@ -102,7 +103,6 @@
     <ClCompile Include="Source\SceneMenu.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
-    <ClCompile Include="Source\Weapon\Bomb.cpp" />
     <ClCompile Include="Source\Tank\Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +115,7 @@
     <ClInclude Include="Source\SceneTank.h" />
     <ClInclude Include="Source\SceneTSelect.h" />
     <ClInclude Include="Source\Plane\Plane.h" />
+    <ClInclude Include="Source\Tank\TurretTank.h" />
     <ClInclude Include="Source\Terrain.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera.h" />
@@ -133,7 +134,6 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
-    <ClInclude Include="Source\Weapon\Bomb.h" />
     <ClInclude Include="Source\Tank\Tank.h" />
   </ItemGroup>
   <ItemGroup>

@@ -65,6 +65,7 @@ void ScenePlane::Init()
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
 	//Tank* player = new Tank;
 	//player = static_cast<Tank*>(GOManager::GetInstance()->fetchGO());
+	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;
 	player->Init();
 	//// Tank
@@ -95,7 +96,6 @@ void ScenePlane::Init()
 	//	tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 
 	// Set terrain reference in GOManager
-	GOManager::GetInstance()->terreference = &terr;
 
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
@@ -136,8 +136,6 @@ void ScenePlane::Update(double dt)
 	{
 		plane->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
 		plane->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-		//defaultShader.SetVec3("coloredTexture[0]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
-		//defaultShader.SetVec3("coloredTexture[1]", vec3{ Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f),Math::RandFloatMinMax(0.f,1.f) });
 	}
 
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
@@ -184,72 +182,6 @@ void ScenePlane::Update(double dt)
 		upg->pos.y = 80;
 		upg->vel.Set(0, -5.f, 0);
 	}*/
-
-	//vec3 n = terr.GetNormal(tank->pos);
-
-	//// Tank Movement
-	//if (Application::IsKeyPressed('J')) // Left
-	//{
-	//	tank->pos -= tankSpeed * static_cast<float>(dt);
-	//	tank->pos.y = terr.GetHeight(tank->pos).y;
-
-	//	tank2->pos -= tankSpeed * static_cast<float>(dt);
-	//	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-	//	if (n <= 0)
-	//	{
-	//		tank->angle = Math::RadianToDegree(terr.GetNormal(tank->pos).x);
-	//	}
-	//	else
-	//		tank->angle = Math::RadianToDegree(-(terr.GetNormal(tank->pos).x));
-	//}
-	//if (Application::IsKeyPressed('L')) // Right
-	//{
-	//	tank->pos += tankSpeed * static_cast<float>(dt);
-	//	tank->pos.y = terr.GetHeight(tank->pos).y;
-
-	//	tank2->pos += tankSpeed * static_cast<float>(dt);
-	//	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-	//	if (n <= 0)
-	//	{
-	//		tank->angle = Math::RadianToDegree(terr.GetNormal(tank->pos).x);
-	//	}
-	//	else
-	//		tank->angle = Math::RadianToDegree(-(terr.GetNormal(tank->pos).x));
-	//}
-	//tank->pos.x = Math::Clamp(tank->pos.x, 4.f, 173.f);
-	//tank2->pos.x = Math::Clamp(tank2->pos.x, 4.f, 173.f);
-	//// Tank barrel control
-	//if (Application::IsKeyPressed('I')) // Left
-	//{
-	//	tank2->angle += 30.0f * static_cast<float>(dt);
-	//}
-	//if (Application::IsKeyPressed('P')) // Right
-	//{
-	//	tank2->angle -= 30.0f * static_cast<float>(dt);
-	//}
-	//tank2->angle = Math::Clamp(tank2->angle, 30.f, 150.f);
-	//tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
-	//tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
-
-	//// Tank shoot
-	//bulletCooldown -= dt;
-	//tank2->dir.Set(cosf(tank2->angle), sinf(tank2->angle), 0);
-	//if (Application::IsKeyPressed('N') && bulletCooldown <= 0)
-	//{
-	//	GameObject *object = GOManager::GetInstance()->fetchGO();
-	//	object->active = true;
-	//	object->type = GameObject::PLAYER_PROJECTILE_SHELL;
-	//	object->scale.Set(0.4f, 0.4f, 0.4f);
-	//	object->pos = tank2->pos;
-	//	object->vel = tank2->norm * BULLET_SPEED;
-	//	object->hasGravity = false;
-	//	if (GOManager::GetInstance()->upgrade_1 == 0)
-	//		bulletCooldown = 1.2f;
-	//	if (GOManager::GetInstance()->upgrade_1 == 1)
-	//		bulletCooldown = 0.5f;
-	//}
 
 	static bool hPressed = false;
 	if (Application::IsKeyPressed('H'))
@@ -433,12 +365,6 @@ void ScenePlane::Render()
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
-	modelStack.PushMatrix();
-		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0);
-		modelStack.Scale(57, 14, 1);
-		//RenderMesh(meshList[GEO_A10], false);
-	modelStack.PopMatrix();
-
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
@@ -446,7 +372,7 @@ void ScenePlane::Render()
 	ss << "Upgrade no.: " << GOManager::GetInstance()->tUp;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 15);
 	ss.str("");
-	ss << "Chance: " << GOManager::GetInstance()->random;
+	ss << "Kill: " << GOManager::GetInstance()->planeKills;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 12);
 	ss.str("");
 	ss << "Lives: " << GOManager::GetInstance()->tlives;

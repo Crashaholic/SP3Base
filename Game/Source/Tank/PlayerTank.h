@@ -1,6 +1,6 @@
 #pragma once
-#include "Tank.h"
-class PlayerTank : public Tank
+#include "TurretTank.h"
+class PlayerTank : public TurretTank
 {
 public:
 	PlayerTank();
