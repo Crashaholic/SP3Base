@@ -475,6 +475,8 @@ void GOManager::toExplosion(GameObject * go)
 	go->hasGravity = false;
 	go->hasLifeTime = true;
 	go->lifeTime = 0.7;
+	go->angle = Math::RandFloatMinMax(0.0f, 360.0f);
+	go->norm.Set(cos(go->angle), sin(go->angle), 0.0f);
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *a = m_goList[i];
