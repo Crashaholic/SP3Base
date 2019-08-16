@@ -72,6 +72,7 @@ struct GameObject
 	bool hasGravity;
 	bool hasCollider();
 	virtual void Update(double dt);
+	virtual void Init();
 	void reset();
 	float transparency;
 	Component color[MAX_TEXTURES];

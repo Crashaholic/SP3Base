@@ -60,6 +60,10 @@ void GameObject::Update(double dt)
 	}
 }
 
+void GameObject::Init()
+{
+}
+
 GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
 	: type(typeValue),
 	scale(1, 1, 1),

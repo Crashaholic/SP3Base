@@ -52,9 +52,9 @@ private:
 
 	unsigned decal1;
 
+	Tank* player;
 
-
-	GameObject *tank, *tank2;
+	//GameObject *tank, *tank2;
 	float angle;
 	float tankSpeed;
 	double bulletCooldown;

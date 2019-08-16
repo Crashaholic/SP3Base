@@ -10,7 +10,7 @@
 #include "GameObject.h"
 #include "shader.hpp"
 #include <vector>
-
+#include "Tank/Tank.h"
 
 class Scene
 {
