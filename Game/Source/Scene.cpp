@@ -155,7 +155,7 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 	{
 		Mtx44 characterSpacing;
 		//1.0f is the spacing of each character, you may change this value
-		characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0);
+		characterSpacing.SetToTranslation(i * 0.5f + 0.5f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		defaultShader.SetMat4("model", MVP);
 

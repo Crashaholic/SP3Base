@@ -21,35 +21,55 @@ SceneMenu::~SceneMenu()
 void SceneMenu::Init()
 {
 	Scene::Init();
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	bLightEnabled = true;
-	m_speed = 1.f;
-	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
 
-	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
+	Vector3 center(m_worldWidth / 2, m_worldHeight / 2 - 20.0f, 0.0f);
 
 	// Buttons init
-	playPlane	= new Button;
-	playTank	= new Button;
-	play2P		= new Button;
-	highScore	= new Button;
-	mute		= new Button;
+	bArray[0] = new Button;
+	bArray[1] = new Button;
+	bArray[2] = new Button;
+	bArray[3] = new Button;
+	bArray[4] = new Button;
 
-	addButton(playPlane);
-	addButton(playTank);
-	addButton(play2P);
-	addButton(highScore);
-	addButton(mute);
+	addButton(bArray[0]);
+	addButton(bArray[1]);
+	addButton(bArray[2]);
+	addButton(bArray[3]);
+	addButton(bArray[4]);
 
-	playPlane	->init(Vector3(center.x - 70.0f, center.y, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
-	playTank	->init(Vector3(center.x - 70.0f, center.y - 7.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
-	play2P		->init(Vector3(center.x - 70.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
-	highScore	->init(Vector3(center.x - 70.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
-	mute		->init(Vector3(center.x - 70.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
+	bArray[0]->init(Vector3(center.x - 69.0f, center.y, 1.0f),					Vector3(20.0f, 3.5f, 1.0f));
+	bArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f),			Vector3(20.0f, 3.5f, 1.0f));
+	bArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+
+	// Text init
+	sArray[0] = "Play as Plane";
+	sArray[1] = "Play as Tank";
+	sArray[2] = "2 Player";
+	sArray[3] = "Highscores";
+	sArray[4] = "Mute";
+
+	sArrayI[0] = "Play as Plane";
+	sArrayI[1] = "Play as Tank";
+	sArrayI[2] = "2 Player";
+	sArrayI[3] = "Highscores";
+	sArrayI[4] = "Mute";
+
+	sArrayA[0] = " > Play as Plane";
+	sArrayA[1] = " > Play as Tank";
+	sArrayA[2] = " > 2 Player";
+	sArrayA[3] = " > Highscores";
+	sArrayA[4] = " > Mute";
+
+	muted = false;
+	choice = 0;
 }
 
 void SceneMenu::Update(double dt)
@@ -88,6 +108,32 @@ void SceneMenu::Update(double dt)
 	{
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
+
+		switch (choice)
+		{
+		case 0:
+			SceneManager::getSceneManager().switchToScene("PSelect", this);
+			break;
+		case 1:
+			SceneManager::getSceneManager().switchToScene("TSelect", this);
+			break;
+		case 2:
+			// TODO: Ryan
+			// Add a scene for 2 player mode
+			// SceneManager::getSceneManager().switchToScene("", this);
+			break;
+		case 3:
+			SceneManager::getSceneManager().switchToScene("Score", this);
+			break;
+		case 4:
+			if (muted == false)
+				muted = true;
+			else
+				muted = false;
+			break;
+		default:
+			break;
+		}
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
@@ -104,6 +150,38 @@ void SceneMenu::Update(double dt)
 	{
 		bRButtonState = false;
 		std::cout << "RBUTTON UP" << std::endl;
+	}
+
+	// Button checks
+	if (muted == false)
+	{
+		sArray[4]	= "Unmute";
+		sArrayI[4]	= "Unmute";
+		sArrayA[4]	= " > Unmute";
+	}
+	else
+	{
+		sArray[4] = "Mute";
+		sArrayI[4] = "Mute";
+		sArrayA[4] = " > Mute";
+	}
+	int inactive = 0;
+	for (int i = 0; i < 5; ++i)
+	{
+		if (bArray[i]->checkMouse())
+		{
+			sArray[i] = sArrayA[i];
+			choice = i;
+		}
+		else
+		{
+			sArray[i] = sArrayI[i];
+			++inactive;
+		}
+		if (inactive == 5)
+		{
+			choice = -1;
+		}
 	}
 
 	// Physics Simulation Section
@@ -131,15 +209,21 @@ void SceneMenu::Render()
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	renderButton();
+	// renderButton();
 
 	//On screen text
+	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.33", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 53);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", Color(0, 1, 0), 3, 0, 49);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], sArray[0], Color(0, 1, 0), 3, 0, 16);
+	RenderTextOnScreen(meshList[GEO_TEXT], sArray[1], Color(0, 1, 0), 3, 0, 12);
+	RenderTextOnScreen(meshList[GEO_TEXT], sArray[2], Color(0, 1, 0), 3, 0, 8);
+	RenderTextOnScreen(meshList[GEO_TEXT], sArray[3], Color(0, 1, 0), 3, 0, 4);
+	RenderTextOnScreen(meshList[GEO_TEXT], sArray[4], Color(0, 1, 0), 3, 0, 0);
 }
 
 void SceneMenu::Exit()
