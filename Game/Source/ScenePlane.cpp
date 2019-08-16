@@ -426,7 +426,7 @@ void ScenePlane::EndWave()
 	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
-	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateRandomHeight((unsigned  int)m_worldWidth);
 	terr.GenerateTerrainMesh();
 	tank->pos = terr.GetHeight(tank->pos);
 	tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
@@ -434,7 +434,7 @@ void ScenePlane::EndWave()
 
 void ScenePlane::SpawnEnemy()
 {
-	int tempcount = startCount + 1 * waveNo;
+	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
 		return;
