@@ -15,6 +15,7 @@ void PlayerTank::Init()
 {
 	tankSpeed = 5;
 	SetGORef(GOManager::GetInstance()->fetchGO());
+	GOref->reserved = true;
 	GOref->type = GameObject::PLAYER_TANK;
 	GOref->scale.Set(4.0f, 2.2f, 1.0f);
 	heightOffset = GOref->scale.y + 0.5f;
@@ -36,7 +37,6 @@ void PlayerTank::Init()
 
 void PlayerTank::Update(double dt)
 {
-
 	// Tank Movement
 	Terrain* terreference = GOManager::GetInstance()->terreference;
 	Vector3 frontCheck = GOref->pos + Vector3(GOref->scale.x/2, 0,0);
@@ -70,7 +70,10 @@ void PlayerTank::Update(double dt)
 	turretAngle = Math::Clamp(turretAngle, Math::DegreeToRadian(30.f), Math::DegreeToRadian(150.f));
 	GOref->dir.Set(cos(turretAngle), sin(turretAngle), 0);
 	// Tank shoot
-	bulletCooldown -= dt;
+	if (bulletCooldown > 0)
+	{
+		bulletCooldown -= dt;
+	}
 	if (Application::IsKeyPressed('N') && bulletCooldown <= 0)
 	{
 		GameObject *object = GOManager::GetInstance()->fetchGO();
@@ -80,12 +83,8 @@ void PlayerTank::Update(double dt)
 		object->pos = GOref->pos;
 		object->vel = GOref->dir * 30.0f;
 		object->hasGravity = false;
-		if (GOManager::GetInstance()->upgrade_1 == 0)
-			bulletCooldown = 1.2f;
-		if (GOManager::GetInstance()->upgrade_1 == 1)
-			bulletCooldown = 0.5f;
+		bulletCooldown = Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.2f), 0.2f);
 	}
-
 }
 
 void PlayerTank::move_leftright()

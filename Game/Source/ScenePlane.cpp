@@ -41,7 +41,7 @@ void ScenePlane::Init()
 	tankSpeed = 5.f;
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	decal1 = LoadTGA("Image//A10decal2.tga");
 
@@ -61,41 +61,11 @@ void ScenePlane::Init()
 	g2->type = GameObject::GO_CUBE;
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
-	//g2->vel.Set(0, -5.0f, 0);
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
-	//Tank* player = new Tank;
-	//player = static_cast<Tank*>(GOManager::GetInstance()->fetchGO());
+
 	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;
 	player->Init();
-	//// Tank
-	//tank = GOManager::GetInstance()->fetchGO();
-	//tank->type = GameObject::PLAYER_TANK;
-	//tank->scale.Set(3.5f, 1.4f, 1.0f);
-	//tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
-	//tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
-	//tank->defaultPos = tank->pos;
-
-	//tank2 = GOManager::GetInstance()->fetchGO();
-	//tank2->type = GameObject::PLAYER_TANKGUN;
-	//tank2->scale.Set(1.5f, 0.6f, 1.0f);
-	//tank2->angle = 89.0f;
-	//tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
-	//tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
-	//tank2->defaultPos = tank2->pos;
-
-	//tank->pos.y = terr.GetHeight(tank->pos).y;
-	//tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-	//vec3 n = terr.GetNormal(tank->pos);
-	//if (n <= 0)
-	//{
-	//	tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
-	//}
-	//else
-	//	tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
-
-	// Set terrain reference in GOManager
 
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
@@ -409,7 +379,7 @@ void ScenePlane::EndWave()
 	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
-	terr.GenerateRandomHeight((unsigned int)m_worldWidth);
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	//tank->pos = terr.GetHeight(tank->pos);
 	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};

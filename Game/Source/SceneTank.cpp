@@ -37,7 +37,7 @@ void SceneTank::Init()
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	m_ghost->active = true;
 
-	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;

@@ -1,6 +1,37 @@
 
 #include "GameObject.h"
 
+GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
+	: type(typeValue),
+	scale(1, 1, 1),
+	active(false),
+	reserved(false),
+	exRadius(1.f),
+	hasGravity(false),
+	norm(0, 1, 0),
+	angle(0.0f),
+	defaultPos(0.0f, 0.0f, 0.0f),
+	defaultScale(1.0f, 1.0f, 1.0f),
+	wrapMode(SW_CLEAR),
+	lifeTime(0.0),
+	hasLifeTime(false),
+	transparency(1.0f)
+{
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		isColorable[i] = false;
+		color[i].Set(1, 1, 1);
+	}
+}
+
+GameObject::~GameObject()
+{
+}
+
+void GameObject::Init()
+{
+}
+
 void GameObject::Update(double dt)
 {
 	pos += vel * (float)dt;
@@ -22,7 +53,7 @@ void GameObject::Update(double dt)
 	switch (type)
 	{
 	case PLAYER_PROJECTILE_MISSILE:
-		vel += dir*static_cast<float>(dt)*100.0f;
+		vel += dir * static_cast<float>(dt)*100.0f;
 		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt)*vel.Length() * 0.1f;;
 
 		try
@@ -48,7 +79,7 @@ void GameObject::Update(double dt)
 			dir.Set(1, 0, 0);
 		}
 		angle = atan2(dir.y, dir.x);
-		norm.Set( -dir.y, dir.x);
+		norm.Set(-dir.y, dir.x);
 		break;
 	case EXPLOSION:
 		transparency = (float)lifeTime;
@@ -58,36 +89,6 @@ void GameObject::Update(double dt)
 		}
 		break;
 	}
-}
-
-void GameObject::Init()
-{
-}
-
-GameObject::GameObject(GAMEOBJECT_TYPE typeValue)
-	: type(typeValue),
-	scale(1, 1, 1),
-	active(false),
-	exRadius(1.f),
-	hasGravity(false),
-	norm(0, 1, 0),
-	angle(0.0f),
-	defaultPos(0.0f, 0.0f, 0.0f),
-	defaultScale(1.0f, 1.0f, 1.0f),
-	wrapMode(SW_CLEAR),
-	lifeTime(0.0),
-	hasLifeTime(false),
-	transparency(1.0f)
-{
-	for (int i = 0; i < MAX_TEXTURES; ++i)
-	{
-		isColorable[i] = false;
-		color[i].Set(1, 1, 1);
-	}
-}
-
-GameObject::~GameObject()
-{
 }
 
 bool GameObject::hasCollider()
