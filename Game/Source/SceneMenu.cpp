@@ -23,17 +23,33 @@ void SceneMenu::Init()
 	Scene::Init();
 	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
-
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
-
-
 
 	bLightEnabled = true;
 	m_speed = 1.f;
 	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
-	m_ghost = new GameObject(GameObject::GO_BALL);
-	m_ghost->active = true;
+
+	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
+
+	// Buttons init
+	playPlane	= new Button;
+	playTank	= new Button;
+	play2P		= new Button;
+	highScore	= new Button;
+	mute		= new Button;
+
+	addButton(playPlane);
+	addButton(playTank);
+	addButton(play2P);
+	addButton(highScore);
+	addButton(mute);
+
+	playPlane	->init(Vector3(center.x - 70.0f, center.y, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
+	playTank	->init(Vector3(center.x - 70.0f, center.y - 7.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
+	play2P		->init(Vector3(center.x - 70.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
+	highScore	->init(Vector3(center.x - 70.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
+	mute		->init(Vector3(center.x - 70.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(8.0f, 3.0f, 1.0f));
 }
 
 void SceneMenu::Update(double dt)
@@ -67,7 +83,6 @@ void SceneMenu::Update(double dt)
 	// Switch scene
 	checkSwitch();
 
-	// Mouse Section
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -116,6 +131,8 @@ void SceneMenu::Render()
 
 	RenderMesh(meshList[GEO_AXES], false);
 
+	renderButton();
+
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
@@ -134,10 +151,4 @@ void SceneMenu::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-
-	if (m_ghost)
-	{
-		delete m_ghost;
-		m_ghost = NULL;
-	}
 }

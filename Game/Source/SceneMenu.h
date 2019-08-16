@@ -25,7 +25,13 @@ private:
 	// Physics
 	float m_speed;
 	Vector3 m_gravity;
-	GameObject *m_ghost;
+
+	// Buttons
+	Button* playPlane;
+	Button* playTank;
+	Button* play2P;
+	Button* highScore;
+	Button* mute;
 };
 
 #endif

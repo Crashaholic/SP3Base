@@ -158,6 +158,7 @@ void Application::Run()
 		if (scene->readyExit == true)
 		{
 			scene->readyExit = false;
+			scene->cleanButton();
 			scene->Exit();
 			GOManager::GetInstance()->cleanList();
 			scene = manager->getActiveScene();

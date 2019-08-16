@@ -86,6 +86,9 @@ void Scene::Init()
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateQuad("EXPLOSION", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
+
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -349,4 +352,50 @@ void Scene::debugBalls(GameObject * go)
 	modelStack.Scale(0.5f, 0.5f, 0.5f);
 	RenderMesh(meshList[GEO_DEBUG], false);
 	modelStack.PopMatrix();
+}
+
+void Scene::addButton(Button * button)
+{
+	buttonList.push_back(button);
+}
+
+void Scene::cleanButton()
+{
+	while (buttonList.size() > 0)
+	{
+		Button *button = buttonList.back();
+		delete button;
+		buttonList.pop_back();
+	}
+}
+
+void Scene::renderButton()
+{
+	for (std::vector<Button *>::iterator it = buttonList.begin(); it != buttonList.end(); ++it)
+	{
+		Button *button = *it;
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[0].x, button->balls[0].y, button->balls[0].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[1].x, button->balls[1].y, button->balls[1].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[2].x, button->balls[2].y, button->balls[2].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(button->balls[3].x, button->balls[3].y, button->balls[3].z);
+		modelStack.Scale(0.5f, 0.5f, 0.5f);
+		RenderMesh(meshList[GEO_DEBUG], false);
+		modelStack.PopMatrix();
+	}
 }
