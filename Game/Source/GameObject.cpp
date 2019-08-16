@@ -36,6 +36,8 @@ void GameObject::Update(double dt)
 		break;
 	case EXPLOSION:
 		transparency = (float)lifeTime;
+		// TODO: Matthew pls fix thanks
+		scale = Vector3(1, 1, 1) * (1 - lifeTime) * mass;
 		break;
 	}
 }
