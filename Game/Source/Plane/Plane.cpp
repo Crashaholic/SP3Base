@@ -9,23 +9,20 @@ void Plane::Primary()
 	bomb->pos = pos;
 	bomb->scale.Set(1, 2, 1);
 	bomb->hasGravity = true;
-	bomb->wrapMode = SW_BOUNCE;
-	bomb->mass = 50;
+	bomb->wrapMode = SW_CLEAR;
 	for(int i = 0;i<MAX_TEXTURES;++i)
 		bomb->color[i] = color[i];
-	//bomb = dynamic_cast<GameObject*>(bomb);
 }
 
 void Plane::Secondary()
 {
 	GameObject* bomb = GOManager::GetInstance()->fetchGO();
-	bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
+	bomb->type = GameObject::PLAYER_PROJECTILE_NUKE;
 	bomb->vel = vel;
 	bomb->pos = pos;
 	bomb->scale.Set(1, 2, 1);
 	bomb->hasGravity = true;
 	bomb->wrapMode = SW_BOUNCE;
-	bomb->mass = 500;
 	for (int i = 0; i < MAX_TEXTURES; ++i)
 		bomb->color[i].Set(1, 0, 0);
 	//bomb = dynamic_cast<GameObject*>(bomb);

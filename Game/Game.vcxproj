@@ -74,6 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Tank\PlayerTank.cpp" />
     <ClCompile Include="Source\HighScoreSystem.cpp" />
     <ClCompile Include="Source\HighscoreSystem.h" />
     <ClCompile Include="Source\Plane\A10.cpp" />
@@ -101,8 +102,11 @@
     <ClCompile Include="Source\SceneMenu.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
+    <ClCompile Include="Source\Weapon\Bomb.cpp" />
+    <ClCompile Include="Source\Tank\Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Tank\PlayerTank.h" />
     <ClInclude Include="Source\Plane\A10.h" />
     <ClInclude Include="Source\Plane\Komet.h" />
     <ClInclude Include="Source\SceneEnd.h" />
@@ -129,6 +133,8 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
+    <ClInclude Include="Source\Weapon\Bomb.h" />
+    <ClInclude Include="Source\Tank\Tank.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />

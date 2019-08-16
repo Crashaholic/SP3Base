@@ -11,6 +11,8 @@
 #include "SceneManager.h"
 #include "Logging.h"
 
+#include "Tank/PlayerTank.h"
+
 ScenePlane::ScenePlane()
 {
 }
@@ -25,7 +27,7 @@ void ScenePlane::Init()
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
 	//plane = dynamic_cast<Komet*>(new Plane);
-	plane = new Komet;
+	plane = new A10;
 	plane->Init();
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -61,47 +63,50 @@ void ScenePlane::Init()
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
 	//g2->vel.Set(0, -5.0f, 0);
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
+	//Tank* player = new Tank;
+	//player = static_cast<Tank*>(GOManager::GetInstance()->fetchGO());
+	player = new PlayerTank;
+	player->Init();
+	//// Tank
+	//tank = GOManager::GetInstance()->fetchGO();
+	//tank->type = GameObject::PLAYER_TANK;
+	//tank->scale.Set(3.5f, 1.4f, 1.0f);
+	//tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
+	//tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
+	//tank->defaultPos = tank->pos;
 
-	// Tank
-	tank = GOManager::GetInstance()->fetchGO();
-	tank->type = GameObject::PLAYER_TANK;
-	tank->scale.Set(3.5f, 1.4f, 1.0f);
-	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
-	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
+	//tank2 = GOManager::GetInstance()->fetchGO();
+	//tank2->type = GameObject::PLAYER_TANKGUN;
+	//tank2->scale.Set(1.5f, 0.6f, 1.0f);
+	//tank2->angle = 89.0f;
+	//tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
+	//tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
+	//tank2->defaultPos = tank2->pos;
 
-	tank2 = GOManager::GetInstance()->fetchGO();
-	tank2->type = GameObject::PLAYER_TANKGUN;
-	tank2->scale.Set(1.5f, 0.6f, 1.0f);
-	tank2->angle = 89.0f;
-	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
-	tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
+	//tank->pos.y = terr.GetHeight(tank->pos).y;
+	//tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
 
-	tank->pos.y = terr.GetHeight(tank->pos).y;
-	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-	vec3 n = terr.GetNormal(tank->pos);
-	if (n <= 0)
-	{
-		tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
-	}
-	else
-		tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
-
-	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
+	//vec3 n = terr.GetNormal(tank->pos);
+	//if (n <= 0)
+	//{
+	//	tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
+	//}
+	//else
+	//	tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
+
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
-	spawnTimer = 3.f; // TODO: REPLACE WITH A CONST
+	spawnTimer = (float)SPAWNTIMER;
 
-	startCount = 2;//TODO: REPLACE WITH A CONST
+	startCount = STARTINGCOUNT;
 }
 
 void ScenePlane::Update(double dt)
 {
-
+	player->Update(dt);
 	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -137,73 +142,115 @@ void ScenePlane::Update(double dt)
 
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
 
-	if (spawnTimer == 0 && Math::RandFloatMinMax(0.f, 1.f) > 0.5f) // TODO: REPLACE APPROPRIATE VALUES WITH A CONST
+	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
 	{
 		SpawnEnemy();
 	}
 
-	vec3 n = terr.GetNormal(tank->pos);
-
-	// Tank Movement
-	if (Application::IsKeyPressed('J')) // Left
+	/*if (GOManager::GetInstance()->upgrade_2 == 1)
 	{
-		tank->pos -= tankSpeed * static_cast<float>(dt);
-		tank->pos.y = terr.GetHeight(tank->pos).y;
-
-		tank2->pos -= tankSpeed * static_cast<float>(dt);
-		tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-		if (n <= 0)
-		{
-			tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
-		}
-		else
-			tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
+		tankSpeed = 10.f;
 	}
-	if (Application::IsKeyPressed('L')) // Right
+	if (GOManager::GetInstance()->tankup1 == true)
 	{
-		tank->pos += tankSpeed * static_cast<float>(dt);
-		tank->pos.y = terr.GetHeight(tank->pos).y;
-
-		tank2->pos += tankSpeed * static_cast<float>(dt);
-		tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
-
-		if (n <= 0)
-		{
-			tank->angle = terr.GetNormal(tank->pos).x * (180 / (22 / 7));
-		}
-		else
-			tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
+		GOManager::GetInstance()->tankup1 = false;
+		GameObject *upg = GOManager::GetInstance()->fetchGO();
+		upg->active = true;
+		upg->type = GameObject::UPGRADE_1;
+		upg->scale.Set(1.f, 1.f, 1.f);
+		upg->pos.x = plane->pos.x;
+		upg->pos.y = 80;
+		upg->vel.Set(0, -5.f, 0);
 	}
-	tank->pos.x = Math::Clamp(tank->pos.x, 4.f, 130.f);
-	tank2->pos.x = Math::Clamp(tank2->pos.x, 4.f, 130.f);
-	// Tank barrel control
-	if (Application::IsKeyPressed('I')) // Left
+	if (GOManager::GetInstance()->tankup2 == true)
 	{
-		tank2->angle += 30.0f * static_cast<float>(dt);
+		GOManager::GetInstance()->tankup2 = false;
+		GameObject *upg = GOManager::GetInstance()->fetchGO();
+		upg->active = true;
+		upg->type = GameObject::UPGRADE_2;
+		upg->scale.Set(1.f, 1.f, 1.f);
+		upg->pos.x = plane->pos.x;
+		upg->pos.y = 80;
+		upg->vel.Set(0, -5.f, 0);
 	}
-	if (Application::IsKeyPressed('P')) // Right
+	if (GOManager::GetInstance()->tankup3 == true)
 	{
-		tank2->angle -= 30.0f * static_cast<float>(dt);
-	}
-	tank2->angle = Math::Clamp(tank2->angle, 30.f, 150.f);
-	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
-	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
+		GOManager::GetInstance()->tankup3 = false;
+		GameObject *upg = GOManager::GetInstance()->fetchGO();
+		upg->active = true;
+		upg->type = GameObject::UPGRADE_3;
+		upg->scale.Set(1.f, 1.f, 1.f);
+		upg->pos.x = plane->pos.x;
+		upg->pos.y = 80;
+		upg->vel.Set(0, -5.f, 0);
+	}*/
 
-	// Tank shoot
-	bulletCooldown -= dt; // lower = more delay
-	tank2->dir.Set(cosf(tank2->angle), sinf(tank2->angle), 0);
-	if (Application::IsKeyPressed('N') && bulletCooldown <= 0)
-	{
-		GameObject *object = GOManager::GetInstance()->fetchGO();
-		object->active = true;
-		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
-		object->scale.Set(0.4f, 0.4f, 0.4f);
-		object->pos = tank2->pos;
-		object->vel = tank2->norm * BULLET_SPEED;
-		object->hasGravity = false;
-		bulletCooldown = 0.5f;
-	}
+	//vec3 n = terr.GetNormal(tank->pos);
+
+	//// Tank Movement
+	//if (Application::IsKeyPressed('J')) // Left
+	//{
+	//	tank->pos -= tankSpeed * static_cast<float>(dt);
+	//	tank->pos.y = terr.GetHeight(tank->pos).y;
+
+	//	tank2->pos -= tankSpeed * static_cast<float>(dt);
+	//	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
+
+	//	if (n <= 0)
+	//	{
+	//		tank->angle = Math::RadianToDegree(terr.GetNormal(tank->pos).x);
+	//	}
+	//	else
+	//		tank->angle = Math::RadianToDegree(-(terr.GetNormal(tank->pos).x));
+	//}
+	//if (Application::IsKeyPressed('L')) // Right
+	//{
+	//	tank->pos += tankSpeed * static_cast<float>(dt);
+	//	tank->pos.y = terr.GetHeight(tank->pos).y;
+
+	//	tank2->pos += tankSpeed * static_cast<float>(dt);
+	//	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
+
+	//	if (n <= 0)
+	//	{
+	//		tank->angle = Math::RadianToDegree(terr.GetNormal(tank->pos).x);
+	//	}
+	//	else
+	//		tank->angle = Math::RadianToDegree(-(terr.GetNormal(tank->pos).x));
+	//}
+	//tank->pos.x = Math::Clamp(tank->pos.x, 4.f, 173.f);
+	//tank2->pos.x = Math::Clamp(tank2->pos.x, 4.f, 173.f);
+	//// Tank barrel control
+	//if (Application::IsKeyPressed('I')) // Left
+	//{
+	//	tank2->angle += 30.0f * static_cast<float>(dt);
+	//}
+	//if (Application::IsKeyPressed('P')) // Right
+	//{
+	//	tank2->angle -= 30.0f * static_cast<float>(dt);
+	//}
+	//tank2->angle = Math::Clamp(tank2->angle, 30.f, 150.f);
+	//tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
+	//tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
+
+	//// Tank shoot
+	//bulletCooldown -= dt;
+	//tank2->dir.Set(cosf(tank2->angle), sinf(tank2->angle), 0);
+	//if (Application::IsKeyPressed('N') && bulletCooldown <= 0)
+	//{
+	//	GameObject *object = GOManager::GetInstance()->fetchGO();
+	//	object->active = true;
+	//	object->type = GameObject::PLAYER_PROJECTILE_SHELL;
+	//	object->scale.Set(0.4f, 0.4f, 0.4f);
+	//	object->pos = tank2->pos;
+	//	object->vel = tank2->norm * BULLET_SPEED;
+	//	object->hasGravity = false;
+	//	if (GOManager::GetInstance()->upgrade_1 == 0)
+	//		bulletCooldown = 1.2f;
+	//	if (GOManager::GetInstance()->upgrade_1 == 1)
+	//		bulletCooldown = 0.5f;
+	//}
+
 	static bool hPressed = false;
 	if (Application::IsKeyPressed('H'))
 	{
@@ -378,8 +425,8 @@ void ScenePlane::Render()
 		}
 	}
 
-	RenderGO(tank);
-	RenderGO(tank2);
+	//RenderGO(tank);
+	//RenderGO(tank2);
 
 	modelStack.PushMatrix();
 	RenderMesh(terr.tMesh, false);
@@ -396,12 +443,22 @@ void ScenePlane::Render()
 	std::ostringstream ss;
 	ss.precision(5);
 
-	ss << "Pos: " << tank->pos;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 6);
+	ss << "Upgrade no.: " << GOManager::GetInstance()->tUp;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 15);
 	ss.str("");
-	ss << "Vel: " << tank->vel;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 3);
+	ss << "Chance: " << GOManager::GetInstance()->random;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 12);
 	ss.str("");
+	ss << "Lives: " << GOManager::GetInstance()->tlives;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 9);
+	ss.str("");
+
+	//ss << "Pos: " << tank->pos;
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 6);
+	//ss.str("");
+	//ss << "Vel: " << tank->vel;
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 2, 0, 3);
+	//ss.str("");
 	ss.precision(5);
 
 	ss << "FPS: " << fps;
@@ -423,13 +480,13 @@ void ScenePlane::Exit()
 void ScenePlane::EndWave()
 {
 	enemyCount = 0;
-	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
 	terr.GenerateRandomHeight((unsigned  int)m_worldWidth);
 	terr.GenerateTerrainMesh();
-	tank->pos = terr.GetHeight(tank->pos);
-	tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
+	//tank->pos = terr.GetHeight(tank->pos);
+	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
@@ -448,6 +505,6 @@ void ScenePlane::SpawnEnemy()
 		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
-		spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+		spawnTimer = (float)SPAWNTIMER;
 	}
 }

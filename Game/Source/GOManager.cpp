@@ -2,6 +2,10 @@
 #include "GameObject.h"
 #include "Mtx44.h"
 #include "GOManager.h"
+#include "SceneManager.h"
+
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 GOManager::GOManager()
 {
@@ -23,17 +27,28 @@ void GOManager::init()
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	lives = 2;
+	planeLives = 2;
+	tankLives = 2;
 	upgrade_1 = 0;
 	upgrade_2 = 0;
 	attackCount = 0;
-	kills = 0;
-	accuracy = 0.0f;
-	highScore = 0;
+
+	// These variables need to be passed to sceneEnd
+	planeKills = 0;
+	tankKills = 0;
+	planeAccuracy = 0.0f;
+	tankAccuracy = 0.0f;
+	planeHighscore = 0;
+	tankHighscore = 0;
 }
 
 void GOManager::update(double dt)
 {
+	if (random == 1)
+	{
+		tUpgrade = true;
+	}
+
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
@@ -42,8 +57,6 @@ void GOManager::update(double dt)
 			go->Update(dt);
 			go->pos += go->vel * static_cast<float>(dt);
 			updateCorn(go);
-
-
 
 			if (terrainGate(go))
 			{
@@ -98,7 +111,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
-	// Player Projectile to Enemy
+	// Player Plane Projectile To
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
@@ -106,11 +119,28 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 	{
 		switch (go2->type)
 		{
-		case GameObject::ENEMY_PLANE_PASSIVE:
+			// Enemy & other player
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
 		case GameObject::ENEMY_BUILDING:
+		case GameObject::PLAYER_TANK:
+		case GameObject::PLAYER_TANKGUN:
+			return true;
+		}
+		break;
+	}
+	// Player Tank Projectile To
+	case GameObject::PLAYER_PROJECTILE_SHELL:
+	{
+		switch (go2->type)
+		{
+		// Enemy & other player
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
 			return true;
 		}
 		break;
@@ -229,7 +259,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 {
 	switch (go1->type)
 	{
-		// Player To
+	// Player
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
@@ -237,19 +267,34 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	{
 		switch (go2->type)
 		{
-		// Enemy
-		case GameObject::ENEMY_PLANE_PASSIVE:
+		// if for some reason the player decides to crash into an enemy object
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
 		case GameObject::ENEMY_BUILDING:
 		{
-			++kills;
 			go2->active = false;
-			playerDeath(go1);
+
+			switch (go1->type)
+			{
+			case GameObject::PLAYER_PLANE_KOMET:
+			case GameObject::PLAYER_PLANE_A10:
+			{
+				++planeKills;
+				planeDeath(go1);
+				break;
+			}
+			case GameObject::PLAYER_TANK:
+			case GameObject::PLAYER_TANKGUN:
+			{
+				++tankKills;
+				tankDeath();
+				break;
+			}
+			}
 			break;
 		}
-		// Upgrade
+		// Upgrade pickups
 		case GameObject::UPGRADE_1:
 		{
 			++upgrade_1;
@@ -264,7 +309,8 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		case GameObject::UPGRADE_3:
 		{
-			++lives;
+			++planeLives;
+			++tankLives;
 			go2->active = false;
 			break;
 		}
@@ -277,47 +323,31 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		}
 		break;
 	}
-	// Player Projectile To
-	case GameObject::PLAYER_PROJECTILE_BOMB:
-	case GameObject::PLAYER_PROJECTILE_NUKE:
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	// Projectiles
+	case GameObject::PLAYER_PROJECTILE_SHELL:
 	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
-		switch (go2->type)
-		{
-		case GameObject::ENEMY_PLANE_PASSIVE:
-		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_TANK_PASSIVE:
-		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
-		{
-			++kills;
-			go2->active = false;
-			break;
-		}
-		}
+		go1->exRadius = 7.0f;
+		toExplosion(go1);
 		break;
 	}
-	// Enemy Projectile To
-	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	{
+		go1->exRadius = 20.0f;
+		toExplosion(go1);
+		break;
+	}
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
-		switch (go2->type)
-		{
-		case GameObject::PLAYER_PLANE_KOMET:
-		case GameObject::PLAYER_PLANE_A10:
-		case GameObject::PLAYER_TANK:
-		case GameObject::PLAYER_TANKGUN:
-		{
-			playerDeath(go2);
-			break;
-		}
-		}
+		go1->exRadius = 5.0f;
+		toExplosion(go1);
 		break;
 	}
 	default:
 	{
-		// This should never run, if collision gate works properly.
 		break;
 	}
 	}
@@ -355,139 +385,144 @@ bool GOManager::checkTerrain(GameObject * go)
 
 void GOManager::terrainResponse(GameObject * go)
 {
+	// handles response between game objects and terrain
 	switch (go->type)
 	{
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	{
-		playerDeath(go);
+		planeDeath(go);
 		break;
 	}
 	case GameObject::UPGRADE_1:
 	case GameObject::UPGRADE_2:
 	case GameObject::UPGRADE_3:
 	{
-		// if the upgrade is going downwards
 		if (go->vel.y < 0.0f)
 		{
-			go->active = false;
+			go->vel.y = 0.0f;
 		}
 		break;
 	}
-	case GameObject::PLAYER_PROJECTILE_BOMB:
-	case GameObject::PLAYER_PROJECTILE_NUKE:
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	// Projectiles
 	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
-		//go->active = false;
-		//GameObject* go2 = fetchGO();
-		go->type = GameObject::EXPLOSION;
-		go->scale = Vector3(1, 1, 1) * go->mass * 0.1f;
-		for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
-		{
-			go->color[i].Set(1.f, 1.f, 1.f);
-		}
-		go->pos.y = terreference->GetHeight(go->pos).y + 0.01f;
-		go->vel.SetZero();
-		go->hasGravity = false;
-		go->hasLifeTime = true;
-		go->lifeTime = 1.0;
-		go->angle = Math::RandFloatMinMax(0.0f,360.0f);
-		go->norm.Set(cos(go->angle), sin(go->angle), 0);
-		for (unsigned int i = 0; i < m_goList.size(); ++i)
-		{
-			if (m_goList[i] == go)
-				continue;
-			float length = (m_goList[i]->pos - go->pos).Length();
-			if (length < go->mass * 0.1f)
-				explosionResponse(m_goList[i]);
-		}
+		go->exRadius = 7.0f;
+		toExplosion(go);
 		break;
 	}
-	//{
-	//	//go->active = false;
-	//	//GameObject* go2 = fetchGO();
-	//	go->type = GameObject::EXPLOSION;
-	//	go->scale = Vector3(1, 1, 1) * go->mass * 0.1f;
-	//	go->pos.y = terreference->GetHeight(go->pos).y;
-	//	go->vel.SetZero();
-	//	go->hasGravity = false;
-	//	break;
-	//}
-	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	{
+		go->exRadius = 20.0f;
+		toExplosion(go);
+		break;
+	}
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
-		go->active = false;
+		go->exRadius = 5.0f;
+		toExplosion(go);
 		break;
 	}
 	default:
 	{
-		// This should never run, if terrain gate works properly.
 		break;
 	}
 	}
 }
 
-void GOManager::explosionResponse(GameObject* go)
+void GOManager::planeDeath(GameObject * go)
 {
-	switch (go->type)
-	{
-	case GameObject::PLAYER_PLANE_KOMET:
-	case GameObject::PLAYER_PLANE_A10:
-	{
-		playerDeath(go);
-		break;
-	}
-	case GameObject::ENEMY_BUILDING:
-	case GameObject::ENEMY_TANK_PASSIVE:
-	case GameObject::ENEMY_TANK_AGGRESSIVE:
-	case GameObject::ENEMY_PLANE_AGGRESSIVE:
-	case GameObject::ENEMY_PLANE_PASSIVE:
-		go->active = false;
-	default:
-	{
-		break;
-	}
-	}
+	--planeLives;
+	GameObject* ex = fetchGO();
+	ex->exRadius = 10.0f;
+	ex->pos = go->pos;
+	go->active = false;
+	toExplosion(ex);
 
-}
-
-void GOManager::playerDeath(GameObject * go)
-{
-	--lives;
-	GameObject* go2 = fetchGO();
-	go2->type = GameObject::EXPLOSION;
-	go2->mass = 20.0f;
-	go2->scale = Vector3(1, 1, 1) * go2->mass;
-	for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
+	if (planeLives <= 0)
 	{
-		go2->color[i].Set(1.f, 1.f, 1.f);
-	}
-	go2->pos = go->pos;
-	go2->vel.SetZero();
-	go2->hasGravity = false;
-	go2->hasLifeTime = true;
-	go2->lifeTime = 1.0;
-	for (unsigned int i = 0; i < m_goList.size(); ++i)
-	{
-		if (m_goList[i] == go || m_goList[i] == go2)
-			continue;
-		float length = (m_goList[i]->pos - go2->pos).Length();
-		if (length < go2->mass * 0.1f)
-			explosionResponse(m_goList[i]);
-	}
-
-	if (lives <= 0)
-	{
-		go->active = false;
 		// TODO: Ryan & Yan Quan
 		// Switch scene and pass high score to YQ's function
-		highScore = kills + static_cast<int>(accuracy / 10.0f) * kills;
+		planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
 	}
 	else
 	{
-		std::cout << lives << std::endl;
 		go->reset();
+		go->active = true;
+	}
+}
+
+void GOManager::tankDeath()
+{
+	// TODO: Ryan
+	// Add tank death codes
+}
+
+void GOManager::toExplosion(GameObject * go)
+{
+	go->type = GameObject::EXPLOSION;
+	go->scale = Vector3(1, 1, 1) * go->exRadius;
+	go->defaultScale = go->scale;
+	for (unsigned int i = 0; i < MAX_TEXTURES; ++i)
+	{
+		go->color[i].Set(1.f, 1.f, 1.f);
+	}
+	go->pos.y = terreference->GetHeight(go->pos).y + 0.01f;
+	go->vel.SetZero();
+	go->hasGravity = false;
+	go->hasLifeTime = true;
+	go->lifeTime = 0.7;
+	for (unsigned int i = 0; i < m_goList.size(); ++i)
+	{
+		GameObject *a = m_goList[i];
+		if (a == go)
+			continue;
+		float length = (a->pos - go->pos).Length();
+		if (length < go->exRadius)
+		{
+			exResponse(a);
+		}
+	}
+}
+
+void GOManager::exResponse(GameObject * go)
+{
+	if (go->active == true)
+	{
+		switch (go->type)
+		{
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
+		{
+			++tankKills;
+			planeDeath(go);
+			break;
+		}
+		case GameObject::PLAYER_TANK:
+		{
+			++planeKills;
+			tankDeath();
+			break;
+		}
+		case GameObject::ENEMY_PLANE_PASSIVE:
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+		{
+			++planeKills;
+			++tankKills;
+			go->active = false;
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
 	}
 }
 
@@ -503,7 +538,6 @@ GameObject * GOManager::fetchGO()
 			go->pos.SetZero();
 			go->hasLifeTime = false;
 			go->lifeTime = 0.0;
-			go->mass = 10.0f;
 			go->transparency = 1.0f;
 			go->wrapMode = GameObject::SW_CLEAR;
 			go->type = GameObject::GO_NONE;

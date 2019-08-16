@@ -10,7 +10,7 @@
 #include "GameObject.h"
 #include "shader.hpp"
 #include <vector>
-
+#include "Tank/Tank.h"
 
 class Scene
 {
@@ -41,6 +41,7 @@ protected:
 		GEO_PLAYER_PROJECTILE_NUKE,
 		GEO_PLAYER_PROJECTILE_MACHINE,	// Machine gun
 		GEO_PLAYER_PROJECTILE_MISSILE,
+		GEO_PLAYER_PROJECTILE_SHELL,
 
 		GEO_ENEMY_PROJECTILE_BOMB,
 		GEO_ENEMY_PROJECTILE_MACHINE,	// Machine gun
