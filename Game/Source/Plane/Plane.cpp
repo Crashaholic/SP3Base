@@ -9,8 +9,8 @@ void Plane::Primary()
 	bomb->pos = pos;
 	bomb->scale.Set(1, 2, 1);
 	bomb->hasGravity = true;
-	bomb->wrapMode = SW_CLEAR;
-	bomb->mass = 50;//RMB that this will be affected by Upgrade 1(mass is used to determine explosion radius)
+	bomb->wrapMode = SW_BOUNCE;
+	bomb->mass = 50;
 	for(int i = 0;i<MAX_TEXTURES;++i)
 		bomb->color[i] = color[i];
 	//bomb = dynamic_cast<GameObject*>(bomb);
@@ -18,7 +18,17 @@ void Plane::Primary()
 
 void Plane::Secondary()
 {
-	topSpeed = 10.0f;
+	GameObject* bomb = GOManager::GetInstance()->fetchGO();
+	bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
+	bomb->vel = vel;
+	bomb->pos = pos;
+	bomb->scale.Set(1, 2, 1);
+	bomb->hasGravity = true;
+	bomb->wrapMode = SW_BOUNCE;
+	bomb->mass = 500;
+	for (int i = 0; i < MAX_TEXTURES; ++i)
+		bomb->color[i].Set(1, 0, 0);
+	//bomb = dynamic_cast<GameObject*>(bomb);
 }
 
 void Plane::Update(double dt)
@@ -46,7 +56,7 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 	else if (Application::IsKeyPressed(right))
 		angle -= turnSpeed * (float)dt;
 
-	static bool press1, press2;
+	static bool press1 = false, press2 = false;
 	if (Application::IsKeyPressed(pri) && !press1)
 	{
 		Primary();
@@ -84,6 +94,10 @@ void Plane::Init()
 	type = PLAYER_PLANE_KOMET;
 	wrapMode = SW_HYBRID;
 	GOManager::GetInstance()->addGO(this);
+	priAmmo = 1;
+	AddPri(priAmmo);
+	secAmmo = 0;
+	AddSec(secAmmo);
 }
 
 Plane::Plane()
@@ -94,4 +108,18 @@ Plane::Plane()
 Plane::~Plane()
 {
 
+}
+
+void Plane::AddPri(int num)
+{
+	for (int i = 0; i < num; ++i)
+	{
+		priprojectiles.push_back(NULL);
+	}
+	priAmmo += num;
+}
+
+void Plane::AddSec(int num)
+{
+	secAmmo += num;
 }

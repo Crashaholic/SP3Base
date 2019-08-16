@@ -23,7 +23,9 @@ void ScenePlane::Init()
 {
 	Scene::Init();
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
-	plane = new Plane;
+	//plane = new Plane;
+	//plane = dynamic_cast<Komet*>(new Plane);
+	plane = new Komet;
 	plane->Init();
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 

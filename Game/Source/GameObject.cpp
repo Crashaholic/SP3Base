@@ -21,6 +21,22 @@ void GameObject::Update(double dt)
 	}
 	switch (type)
 	{
+	case PLAYER_PROJECTILE_MISSILE:
+		vel += dir*static_cast<float>(dt)*100.0f;
+		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt)*vel.Length() * 0.1f;;
+
+		try
+		{
+			norm = Vector3(-vel.y, vel.x).Normalized();
+		}
+		catch (DivideByZero)
+		{
+			norm.Set(1, 0, 0);
+		}
+		angle = atan2(dir.y, dir.x);
+		//norm.Set(-dir.y, dir.x);
+		break;
+
 	case PLAYER_PROJECTILE_BOMB:
 	case PLAYER_PROJECTILE_NUKE:
 		try
@@ -37,7 +53,7 @@ void GameObject::Update(double dt)
 	case EXPLOSION:
 		transparency = (float)lifeTime;
 		// TODO: Matthew pls fix thanks
-		scale = Vector3(1, 1, 1) * (1 - lifeTime) * mass;
+		//scale = Vector3(1, 1, 1) * (1 - lifeTime) * mass;
 		break;
 	}
 }
