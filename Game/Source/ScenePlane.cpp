@@ -23,7 +23,9 @@ void ScenePlane::Init()
 {
 	Scene::Init();
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
-	plane = new Plane;
+	//plane = new Plane;
+	//plane = dynamic_cast<Komet*>(new Plane);
+	plane = new A10;
 	plane->Init();
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -66,6 +68,7 @@ void ScenePlane::Init()
 	tank->scale.Set(3.5f, 1.4f, 1.0f);
 	tank->norm.Set(cos(Math::DegreeToRadian(tank->angle)), sin(Math::DegreeToRadian(tank->angle)), 0.0f);
 	tank->pos.Set(center.x - 55.f, center.y - 28.0f, center.z);
+	tank->defaultPos = tank->pos;
 
 	tank2 = GOManager::GetInstance()->fetchGO();
 	tank2->type = GameObject::PLAYER_TANKGUN;
@@ -73,6 +76,7 @@ void ScenePlane::Init()
 	tank2->angle = 89.0f;
 	tank2->norm.Set(cos(Math::DegreeToRadian(tank2->angle)), sin(Math::DegreeToRadian(tank2->angle)), 0.0f);
 	tank2->pos.Set(center.x - 55.f, center.y - 26.0f, center.z); 
+	tank2->defaultPos = tank2->pos;
 
 	tank->pos.y = terr.GetHeight(tank->pos).y;
 	tank2->pos.y = terr.GetHeight(tank->pos).y + 2;
@@ -85,16 +89,14 @@ void ScenePlane::Init()
 	else
 		tank->angle = -(terr.GetNormal(tank->pos).x * (180 / (22 / 7)));
 
-	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
-
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
+
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
-	spawnTimer = 3.f; // TODO: REPLACE WITH A CONST
+	spawnTimer = (float)SPAWNTIMER;
 
-	startCount = 2;//TODO: REPLACE WITH A CONST
+	startCount = STARTINGCOUNT;
 }
 
 void ScenePlane::Update(double dt)
@@ -135,7 +137,7 @@ void ScenePlane::Update(double dt)
 
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
 
-	if (spawnTimer == 0 && Math::RandFloatMinMax(0.f, 1.f) > 0.5f) // TODO: REPLACE APPROPRIATE VALUES WITH A CONST
+	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
 	{
 		SpawnEnemy();
 	}
@@ -233,7 +235,7 @@ void ScenePlane::Update(double dt)
 	{
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
-		object->type = GameObject::PLAYER_PROJECTILE_MACHINE;
+		object->type = GameObject::PLAYER_PROJECTILE_SHELL;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = tank2->pos;
 		object->vel = tank2->norm * BULLET_SPEED;
@@ -249,6 +251,7 @@ void ScenePlane::Update(double dt)
 	{
 		if (!hPressed)
 		{
+			EndWave();
 			hPressed = true;
 		}
 	}
@@ -472,15 +475,18 @@ void ScenePlane::Exit()
 void ScenePlane::EndWave()
 {
 	enemyCount = 0;
-	spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
-	terr.GenerateRandomHeight(m_worldWidth);
+	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
+	terr.GenerateRandomHeight((unsigned  int)m_worldWidth);
 	terr.GenerateTerrainMesh();
+	tank->pos = terr.GetHeight(tank->pos);
+	tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
 {
-	int tempcount = startCount + 1 * waveNo;
+	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
 		return;
@@ -492,8 +498,8 @@ void ScenePlane::SpawnEnemy()
 		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
 		//TODO: TANK TARGET/MOVE CODE HERE
 		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
-		LOG_NONE("SPAWNED AT: %", (int)spawner + 1);
+		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
-		spawnTimer = 3; // TODO: REPLACE WITH *THE* CONST
+		spawnTimer = (float)SPAWNTIMER;
 	}
 }

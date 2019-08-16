@@ -93,6 +93,15 @@
     <ClCompile Include="Source\Plane\A10.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\HighscoreSystem.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\HighScoreSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Plane\Komet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -173,6 +182,9 @@
     <ClInclude Include="Source\Plane\A10.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Plane\Komet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag">
@@ -181,5 +193,8 @@
     <None Include="Shader\comg.vert">
       <Filter>Shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Scores\highscores.txt" />
   </ItemGroup>
 </Project>

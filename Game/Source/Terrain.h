@@ -21,7 +21,7 @@ public:
 	Vector3 GetNormal(Vector3 ObjectPosition);
 	Vector3 GetHeight(Vector3 TankPos);
 
-	void GenerateRandomHeight(unsigned int worldWidth);
+	void GenerateRandomHeight(float worldWidth);
 	void GenerateTerrainMesh();
 
 };

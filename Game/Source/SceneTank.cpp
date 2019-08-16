@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "SceneManager.h"
+#include <Logging.h>
 
 SceneTank::SceneTank()
 {
@@ -26,7 +27,8 @@ void SceneTank::Init()
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
 	bLightEnabled = true;
 	m_speed = 1.f;
@@ -34,6 +36,17 @@ void SceneTank::Init()
 	Math::InitRNG();
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	m_ghost->active = true;
+
+	terr.GenerateRandomHeight(static_cast<unsigned int>(m_worldWidth));
+	terr.GenerateTerrainMesh();
+	// Set terrain reference in GOManager
+	GOManager::GetInstance()->terreference = &terr;
+
+	SpawnPos1 = vec3(-2, terr.GetHeight({ -2, 0, 0 }).y, 0);
+	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0 }).y, 0);
+	spawnTimer = (float)SPAWNTIMER;
+
+	startCount = STARTINGCOUNT;
 }
 
 void SceneTank::Update(double dt)
@@ -62,6 +75,28 @@ void SceneTank::Update(double dt)
 	}
 	if (Application::IsKeyPressed('v'))
 	{
+	}
+
+	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
+
+	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
+	{
+		SpawnEnemy();
+	}
+
+	static bool hPressed = false;
+	if (Application::IsKeyPressed('H'))
+	{
+		if (!hPressed)
+		{
+			EndWave();
+			hPressed = true;
+		}
+	}
+	else
+	{
+		if (hPressed)
+			hPressed = false;
 	}
 
 	// Switch scene
@@ -139,5 +174,37 @@ void SceneTank::Exit()
 	{
 		delete m_ghost;
 		m_ghost = NULL;
+	}
+}
+
+void SceneTank::EndWave()
+{
+	enemyCount = 0;
+	spawnTimer = (float)SPAWNTIMER;
+	waveNo++;
+	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
+	terr.GenerateRandomHeight(m_worldWidth);
+	terr.GenerateTerrainMesh();
+	//tank->pos = terr.GetHeight(tank->pos);
+	//tank2->pos = terr.GetHeight(tank->pos) + vec3{ 0, 2, 0 };
+}
+
+void SceneTank::SpawnEnemy()
+{
+	unsigned int tempcount = startCount + 1 * waveNo;
+	if (enemyCount > tempcount)
+	{
+		return;
+	}
+	else
+	{
+		bool spawner = rand() % 2;
+		//GameObject* t = GOManager::GetInstance()->fetchGO();
+		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
+		//TODO: TANK TARGET/MOVE CODE HERE
+		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
+		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
+		++enemyCount;
+		spawnTimer = (float)SPAWNTIMER;
 	}
 }
