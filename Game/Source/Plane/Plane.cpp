@@ -3,28 +3,42 @@
 
 void Plane::Primary()
 {
-	GameObject* bomb = GOManager::GetInstance()->fetchGO();
-	bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
-	bomb->vel = GOref->vel;
-	bomb->pos = GOref->pos;
-	bomb->scale.Set(1, 2, 1);
-	bomb->hasGravity = true;
-	bomb->wrapMode = GameObject::SW_CLEAR;
-	for(int i = 0;i<MAX_TEXTURES;++i)
-		bomb->color[i] = GOref->color[i];
+	for (unsigned int i = 0; i < priprojectiles.size(); ++i)
+	{
+		if (!priprojectiles[i])
+		{
+			GameObject* bomb = GOManager::GetInstance()->fetchGO();
+			bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
+			bomb->vel = GOref->vel;
+			bomb->pos = GOref->pos;
+			bomb->scale.Set(1, 2, 1);
+			bomb->hasGravity = true;
+			bomb->wrapMode = GameObject::SW_CLEAR;
+			for (int i = 0; i < MAX_TEXTURES; ++i)
+				bomb->color[i] = GOref->color[i];
+			priprojectiles[i] = bomb;
+			++GOManager::GetInstance()->totalShots;
+			break;
+		}
+	}
 }
 
 void Plane::Secondary()
 {
-	GameObject* bomb = GOManager::GetInstance()->fetchGO();
-	bomb->type = GameObject::PLAYER_PROJECTILE_NUKE;
-	bomb->vel = GOref->vel;
-	bomb->pos = GOref->pos;
-	bomb->scale.Set(1, 2, 1);
-	bomb->hasGravity = true;
-	bomb->wrapMode = GameObject::SW_BOUNCE;
-	for (int i = 0; i < MAX_TEXTURES; ++i)
-		bomb->color[i].Set(1, 0, 0);
+	if (secAmmo > 0)
+	{
+		++GOManager::GetInstance()->totalShots;
+		GameObject* bomb = GOManager::GetInstance()->fetchGO();
+		bomb->type = GameObject::PLAYER_PROJECTILE_NUKE;
+		bomb->vel = GOref->vel;
+		bomb->pos = GOref->pos;
+		bomb->scale.Set(1, 2, 1);
+		bomb->hasGravity = true;
+		bomb->wrapMode = GameObject::SW_BOUNCE;
+		for (int i = 0; i < MAX_TEXTURES; ++i)
+			bomb->color[i].Set(1, 0, 0);
+		--secAmmo;
+	}
 	//bomb = dynamic_cast<GameObject*>(bomb);
 }
 
@@ -51,6 +65,22 @@ void Plane::Update(double dt)
 		{
 			GOref->scale.y = 1.4f;
 		}
+		int totalremaining = 0;
+		for (unsigned int i = 0; i < priprojectiles.size(); ++i)
+		{
+			if (priprojectiles[i])
+			{
+				if (!priprojectiles[i]->active || priprojectiles[i]->type !=GameObject::PLAYER_PROJECTILE_BOMB)
+				{
+					priprojectiles[i] = NULL;
+					//break;
+				}
+			}
+			else
+				++totalremaining;
+		}
+		GOManager::GetInstance()->upgrade_1 = totalremaining;
+		GOManager::GetInstance()->upgrade_2 = secAmmo;
 	}
 }
 
@@ -84,6 +114,16 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 	//	Secondary();
 }
 
+int Plane::getPri()
+{
+	return priAmmo;
+}
+
+int Plane::getSec()
+{
+	return secAmmo;
+}
+
 void Plane::Init()
 {	
 	SetGORef(GOManager::GetInstance()->fetchGO());
@@ -101,10 +141,14 @@ void Plane::Init()
 	GOref->type = GameObject::PLAYER_PLANE_KOMET;
 	GOref->wrapMode = GameObject::SW_HYBRID;
 	//GOManager::GetInstance()->addGO(this);
-	priAmmo = 1;
-	AddPri(priAmmo);
+	priAmmo = 0;
+	AddPri(1);
 	secAmmo = 0;
-	AddSec(secAmmo);
+	AddSec(3);
+	for (int i = 0; i < priAmmo-1; ++i)
+	{
+		priprojectiles.push_back(NULL);
+	}
 }
 
 Plane::Plane()

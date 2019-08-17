@@ -40,6 +40,8 @@ void GOManager::init()
 	tankAccuracy = 0.0f;
 	planeHighscore = 0;
 	tankHighscore = 0;
+	totalHits = 0;
+	totalShots = 0;
 }
 
 void GOManager::update(double dt)
@@ -82,6 +84,15 @@ void GOManager::update(double dt)
 				}
 			}
 		}
+	}
+	if (totalShots == 0)
+	{
+		planeAccuracy = tankAccuracy = 0.0f;
+	}
+	else
+	{
+		planeAccuracy = (float)planeKills / (float)totalShots;
+		tankAccuracy = (float)tankKills / (float)totalShots;
 	}
 }
 
@@ -325,6 +336,25 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
+		switch (go2->type)
+		{
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		case GameObject::ENEMY_TANK_PASSIVE:
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+		case GameObject::ENEMY_BUILDING:
+			switch (go1->type)
+			{
+			case GameObject::PLAYER_PROJECTILE_SHELL:
+				++tankKills;
+				break;
+			case GameObject::PLAYER_PROJECTILE_MISSILE:
+			case GameObject::PLAYER_PROJECTILE_BOMB:
+				++planeKills;
+				break;
+			}
+			exResponse(go2);
+			break;
+		}
 		go1->exRadius = 7.0f;
 		toExplosion(go1);
 		break;

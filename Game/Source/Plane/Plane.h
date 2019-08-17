@@ -33,6 +33,8 @@ public:
 	virtual void AddSec(int num);
 	virtual void Update(double dt);
 	void ReadInput(double dt, char left, char right, char pri, char sec);
+	int getPri();
+	int getSec();
 };
 
 #endif

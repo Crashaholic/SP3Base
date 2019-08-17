@@ -63,6 +63,8 @@ public:
 
 	int planeKills;
 	int tankKills;
+	unsigned int totalShots;
+	unsigned int totalHits;
 	float planeAccuracy;
 	float tankAccuracy;
 	int planeHighscore;
