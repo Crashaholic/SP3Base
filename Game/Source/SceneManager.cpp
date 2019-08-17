@@ -1,9 +1,22 @@
 #include "SceneManager.h"
 
+int				SceneManager::planeChoice;
+std::string	SceneManager::planeDecalChoice;
+Color			SceneManager::planeColor[2];
+std::string	SceneManager::tankDecalChoice;
+Color			SceneManager::tankColor[2];
 
 
 SceneManager::SceneManager()
 {
+	planeChoice = 0;
+	planeColor[0].Set(1, 1, 1);
+	planeColor[1].Set(1, 1, 1);
+	planeDecalChoice = "";
+
+	tankColor[0].Set(1, 1, 1);
+	tankColor[1].Set(1, 1, 1);
+	tankDecalChoice = "";
 }
 
 

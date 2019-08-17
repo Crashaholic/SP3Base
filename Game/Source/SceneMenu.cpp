@@ -109,6 +109,11 @@ void SceneMenu::Update(double dt)
 		bLButtonState = true;
 		std::cout << "LBUTTON DOWN" << std::endl;
 
+	}
+	else if (bLButtonState && !Application::IsMousePressed(0))
+	{
+		bLButtonState = false;
+		std::cout << "LBUTTON UP" << std::endl;
 		switch (choice)
 		{
 		case 0:
@@ -134,11 +139,6 @@ void SceneMenu::Update(double dt)
 		default:
 			break;
 		}
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
 	}
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -170,12 +170,12 @@ void SceneMenu::Update(double dt)
 	{
 		if (bArray[i]->checkMouse())
 		{
-			sArray[i] = sArrayA[i];
+		//	sArray[i] = sArrayA[i];
 			choice = i;
 		}
 		else
 		{
-			sArray[i] = sArrayI[i];
+			//sArray[i] = sArrayI[i];
 			++inactive;
 		}
 		if (inactive == 5)
@@ -219,11 +219,26 @@ void SceneMenu::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 53);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", Color(0, 1, 0), 3, 0, 49);
 
+	for (int i = 0; i < 5; ++i)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(bArray[i]->getPos().x, bArray[i]->getPos().y, bArray[i]->getPos().z);
+		modelStack.Scale(bArray[i]->getScale().x, bArray[i]->getScale().y, bArray[i]->getScale().z);
+		if (bArray[i]->checkMouse())
+			meshList[GEO_CUBE]->material.kAmbient.Set(0, 1, 0);
+		else
+			meshList[GEO_CUBE]->material.kAmbient.Set(1, 0, 0);
+		RenderMesh(meshList[GEO_CUBE], true);
+		modelStack.PopMatrix();
+	}
+
 	RenderTextOnScreen(meshList[GEO_TEXT], sArray[0], Color(0, 1, 0), 3, 0, 16);
 	RenderTextOnScreen(meshList[GEO_TEXT], sArray[1], Color(0, 1, 0), 3, 0, 12);
 	RenderTextOnScreen(meshList[GEO_TEXT], sArray[2], Color(0, 1, 0), 3, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], sArray[3], Color(0, 1, 0), 3, 0, 4);
 	RenderTextOnScreen(meshList[GEO_TEXT], sArray[4], Color(0, 1, 0), 3, 0, 0);
+
+
 }
 
 void SceneMenu::Exit()

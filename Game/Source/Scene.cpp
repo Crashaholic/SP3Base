@@ -93,6 +93,9 @@ void Scene::Init()
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
 	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
 	meshList[GEO_UPGRADE_3] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_GRADIENTR] = MeshBuilder::GenerateGradient("grad1", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_GRADIENTG] = MeshBuilder::GenerateGradient("grad2", Color(0.f, 1.f, 0.f), 2.0f);
+	meshList[GEO_GRADIENTB] = MeshBuilder::GenerateGradient("grad3", Color(0.f, 0.f, 1.f), 2.0f);
 
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();

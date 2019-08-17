@@ -10,6 +10,7 @@ private:
 	Vector3 pos;
 	Vector3 scale;
 
+	float previousOutput;
 public:
 	Button();
 	~Button();
@@ -26,7 +27,12 @@ public:
 	float checkMouseLR();	// returns 0.0f to 1.0f, from left to right
 	float checkMouseBT();	// returns 0.0f to 1.0f, from bottom to top
 
+	float getPreviousOutput();
+
 	void updateMouse();
+
+	Vector3 getPos();
+	Vector3 getScale();
 };
 
 #endif

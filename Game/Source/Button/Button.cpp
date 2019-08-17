@@ -18,6 +18,7 @@ void Button::init(Vector3 pos, Vector3 scale)
 	this->pos = pos;
 	this->scale = scale;
 
+	previousOutput = 1.0f;
 	// For debugging only
 	Vector3 U(0, 1, 0);
 	Vector3 R(1, 0, 0);
@@ -48,6 +49,7 @@ float Button::checkMouseLR()
 	if ((mousePos.x < min) || (mousePos.x > max))
 		return -1.0f;
 
+	previousOutput = (mousePos.x - min) / (max - min);
 	return (mousePos.x - min) / (max - min);
 }
 
@@ -62,6 +64,11 @@ float Button::checkMouseBT()
 	return (mousePos.y - min) / (max - min);
 }
 
+float Button::getPreviousOutput()
+{
+	return previousOutput;
+}
+
 void Button::updateMouse()
 {
 	float m_worldHeight = 100.0f;
@@ -73,4 +80,14 @@ void Button::updateMouse()
 	int h = Application::GetWindowHeight();
 	mousePos.x = static_cast<float>((x / w) * m_worldWidth);
 	mousePos.y = static_cast<float>(((h - y) / h) * m_worldHeight);
+}
+
+Vector3 Button::getPos()
+{
+	return pos;
+}
+
+Vector3 Button::getScale()
+{
+	return scale;
 }

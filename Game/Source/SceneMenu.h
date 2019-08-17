@@ -19,7 +19,6 @@ public:
 	virtual void Exit();
 
 private:
-	//Mesh* meshList[NUM_GEOMETRY];
 	Camera camera;
 	float fps;
 

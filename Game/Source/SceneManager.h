@@ -24,5 +24,12 @@ public:
 	static SceneManager& getSceneManager();
 	Scene* getActiveScene();
 	unordered_map<string, Scene*>& getList();
+
+	static int planeChoice;
+	static std::string planeDecalChoice;
+	static Color planeColor[2];
+
+	static std::string tankDecalChoice;
+	static Color tankColor[2];
 };
 

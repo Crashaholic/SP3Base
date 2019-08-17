@@ -158,21 +158,19 @@ void main()
 				if(colorTextureEnabled[i] == true)
 				{
 					if(texture2D( colorTexture[i], texCoord ).a > 0.1)
-						color = texture2D( colorTexture[i], texCoord );
-
-					//color +=texture2D(colorTexture[i], texCoord);
+					{
+						color.rgb = texture2D( colorTexture[i], texCoord ).rgb*coloredTexture[i];
+						color.a = 1.0;
+						//color.a = texture2D( colorTexture[i], texCoord ).a;
+					}
+					if(color.a<=0.9)
+						discard;
+					//else
+					//	color.rgb*=coloredTexture[i];
 					++texCount;
 				}
-				//if(colorableTexture[i] == true)
-				{
-					color.rgb*=coloredTexture[i];
-				}
 			}
-			if(texCount>0)
-			{
-				//color = color/texCount;
-			}
-			else
+			if(texCount==0)
 				color = vec4(fragmentColor,1);
 		}
 		//if(color.a<0.9)

@@ -262,123 +262,126 @@ bool GOManager::checkCollision(GameObject * go1, GameObject * go2)
 
 void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 {
-	switch (go1->type)
-	{
-	// Player
-	case GameObject::PLAYER_PLANE_KOMET:
-	case GameObject::PLAYER_PLANE_A10:
-	case GameObject::PLAYER_TANK:
-	case GameObject::PLAYER_TANKGUN:
-	case GameObject::EXPLOSION: 
-	{
-		switch (go2->type)
-		{
-		// if for some reason the player decides to crash into an enemy object
-		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_TANK_PASSIVE:
-		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
-		{
-			go2->active = false;
-
-			switch (go1->type)
-			{
-			case GameObject::PLAYER_PLANE_KOMET:
-			case GameObject::PLAYER_PLANE_A10:
-			{
-				++planeKills;
-				planeDeath(go1);
-				break;
-			}
-			//case GameObject::PLAYER_TANK:
-			case GameObject::PLAYER_TANKGUN:
-			{
-				++tankKills;
-				tankDeath(go1);
-				break;
-			}
-			}
-			break;
-		}
-		// Upgrade pickups
-		case GameObject::UPGRADE_1:
-		{
-			++upgrade_1;
-			go2->active = false;
-			break;
-		}
-		case GameObject::UPGRADE_2:
-		{
-			++upgrade_2;
-			go2->active = false;
-			break;
-		}
-		case GameObject::UPGRADE_3:
-		{
-			++planeLives;
-			++tankLives;
-			go2->active = false;
-			break;
-		}
-		// Testing
-		case GameObject::GO_CUBE:
-		{
-			go2->active = false;
-			break;
-		}
-		}
-		break;
-	}
-
-	// Projectiles
-	case GameObject::PLAYER_PROJECTILE_SHELL:
-	case GameObject::PLAYER_PROJECTILE_MISSILE:
-	case GameObject::PLAYER_PROJECTILE_BOMB:
-	case GameObject::ENEMY_PROJECTILE_BOMB:
-	//case GameObject::EXPLOSION:
-	{
-		go1->exRadius = 5.0f;
-		toExplosion(go1);
-		collisionResponse(go1, go2);
-		break;
-	}
-	case GameObject::PLAYER_PROJECTILE_NUKE:
-	{
-		go1->exRadius = 20.0f;
-		toExplosion(go1);
-		break;
-	}
-	case GameObject::PLAYER_PROJECTILE_MACHINE:
-	case GameObject::ENEMY_PROJECTILE_MACHINE:
-	{
-		go1->exRadius = 5.0f;
-		toExplosion(go1);
-		break;
-	}
-	default:
-	{
-		break;
-	}
-	}
-	switch (go1->type)
+	if (go1->Iframes <= 0.0)
 	{
 
-	case GameObject::EXPLOSION:
-		switch (go2->type)
+		switch (go1->type)
 		{
+			// Player
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
 		case GameObject::PLAYER_TANK:
-			tankDeath(go2);
-			break;
-		case GameObject::ENEMY_BUILDING:
-			exResponse(go2);
+		case GameObject::PLAYER_TANKGUN:
+		case GameObject::EXPLOSION:
+		{
+			switch (go2->type)
+			{
+				// if for some reason the player decides to crash into an enemy object
+			case GameObject::ENEMY_PLANE_AGGRESSIVE:
+			case GameObject::ENEMY_TANK_PASSIVE:
+			case GameObject::ENEMY_TANK_AGGRESSIVE:
+			case GameObject::ENEMY_BUILDING:
+			{
+				go2->active = false;
+
+				switch (go1->type)
+				{
+				case GameObject::PLAYER_PLANE_KOMET:
+				case GameObject::PLAYER_PLANE_A10:
+				{
+					++planeKills;
+					planeDeath(go1);
+					break;
+				}
+				//case GameObject::PLAYER_TANK:
+				case GameObject::PLAYER_TANKGUN:
+				{
+					++tankKills;
+					tankDeath(go1);
+					break;
+				}
+				}
+				break;
+			}
+			// Upgrade pickups
+			case GameObject::UPGRADE_1:
+			{
+				++upgrade_1;
+				go2->active = false;
+				break;
+			}
+			case GameObject::UPGRADE_2:
+			{
+				++upgrade_2;
+				go2->active = false;
+				break;
+			}
+			case GameObject::UPGRADE_3:
+			{
+				++planeLives;
+				++tankLives;
+				go2->active = false;
+				break;
+			}
+			// Testing
+			case GameObject::GO_CUBE:
+			{
+				go2->active = false;
+				break;
+			}
+			}
 			break;
 		}
-	}
-	//if ((go1->type ==  )&&  == GameObject::EXPLOSION)
-	//	tankDeath(go1);
-	//if (go2->type == GameObject::PLAYER_TANK && go1->type == GameObject::EXPLOSION)
-	//	tankDeath(go2);
 
+		// Projectiles
+		case GameObject::PLAYER_PROJECTILE_SHELL:
+		case GameObject::PLAYER_PROJECTILE_MISSILE:
+		case GameObject::PLAYER_PROJECTILE_BOMB:
+		case GameObject::ENEMY_PROJECTILE_BOMB:
+			//case GameObject::EXPLOSION:
+		{
+			go1->exRadius = 5.0f;
+			toExplosion(go1);
+			collisionResponse(go1, go2);
+			break;
+		}
+		case GameObject::PLAYER_PROJECTILE_NUKE:
+		{
+			go1->exRadius = 20.0f;
+			toExplosion(go1);
+			break;
+		}
+		case GameObject::PLAYER_PROJECTILE_MACHINE:
+		case GameObject::ENEMY_PROJECTILE_MACHINE:
+		{
+			go1->exRadius = 5.0f;
+			toExplosion(go1);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+		switch (go1->type)
+		{
+
+		case GameObject::EXPLOSION:
+			switch (go2->type)
+			{
+			case GameObject::PLAYER_TANK:
+				tankDeath(go2);
+				break;
+			case GameObject::ENEMY_BUILDING:
+				exResponse(go2);
+				break;
+			}
+		}
+		//if ((go1->type ==  )&&  == GameObject::EXPLOSION)
+		//	tankDeath(go1);
+		//if (go2->type == GameObject::PLAYER_TANK && go1->type == GameObject::EXPLOSION)
+		//	tankDeath(go2);
+	}
 }
 
 bool GOManager::terrainGate(GameObject * go)
@@ -463,7 +466,7 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
-	if (go->Iframes <= 0.0)
+	//if (go->Iframes <= 0.0)
 	{
 		--planeLives;
 		GameObject* ex = fetchGO();
@@ -471,7 +474,7 @@ void GOManager::planeDeath(GameObject * go)
 		ex->pos = go->pos;
 		go->active = false;
 		toExplosion(ex);
-		go->Iframes = 5.0;
+		//go->Iframes = 5.0;
 		if (planeLives <= 0)
 		{
 			// TODO: Ryan & Yan Quan
@@ -621,6 +624,8 @@ GameObject * GOManager::fetchGO()
 			go->hasLifeTime = false;
 			go->lifeTime = 0.0;
 			go->transparency = 1.0f;
+			for (int i = 0; i < 8; ++i)
+				go->color[i].Set(1, 1, 1);
 			go->wrapMode = GameObject::SW_CLEAR;
 			go->type = GameObject::GO_NONE;
 			return go;
