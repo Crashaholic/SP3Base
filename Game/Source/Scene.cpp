@@ -90,15 +90,34 @@ void Scene::Init()
 	meshList[GEO_ENEMY_BUILDING] = MeshBuilder::GenerateQuad("ENEMY_BUILDING", Color(1.f, 0.f, 0.f), 2.0f);
 	meshList[GEO_ENEMY_BUILDING]->textureID[0] = LoadTGA("Image//Enemybuilding1.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
+
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_1]->textureID[0] = LoadTGA("Image//upgrade_1.tga");
 	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_2]->textureID[0] = LoadTGA("Image//upgrade_2.tga");
 	meshList[GEO_UPGRADE_3] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_UPGRADE_3]->textureID[0] = LoadTGA("Image//upgrade_3.tga");
 	meshList[GEO_GRADIENTR] = MeshBuilder::GenerateGradient("grad1", Color(1.f, 0.f, 0.f), 2.0f);
 	meshList[GEO_GRADIENTG] = MeshBuilder::GenerateGradient("grad2", Color(0.f, 1.f, 0.f), 2.0f);
 	meshList[GEO_GRADIENTB] = MeshBuilder::GenerateGradient("grad3", Color(0.f, 0.f, 1.f), 2.0f);
 
+	meshList[GEO_UPGRADE_1_HUD] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_1_HUD]->textureID[0] = LoadTGA("Image//upgrade_1_HUD.tga");
+	meshList[GEO_UPGRADE_2_HUD] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_2_HUD]->textureID[0] = LoadTGA("Image//upgrade_2_HUD.tga");
+	meshList[GEO_UPGRADE_3_HUD] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_UPGRADE_3_HUD]->textureID[0] = LoadTGA("Image//upgrade_3_HUD.tga");
+
+	meshList[GEO_KILL] = MeshBuilder::GenerateQuad("kill", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_KILL]->textureID[0] = LoadTGA("Image//kill.tga");
+
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_ARROW]->textureID[0] = LoadTGA("Image//arrow.tga");
+
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
+
+	windAngle = 0.0f;
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -353,6 +372,14 @@ void Scene::checkSwitch()
 	{
 		SceneManager::getSceneManager().switchToScene("End", this);
 	}
+	if (Application::IsKeyPressed(VK_OEM_4))
+	{
+		SceneManager::getSceneManager().switchToScene("2Select", this);
+	}
+	if (Application::IsKeyPressed(VK_OEM_6))
+	{
+		SceneManager::getSceneManager().switchToScene("2P", this);
+	}
 }
 
 void Scene::debugBalls(GameObject * go)
@@ -426,4 +453,35 @@ void Scene::renderButton()
 		RenderMesh(meshList[GEO_DEBUG], false);
 		modelStack.PopMatrix();
 	}
+}
+
+void Scene::render1PHUD()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_3_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f + HUD_SPACING, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_1_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f + HUD_SPACING * 2.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_2_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f + HUD_SPACING * 3.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_KILL], false);
+	modelStack.PopMatrix();
+}
+
+void Scene::render2PHUD()
+{
 }

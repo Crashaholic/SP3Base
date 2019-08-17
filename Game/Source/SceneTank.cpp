@@ -26,7 +26,7 @@ void SceneTank::Init()
 	Scene::Init();
 	glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
 
-	terr.GenerateRandomHeight((m_worldWidth));
+	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;

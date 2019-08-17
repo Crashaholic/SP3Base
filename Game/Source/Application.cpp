@@ -125,6 +125,8 @@ void Application::Init()
 	Scene *sc5 = new SceneTSelect();
 	Scene *sc6 = new SceneScore();
 	Scene *sc7 = new SceneEnd();
+	Scene *sc8 = new Scene2Select();
+	Scene *sc9 = new Scene2P();
 	manager = &SceneManager::getSceneManager();
 	manager->addScene("Menu", sc1);
 	manager->addScene("Plane", sc2);
@@ -133,6 +135,8 @@ void Application::Init()
 	manager->addScene("TSelect", sc5);
 	manager->addScene("Score", sc6);
 	manager->addScene("End", sc7);
+	manager->addScene("2Select", sc8);
+	manager->addScene("2P", sc9);
 	manager->firstScene("Menu");
 }
 
