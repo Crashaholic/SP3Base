@@ -34,6 +34,8 @@
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\Tank\Tank.cpp" />
     <ClCompile Include="Enemy\Tank\TankEnemy.cpp" />
+    <ClCompile Include="Source\Scene2P.cpp" />
+    <ClCompile Include="Source\Scene2Select.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy\EnemyBase.h" />
@@ -69,6 +71,8 @@
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\Tank\Tank.h" />
     <ClInclude Include="Enemy\Tank\TankEnemy.h" />
+    <ClInclude Include="Source\Scene2P.h" />
+    <ClInclude Include="Source\Scene2Select.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />

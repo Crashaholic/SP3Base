@@ -15,6 +15,8 @@
 #include "SceneTSelect.h"
 #include "SceneScore.h"
 #include "SceneEnd.h"
+#include "Scene2Select.h"
+#include "Scene2P.h"
 
 class Application
 {

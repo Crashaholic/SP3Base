@@ -369,6 +369,14 @@ void Scene::checkSwitch()
 	{
 		SceneManager::getSceneManager().switchToScene("End", this);
 	}
+	if (Application::IsKeyPressed(VK_OEM_4))
+	{
+		SceneManager::getSceneManager().switchToScene("2Select", this);
+	}
+	if (Application::IsKeyPressed(VK_OEM_6))
+	{
+		SceneManager::getSceneManager().switchToScene("2P", this);
+	}
 }
 
 void Scene::debugBalls(GameObject * go)
