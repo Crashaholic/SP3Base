@@ -90,9 +90,20 @@ void Scene::Init()
 	meshList[GEO_ENEMY_BUILDING] = MeshBuilder::GenerateQuad("ENEMY_BUILDING", Color(1.f, 0.f, 0.f), 2.0f);
 	meshList[GEO_ENEMY_BUILDING]->textureID[0] = LoadTGA("Image//Enemybuilding1.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
+
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_1]->textureID[0] = LoadTGA("Image//upgrade_1.tga");
 	meshList[GEO_UPGRADE_2] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_2]->textureID[0] = LoadTGA("Image//upgrade_2.tga");
 	meshList[GEO_UPGRADE_3] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_UPGRADE_3]->textureID[0] = LoadTGA("Image//upgrade_3.tga");
+
+	meshList[GEO_UPGRADE_1_HUD] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_1_HUD]->textureID[0] = LoadTGA("Image//upgrade_1_HUD.tga");
+	meshList[GEO_UPGRADE_2_HUD] = MeshBuilder::GenerateQuad("upgrade2", Color(0.5f, 0.5f, 0.5f), 2.0f);
+	meshList[GEO_UPGRADE_2_HUD]->textureID[0] = LoadTGA("Image//upgrade_2_HUD.tga");
+	meshList[GEO_UPGRADE_3_HUD] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_UPGRADE_3_HUD]->textureID[0] = LoadTGA("Image//upgrade_3_HUD.tga");
 
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();

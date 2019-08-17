@@ -38,6 +38,10 @@ protected:
 		GEO_UPGRADE_2,					// Bomb count OR Movement speed
 		GEO_UPGRADE_3,					// Extra life
 
+		GEO_UPGRADE_1_HUD,
+		GEO_UPGRADE_2_HUD,
+		GEO_UPGRADE_3_HUD,
+
 		GEO_PLAYER_PROJECTILE_BOMB,
 		GEO_PLAYER_PROJECTILE_NUKE,
 		GEO_PLAYER_PROJECTILE_MACHINE,	// Machine gun
