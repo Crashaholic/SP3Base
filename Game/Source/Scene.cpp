@@ -105,8 +105,16 @@ void Scene::Init()
 	meshList[GEO_UPGRADE_3_HUD] = MeshBuilder::GenerateQuad("upgrade3", Color(1.f, 0.f, 0.f), 2.0f);
 	meshList[GEO_UPGRADE_3_HUD]->textureID[0] = LoadTGA("Image//upgrade_3_HUD.tga");
 
+	meshList[GEO_KILL] = MeshBuilder::GenerateQuad("kill", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_KILL]->textureID[0] = LoadTGA("Image//kill.tga");
+
+	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_ARROW]->textureID[0] = LoadTGA("Image//arrow.tga");
+
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
+
+	windAngle = 0.0f;
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -434,4 +442,35 @@ void Scene::renderButton()
 		RenderMesh(meshList[GEO_DEBUG], false);
 		modelStack.PopMatrix();
 	}
+}
+
+void Scene::render1PHUD()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_3_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f + HUD_SPACING, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_1_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f + HUD_SPACING * 2.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_2_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f + HUD_SPACING * 3.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_KILL], false);
+	modelStack.PopMatrix();
+}
+
+void Scene::render2PHUD()
+{
 }

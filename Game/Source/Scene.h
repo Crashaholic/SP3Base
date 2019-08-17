@@ -42,6 +42,9 @@ protected:
 		GEO_UPGRADE_2_HUD,
 		GEO_UPGRADE_3_HUD,
 
+		GEO_KILL,
+		GEO_ARROW,
+
 		GEO_PLAYER_PROJECTILE_BOMB,
 		GEO_PLAYER_PROJECTILE_NUKE,
 		GEO_PLAYER_PROJECTILE_MACHINE,	// Machine gun
@@ -81,6 +84,10 @@ public:
 	void cleanButton();
 	void renderButton();
 
+	// Rendering HUD for 1 player and 2 player modes
+	void render1PHUD();
+	void render2PHUD();
+
 protected:
 	Shader defaultShader;
 
@@ -97,6 +104,11 @@ protected:
 
 	float m_worldWidth;
 	float m_worldHeight;
+
+	float windAngle;
+
+	const float HUD_SPACING = 15.5f;
+	const float HUD_TXT_SPACING = 7.0f;
 };
 
 #endif
