@@ -23,7 +23,7 @@ void ScenePSelect::Init()
 	Scene::Init();
 	glClearColor(0.7f, 0.7f, 0.7f, 0.0f);
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2 - 20.0f, 0.0f);
-	for (int i = 0; i < NUM_BUTTON; ++i)
+	for (int i = 0; i < NUM_PBUTTON; ++i)
 	{
 		bArray[i] = new Button;
 		addButton(bArray[i]);
@@ -39,7 +39,7 @@ void ScenePSelect::Init()
 	bArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f , 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
-	for (int i = 0; i < NUM_SLIDER; ++i)
+	for (int i = 0; i < NUM_PSLIDER; ++i)
 	{
 		slArray[i] = new Button;
 		addButton(slArray[i]);
@@ -97,25 +97,25 @@ void ScenePSelect::Update(double dt)
 	static bool bLButtonState = false;
 	if (Application::IsMousePressed(0))
 	{
-		switch (choice - NUM_BUTTON)
+		switch (choice - NUM_PBUTTON)
 		{
 		case 0:
-			planeColor[0].r = slArray[choice - NUM_BUTTON]->checkMouseLR();
+			planeColor[0].r = slArray[choice - NUM_PBUTTON]->checkMouseLR();
 			break;
 		case 1:
-			planeColor[0].g = slArray[choice - NUM_BUTTON]->checkMouseLR();
+			planeColor[0].g = slArray[choice - NUM_PBUTTON]->checkMouseLR();
 			break;
 		case 2:
-			planeColor[0].b = slArray[choice - NUM_BUTTON]->checkMouseLR();
+			planeColor[0].b = slArray[choice - NUM_PBUTTON]->checkMouseLR();
 			break;
 		case 3:
-			planeColor[1].r = slArray[choice - NUM_BUTTON]->checkMouseLR();
+			planeColor[1].r = slArray[choice - NUM_PBUTTON]->checkMouseLR();
 			break;
 		case 4:
-			planeColor[1].g = slArray[choice - NUM_BUTTON]->checkMouseLR();
+			planeColor[1].g = slArray[choice - NUM_PBUTTON]->checkMouseLR();
 			break;
 		case 5:
-			planeColor[1].b = slArray[choice - NUM_BUTTON]->checkMouseLR();
+			planeColor[1].b = slArray[choice - NUM_PBUTTON]->checkMouseLR();
 			break;
 		default:
 			break;
@@ -172,7 +172,7 @@ void ScenePSelect::Update(double dt)
 		}
 	}
 	currentPlane = Math::Wrap(currentPlane, 0, MAX_PLANES-1);
-	currentDecal = Math::Wrap(currentDecal, 0, MAX_DECALS);
+	currentDecal = Math::Wrap(currentDecal, 0, MAX_PDECALS);
 	meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal];
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -187,9 +187,9 @@ void ScenePSelect::Update(double dt)
 	}
 
 	int inactive = 0;
-	for (int i = 0; i < NUM_BUTTON + NUM_SLIDER; ++i)
+	for (int i = 0; i < NUM_PBUTTON + NUM_PSLIDER; ++i)
 	{
-		if (i < NUM_BUTTON)
+		if (i < NUM_PBUTTON)
 		{
 			if (bArray[i]->checkMouse())
 			{
@@ -202,7 +202,7 @@ void ScenePSelect::Update(double dt)
 		}
 		else
 		{
-			if (slArray[i - NUM_BUTTON]->checkMouse())
+			if (slArray[i - NUM_PBUTTON]->checkMouse())
 			{
 				choice = i;
 			}
@@ -211,7 +211,7 @@ void ScenePSelect::Update(double dt)
 				++inactive;
 			}
 		}
-		if (inactive == NUM_BUTTON + NUM_SLIDER)
+		if (inactive == NUM_PBUTTON + NUM_PSLIDER)
 		{
 			choice = -1;
 		}
@@ -246,7 +246,7 @@ void ScenePSelect::Render()
 	ss.precision(5);
 	ss << "FPS: " << fps;
 
-	for (int i = 0; i < NUM_BUTTON; ++i)
+	for (int i = 0; i < NUM_PBUTTON; ++i)
 	{
 		modelStack.PushMatrix();
 		
@@ -269,7 +269,7 @@ void ScenePSelect::Render()
 		
 		modelStack.PopMatrix();
 	}
-	for (int i = 0; i < NUM_SLIDER; ++i)
+	for (int i = 0; i < NUM_PSLIDER; ++i)
 	{
 		modelStack.PushMatrix();
 		
@@ -338,11 +338,11 @@ void ScenePSelect::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
-	//for (int i = 0; i < NUM_BUTTON; ++i)
+	//for (int i = 0; i < NUM_PBUTTON; ++i)
 	//{
 	//	delete bArray[i];
 	//}
-	//for (int i = 0; i < NUM_SLIDER; ++i)
+	//for (int i = 0; i < NUM_PSLIDER; ++i)
 	//{
 	//	delete slArray[i];
 	//}

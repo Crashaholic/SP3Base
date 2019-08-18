@@ -3,6 +3,7 @@
 int				SceneManager::planeChoice;
 std::string	SceneManager::planeDecalChoice;
 Color			SceneManager::planeColor[2];
+int				SceneManager::tankChoice;
 std::string	SceneManager::tankDecalChoice;
 Color			SceneManager::tankColor[2];
 

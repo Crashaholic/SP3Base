@@ -31,6 +31,10 @@ void SceneTank::Init()
 	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;
 	player->Init();
+	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
+	player->GOref->color[1].Set(SceneManager::tankColor[1].r, SceneManager::tankColor[1].g, SceneManager::tankColor[1].b);
+
+	meshList[SceneManager::tankChoice]->textureID[1] = LoadTGA(SceneManager::tankDecalChoice.c_str());
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 

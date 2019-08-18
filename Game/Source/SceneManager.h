@@ -29,6 +29,7 @@ public:
 	static std::string planeDecalChoice;
 	static Color planeColor[2];
 
+	static int tankChoice;
 	static std::string tankDecalChoice;
 	static Color tankColor[2];
 };

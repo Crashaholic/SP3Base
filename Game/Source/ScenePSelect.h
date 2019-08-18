@@ -1,10 +1,10 @@
 // Ryan
 #ifndef SCENE_PSELECT_H
 #define SCENE_PSELECT_H
-#define MAX_DECALS 2
+#define MAX_PDECALS 2
 #define MAX_PLANES 2
-#define NUM_BUTTON 6
-#define NUM_SLIDER 6
+#define NUM_PBUTTON 6
+#define NUM_PSLIDER 6
 #include "Scene.h"
 
 class ScenePSelect : public Scene
@@ -23,8 +23,8 @@ private:
 	float fps;
 	Color planeColor[2];
 	// Buttons
-	Button* bArray[NUM_BUTTON];
-	std::string sArray[NUM_BUTTON];
+	Button* bArray[NUM_PBUTTON];
+	std::string sArray[NUM_PBUTTON];
 	// 0: Start
 	// 1: Prev Plane
 	// 2: Next Plane
@@ -32,14 +32,14 @@ private:
 	// 4: Next Decal
 	// 5: Back To Main
 
-	Button* slArray[NUM_SLIDER];
+	Button* slArray[NUM_PSLIDER];
 	
 	int choice;
 
 	int currentPlane;
 	int currentDecal;
 
-	unsigned int decals[MAX_PLANES][MAX_DECALS + 1];
+	unsigned int decals[MAX_PLANES][MAX_PDECALS + 1];
 	int planes[MAX_PLANES];
 
 };
