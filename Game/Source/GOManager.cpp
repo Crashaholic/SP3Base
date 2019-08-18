@@ -9,6 +9,20 @@
 
 GOManager::GOManager()
 {
+	sceneID = NONE;
+	planeLives = 2;
+	tankLives = 2;
+	upgrade_1 = 0;
+	upgrade_2 = 0;
+	attackCount = 0;
+	planeKills = 0;
+	tankKills = 0;
+	planeAccuracy = 0.0f;
+	tankAccuracy = 0.0f;
+	planeHighscore = 0;
+	tankHighscore = 0;
+	totalHits = 0;
+	totalShots = 0;
 }
 
 GOManager::~GOManager()
@@ -27,21 +41,6 @@ void GOManager::init()
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	planeLives = 2;
-	tankLives = 2;
-	upgrade_1 = 0;
-	upgrade_2 = 0;
-	attackCount = 0;
-
-	// These variables need to be passed to sceneEnd
-	planeKills = 0;
-	tankKills = 0;
-	planeAccuracy = 0.0f;
-	tankAccuracy = 0.0f;
-	planeHighscore = 0;
-	tankHighscore = 0;
-	totalHits = 0;
-	totalShots = 0;
 }
 
 void GOManager::update(double dt)
@@ -112,12 +111,24 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
 		case GameObject::GO_CUBE:
+		{
 			return true;
+		}
+		// Exception: Only plane collides with building
+		case GameObject::ENEMY_BUILDING:
+		{
+			switch (go1->type)
+			{
+			case GameObject::PLAYER_PLANE_KOMET:
+			case GameObject::PLAYER_PLANE_A10:
+				return true;
+			}
+			return false;
+		}
 		}
 		break;
 	}
@@ -147,7 +158,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		// Enemy & other player
 		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
+		// case GameObject::ENEMY_BUILDING:
 		case GameObject::PLAYER_PLANE_KOMET:
 		case GameObject::PLAYER_PLANE_A10:
 			return true;

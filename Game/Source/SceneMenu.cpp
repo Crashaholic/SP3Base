@@ -55,19 +55,6 @@ void SceneMenu::Init()
 	sArray[2] = "2 Player";
 	sArray[3] = "Highscores";
 	sArray[4] = "Mute";
-
-	sArrayI[0] = "Play as Plane";
-	sArrayI[1] = "Play as Tank";
-	sArrayI[2] = "2 Player";
-	sArrayI[3] = "Highscores";
-	sArrayI[4] = "Mute";
-
-	sArrayA[0] = " > Play as Plane";
-	sArrayA[1] = " > Play as Tank";
-	sArrayA[2] = " > 2 Player";
-	sArrayA[3] = " > Highscores";
-	sArrayA[4] = " > Mute";
-
 	muted = false;
 	choice = 0;
 }
@@ -123,9 +110,7 @@ void SceneMenu::Update(double dt)
 			SceneManager::getSceneManager().switchToScene("TSelect", this);
 			break;
 		case 2:
-			// TODO: Ryan
-			// Add a scene for 2 player mode
-			// SceneManager::getSceneManager().switchToScene("", this);
+			SceneManager::getSceneManager().switchToScene("2Select", this);
 			break;
 		case 3:
 			SceneManager::getSceneManager().switchToScene("Score", this);
@@ -154,34 +139,20 @@ void SceneMenu::Update(double dt)
 
 	// Button checks
 	if (muted == false)
-	{
-		sArray[4]	= "Unmute";
-		sArrayI[4]	= "Unmute";
-		sArrayA[4]	= " > Unmute";
-	}
+		sArray[4] = "Unmute";
 	else
-	{
 		sArray[4] = "Mute";
-		sArrayI[4] = "Mute";
-		sArrayA[4] = " > Mute";
-	}
+
 	int inactive = 0;
 	for (int i = 0; i < 5; ++i)
 	{
 		if (bArray[i]->checkMouse())
-		{
-		//	sArray[i] = sArrayA[i];
 			choice = i;
-		}
 		else
-		{
-			//sArray[i] = sArrayI[i];
 			++inactive;
-		}
+
 		if (inactive == 5)
-		{
 			choice = -1;
-		}
 	}
 
 	// Physics Simulation Section
@@ -212,7 +183,7 @@ void SceneMenu::Render()
 	// renderButton();
 
 	//On screen text
-	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.33", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.54", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
@@ -223,22 +194,20 @@ void SceneMenu::Render()
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(bArray[i]->getPos().x, bArray[i]->getPos().y, bArray[i]->getPos().z);
+		modelStack.PushMatrix();
 		modelStack.Scale(bArray[i]->getScale().x, bArray[i]->getScale().y, bArray[i]->getScale().z);
 		if (bArray[i]->checkMouse())
 			meshList[GEO_CUBE]->material.kAmbient.Set(0, 1, 0);
 		else
 			meshList[GEO_CUBE]->material.kAmbient.Set(1, 0, 0);
 		RenderMesh(meshList[GEO_CUBE], true);
+
+		modelStack.PopMatrix();
+		modelStack.Scale(4, 4, 4);
+		modelStack.Translate(-(float)sArray[i].length() / 4, 0, 0);
+		RenderText(meshList[GEO_TEXT], sArray[i], Color(1, 1, 1));
 		modelStack.PopMatrix();
 	}
-
-	RenderTextOnScreen(meshList[GEO_TEXT], sArray[0], Color(0, 1, 0), 3, 0, 16);
-	RenderTextOnScreen(meshList[GEO_TEXT], sArray[1], Color(0, 1, 0), 3, 0, 12);
-	RenderTextOnScreen(meshList[GEO_TEXT], sArray[2], Color(0, 1, 0), 3, 0, 8);
-	RenderTextOnScreen(meshList[GEO_TEXT], sArray[3], Color(0, 1, 0), 3, 0, 4);
-	RenderTextOnScreen(meshList[GEO_TEXT], sArray[4], Color(0, 1, 0), 3, 0, 0);
-
-
 }
 
 void SceneMenu::Exit()

@@ -74,6 +74,10 @@ void Scene2P::Init()
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
+
+	// ID for sceneEnd
+	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
+	cleanVar();
 }
 
 void Scene2P::Update(double dt)
@@ -256,6 +260,13 @@ void Scene2P::Update(double dt)
 		}
 	}
 	GOManager::GetInstance()->update(dt);
+
+	// After GOManager has updated, check for 0 lives
+	if ((GOManager::GetInstance()->planeLives <= 0) ||
+		(GOManager::GetInstance()->tankLives <= 0))
+	{
+		SceneManager::getSceneManager().switchToScene("End", this);
+	}
 }
 
 void Scene2P::Render()
@@ -304,8 +315,9 @@ void Scene2P::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 0, 0);
 
 	// HUD
+	render2PHUD();
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(1, 1, 1), 3, 4.0f, 55.5f);
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(1, 1, 1), 3, 4.0f + HUD_TXT_SPACING, 55.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(1, 1, 1), 3, 4.0f, 50.5f);
 }
 
 void Scene2P::Exit()

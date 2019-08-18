@@ -28,7 +28,6 @@ public:
 	float checkMouseBT();	// returns 0.0f to 1.0f, from bottom to top
 
 	float getPreviousOutput();
-
 	void updateMouse();
 
 	Vector3 getPos();

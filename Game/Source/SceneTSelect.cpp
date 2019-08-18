@@ -63,10 +63,10 @@ void SceneTSelect::Init()
 
 
 	sArray[0] = "Start";
-	sArray[1] = "<Tank";
-	sArray[2] = "Tank>";
-	sArray[3] = "<Decal";
-	sArray[4] = "Decal>";
+	sArray[1] = "< Tank";
+	sArray[2] = "Tank >";
+	sArray[3] = "< Decal";
+	sArray[4] = "Decal >";
 	sArray[5] = "Back";
 
 	bLightEnabled = true;
@@ -255,26 +255,7 @@ void SceneTSelect::Render()
 
 	for (int i = 0; i < NUM_TBUTTON; ++i)
 	{
-		modelStack.PushMatrix();
-
-		modelStack.Translate(bArray[i]->getPos().x, bArray[i]->getPos().y, bArray[i]->getPos().z);
-
-		modelStack.PushMatrix();
-
-		modelStack.Scale(bArray[i]->getScale().x, bArray[i]->getScale().y, bArray[i]->getScale().z);
-		if (bArray[i]->checkMouse())
-			meshList[GEO_CUBE]->material.kAmbient.Set(0, 1, 0);
-		else
-			meshList[GEO_CUBE]->material.kAmbient.Set(1, 0, 0);
-		RenderMesh(meshList[GEO_CUBE], true);
-
-		modelStack.PopMatrix();
-
-		modelStack.Scale(4, 4, 4);
-		modelStack.Translate(-(float)sArray[i].length() / 2, 0, 0);
-		RenderText(meshList[GEO_TEXT], sArray[i], Color(1, 1, 1));
-
-		modelStack.PopMatrix();
+		RGButtonRender(bArray[i], sArray[i]);
 	}
 	for (int i = 0; i < NUM_TSLIDER; ++i)
 	{

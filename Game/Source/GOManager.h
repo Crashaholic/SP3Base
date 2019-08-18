@@ -70,6 +70,17 @@ public:
 	int planeHighscore;
 	int tankHighscore;
 
+	// These values should only be used for sceneEnd to identify which data to display
+	enum STYPE
+	{
+		NONE = 0,
+		FROM_PLANE,
+		FROM_TANK,
+		FROM_2P,
+		TOTAL
+	};
+	STYPE sceneID;
+
 	Terrain* terreference;
 };
 

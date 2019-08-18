@@ -142,7 +142,7 @@ void Scene::RenderText(Mesh* mesh, std::string text, Color color)
 	{
 		Mtx44 characterSpacing;
 		//1.0f is the spacing of each character, you may change this value
-		characterSpacing.SetToTranslation(i * 1.0f, 0, 0);
+		characterSpacing.SetToTranslation(i * 0.5f, 0, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		//glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 		defaultShader.SetMat4("model", MVP);
@@ -484,4 +484,53 @@ void Scene::render1PHUD()
 
 void Scene::render2PHUD()
 {
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f, 95.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_3_HUD], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.0f, 87.0f, 0);
+	modelStack.Scale(4.0f, 4.0f, 1.0f);
+	RenderMesh(meshList[GEO_UPGRADE_3_HUD], false);
+	modelStack.PopMatrix();
+}
+
+void Scene::cleanVar()
+{
+	// GOManager clean variables
+	GOManager::GetInstance()->planeLives = 2;
+	GOManager::GetInstance()->tankLives = 2;
+	GOManager::GetInstance()->upgrade_1 = 0;
+	GOManager::GetInstance()->upgrade_2 = 0;
+	GOManager::GetInstance()->attackCount = 0;
+	GOManager::GetInstance()->planeKills = 0;
+	GOManager::GetInstance()->tankKills = 0;
+	GOManager::GetInstance()->planeAccuracy = 0.0f;
+	GOManager::GetInstance()->tankAccuracy = 0.0f;
+	GOManager::GetInstance()->planeHighscore = 0;
+	GOManager::GetInstance()->tankHighscore = 0;
+	GOManager::GetInstance()->totalHits = 0;
+	GOManager::GetInstance()->totalShots = 0;
+}
+
+void Scene::RGButtonRender(Button * b, std::string s)
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(b->getPos().x, b->getPos().y, b->getPos().z);
+
+		modelStack.PushMatrix();
+		modelStack.Scale(b->getScale().x, b->getScale().y, b->getScale().z);
+		if (b->checkMouse())
+			meshList[GEO_CUBE]->material.kAmbient.Set(0, 1, 0);
+		else
+			meshList[GEO_CUBE]->material.kAmbient.Set(1, 0, 0);
+		RenderMesh(meshList[GEO_CUBE], true);
+		modelStack.PopMatrix();
+
+	modelStack.Scale(4, 4, 4);
+	modelStack.Translate(-(float)s.length() / 4, 0, 0);
+	RenderText(meshList[GEO_TEXT], s, Color(1, 1, 1));
+	modelStack.PopMatrix();
 }

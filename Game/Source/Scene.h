@@ -11,6 +11,7 @@
 #include "shader.hpp"
 #include "Button/Button.h"
 #include <vector>
+#include <string>
 #include "Tank/Tank.h"
 
 class Scene
@@ -109,6 +110,9 @@ protected:
 	float m_worldHeight;
 
 	float windAngle;
+
+	void cleanVar();
+	void RGButtonRender(Button* b, std::string s);
 
 	const float HUD_SPACING = 15.5f;
 	const float HUD_TXT_SPACING = 7.0f;

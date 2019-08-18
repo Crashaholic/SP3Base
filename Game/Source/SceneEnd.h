@@ -26,6 +26,10 @@ private:
 	float m_speed;
 	Vector3 m_gravity;
 	GameObject *m_ghost;
+
+	Button* bBack;
+	std::string sBack;
+	bool onButton;
 };
 
 #endif

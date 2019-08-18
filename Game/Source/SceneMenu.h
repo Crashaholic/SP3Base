@@ -27,8 +27,6 @@ private:
 
 	// Text
 	string sArray[5];
-	string sArrayI[5];
-	string sArrayA[5];
 	bool muted;
 	int choice;
 };

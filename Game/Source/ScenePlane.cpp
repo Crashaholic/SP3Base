@@ -85,6 +85,10 @@ void ScenePlane::Init()
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
+
+	// ID for sceneEnd
+	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_PLANE;
+	cleanVar();
 }
 
 void ScenePlane::Update(double dt)
@@ -267,6 +271,12 @@ void ScenePlane::Update(double dt)
 		}
 	}
 	GOManager::GetInstance()->update(dt);
+
+	// After GOManager has updated, check for 0 lives
+	if (GOManager::GetInstance()->planeLives <= 0)
+	{
+		SceneManager::getSceneManager().switchToScene("End", this);
+	}
 }
 
 void ScenePlane::Render()
@@ -319,7 +329,7 @@ void ScenePlane::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3,	4.0f,							55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_1),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_2),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 2.0f,	55.5f);
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeAccuracy), Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 3.0f,	55.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeKills), Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 3.0f,	55.5f);
 }
 
 void ScenePlane::Exit()

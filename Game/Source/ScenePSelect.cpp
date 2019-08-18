@@ -66,10 +66,10 @@ void ScenePSelect::Init()
 	decals[1][2] = LoadTGA("Image//A10decal2.tga");
 
 	sArray[0] = "Start";
-	sArray[1] = "<Plane";
-	sArray[2] = "Plane>";
-	sArray[3] = "<Decal";
-	sArray[4] = "Decal>";
+	sArray[1] = "< Plane";
+	sArray[2] = "Plane >";
+	sArray[3] = "< Decal";
+	sArray[4] = "Decal >";
 	sArray[5] = "Back";
 
 	bLightEnabled = true;
@@ -248,34 +248,12 @@ void ScenePSelect::Render()
 
 	for (int i = 0; i < NUM_PBUTTON; ++i)
 	{
-		modelStack.PushMatrix();
-		
-		modelStack.Translate(bArray[i]->getPos().x, bArray[i]->getPos().y, bArray[i]->getPos().z);
-			
-			modelStack.PushMatrix();
-		
-			modelStack.Scale(bArray[i]->getScale().x, bArray[i]->getScale().y, bArray[i]->getScale().z);
-			if (bArray[i]->checkMouse())
-				meshList[GEO_CUBE]->material.kAmbient.Set(0, 1, 0);
-			else
-				meshList[GEO_CUBE]->material.kAmbient.Set(1, 0, 0);
-			RenderMesh(meshList[GEO_CUBE], true);
-			
-			modelStack.PopMatrix();
-		
-			modelStack.Scale(4, 4, 4);
-			modelStack.Translate(-(float)sArray[i].length() / 2, 0, 0);
-		RenderText(meshList[GEO_TEXT], sArray[i], Color(1, 1, 1));
-		
-		modelStack.PopMatrix();
+		RGButtonRender(bArray[i], sArray[i]);
 	}
 	for (int i = 0; i < NUM_PSLIDER; ++i)
 	{
 		modelStack.PushMatrix();
-		
 		modelStack.Translate(slArray[i]->getPos().x, slArray[i]->getPos().y, slArray[i]->getPos().z);
-					
-
 		modelStack.PushMatrix();
 
 			modelStack.Scale(slArray[i]->getScale().x, slArray[i]->getScale().y, slArray[i]->getScale().z);
@@ -297,7 +275,6 @@ void ScenePSelect::Render()
 			modelStack.Translate((slArray[i]->getPreviousOutput()*slArray[i]->getScale().x*2) - (slArray[i]->getScale().x), 0, 0);
 			modelStack.Scale(1.0f, slArray[i]->getScale().y, 1.0f);
 			RenderMesh(meshList[GEO_CUBE], false);
-
 			modelStack.PopMatrix();
 		modelStack.PopMatrix();
 		
