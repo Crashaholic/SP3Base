@@ -13,8 +13,6 @@ PlayerTank::~PlayerTank()
 
 void PlayerTank::Init()
 {
-	tankSpeed = 25;
-
 	SetGORef(GOManager::GetInstance()->fetchGO());
 	GOref->reserved = true;
 	GOref->type = GameObject::PLAYER_TANK;
@@ -41,6 +39,8 @@ void PlayerTank::Update(double dt)
 	if (GOref->active)
 	{
 		// Tank Movement
+		tankSpeed = Math::Max(25.f + (GOManager::GetInstance()->upgrade_2 * 5.f), 25.f);
+
 		Terrain* terreference = GOManager::GetInstance()->terreference;
 		Vector3 frontCheck = GOref->pos + Vector3(GOref->scale.x / 2, 0, 0);
 		Vector3 rearCheck = GOref->pos - Vector3(GOref->scale.x / 2, 0, 0);
@@ -86,7 +86,7 @@ void PlayerTank::Update(double dt)
 			object->pos = GOref->pos;
 			object->vel = GOref->dir * 30.0f;
 			object->hasGravity = false;
-			bulletCooldown = Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.2f), 0.2f);
+			bulletCooldown = Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.5f), 0.5f);
 		}
 		if (Application::IsKeyPressed('K'))
 		{

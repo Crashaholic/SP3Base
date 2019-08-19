@@ -5,9 +5,6 @@
 #include "SceneManager.h"
 #include "Logging.h"
 
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
-
 GOManager::GOManager()
 {
 	sceneID = NONE;
