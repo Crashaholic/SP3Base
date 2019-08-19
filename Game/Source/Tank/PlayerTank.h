@@ -9,7 +9,7 @@ public:
 	void Update(double dt);
 	void move_leftright();
 	void SetGORef(GameObject* GOref);
-	int tankSpeed;
+	float tankSpeed;
 	double bulletCooldown;
 };
 

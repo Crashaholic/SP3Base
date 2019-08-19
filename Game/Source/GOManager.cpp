@@ -5,9 +5,6 @@
 #include "SceneManager.h"
 #include "Logging.h"
 
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
-
 GOManager::GOManager()
 {
 	sceneID = NONE;
@@ -721,7 +718,7 @@ void GOManager::enemyDeath(GameObject * go)
 			switch (sceneID)
 			{
 			case STYPE::FROM_PLANE:
-				up->vel.y = 5.0f;
+				up->vel.y = 3.0f;
 				break;
 			case STYPE::FROM_TANK:
 				up->vel.y = -5.0f;
