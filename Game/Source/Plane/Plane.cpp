@@ -16,7 +16,7 @@ void Plane::Primary()
 			bomb->wrapMode = GameObject::SW_CLEAR;
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 				bomb->color[i] = GOref->color[i];
-			priprojectiles[i] = bomb;
+			priProjectiles[i] = bomb;
 			GOManager::GetInstance()->totalShots += 1;
 			break;
 		}
