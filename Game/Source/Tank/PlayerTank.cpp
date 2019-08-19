@@ -88,10 +88,6 @@ void PlayerTank::Update(double dt)
 			object->hasGravity = false;
 			bulletCooldown = Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.5f), 0.5f);
 		}
-		if (Application::IsKeyPressed('K'))
-		{
-			std::cout << "TankS:" << tankSpeed << std::endl;
-		}
 	}
 }
 
