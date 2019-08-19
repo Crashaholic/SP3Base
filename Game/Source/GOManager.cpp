@@ -24,6 +24,11 @@ GOManager::GOManager()
 	tankHighscore = 0;
 	totalHits = 0;
 	totalShots = 0;
+
+	planeup = planeup2 = planeup3 = pUpgrade = false;
+	srand(time(NULL));
+	check = rand() % 2 + 1;
+	check2 = rand() % 3 + 1;
 	windAngle = 0.0f;
 }
 
@@ -47,6 +52,10 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
+	if (check == 1)
+	{
+		pUpgrade = true;
+	}
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
@@ -116,6 +125,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
+		case GameObject::PLAYER_TANK: //test
 		case GameObject::GO_CUBE:
 		{
 			return true;
@@ -356,6 +366,21 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		LOG_NONE("Projectile collided with object");
 		switch (go2->type)
 		{
+		//test
+		case GameObject::PLAYER_TANK:
+		{
+			if (pUpgrade == true)
+			{
+				// chance to spawn either of the 3 upgrades
+				if (check2 == 1)
+					planeup = true;
+				if (check2 == 2)
+					planeup2 = true;
+				if (check2 == 3)
+					planeup3 = true;
+			}
+			break;
+		}
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:

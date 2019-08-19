@@ -73,6 +73,8 @@ public:
 
 	const float WIND_POWER = 10.0f;
 
+	bool planeup, planeup2, planeup3, pUpgrade;
+	int check, check2;
 	// These values should only be used for sceneEnd to identify which data to display
 	enum STYPE
 	{
