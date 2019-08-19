@@ -70,6 +70,8 @@ public:
 	int planeHighscore;
 	int tankHighscore;
 
+	bool planeup, planeup2, planeup3, pUpgrade;
+	int check, check2;
 	// These values should only be used for sceneEnd to identify which data to display
 	enum STYPE
 	{
