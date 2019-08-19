@@ -3,6 +3,7 @@
 #include "Mtx44.h"
 #include "GOManager.h"
 #include "SceneManager.h"
+#include "Logging.h"
 
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
@@ -23,6 +24,11 @@ GOManager::GOManager()
 	tankHighscore = 0;
 	totalHits = 0;
 	totalShots = 0;
+
+	planeup = planeup2 = planeup3 = pUpgrade = false;
+	srand(time(NULL));
+	check = rand() % 2 + 1;
+	check2 = rand() % 3 + 1;
 }
 
 GOManager::~GOManager()
@@ -45,6 +51,10 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
+	if (check == 1)
+	{
+		pUpgrade = true;
+	}
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
@@ -114,6 +124,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
+		case GameObject::PLAYER_TANK: //test
 		case GameObject::GO_CUBE:
 		{
 			return true;
@@ -292,6 +303,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_BUILDING:
 		{
 			toExplosion(go2);
+			LOG_TRACE("Player collided with enemy");
 
 			// check go1 again
 			switch (go1->type)
@@ -315,18 +327,21 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		// Upgrade pickups
 		case GameObject::UPGRADE_1:
 		{
+			LOG_TRACE("Player picked up UPGRADE_1");
 			++upgrade_1;
 			go2->active = false;
 			break;
 		}
 		case GameObject::UPGRADE_2:
 		{
+			LOG_TRACE("Player picked up UPGRADE_2");
 			++upgrade_2;
 			go2->active = false;
 			break;
 		}
 		case GameObject::UPGRADE_3:
 		{
+			LOG_TRACE("Player picked up UPGRADE_3");
 			++planeLives;
 			++tankLives;
 			go2->active = false;
@@ -347,8 +362,24 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
+		LOG_NONE("Projectile collided with object");
 		switch (go2->type)
 		{
+		//test
+		case GameObject::PLAYER_TANK:
+		{
+			if (pUpgrade == true)
+			{
+				// chance to spawn either of the 3 upgrades
+				if (check2 == 1)
+					planeup = true;
+				if (check2 == 2)
+					planeup2 = true;
+				if (check2 == 3)
+					planeup3 = true;
+			}
+			break;
+		}
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
@@ -372,6 +403,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	{
+		LOG_NONE("Projectile collided with object");
 		go1->exRadius = 20.0f;
 		toExplosion(go1);
 		break;
@@ -379,6 +411,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
+		LOG_NONE("Projectile collided with object");
 		go1->exRadius = 5.0f;
 		toExplosion(go1);
 		break;
@@ -428,6 +461,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	{
+		LOG_TRACE("Player collided with terrain");
 		planeDeath(go);
 		break;
 	}
@@ -435,6 +469,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::UPGRADE_2:
 	case GameObject::UPGRADE_3:
 	{
+		LOG_TRACE("UPGRADE collided with terrain");
 		if (go->vel.y < 0.0f)
 		{
 			go->vel.y = 0.0f;
@@ -446,12 +481,14 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
+		LOG_NONE("Projectile collided with terrain");
 		go->exRadius = 7.0f;
 		toExplosion(go);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	{
+		LOG_NONE("Projectile collided with terrain");
 		go->exRadius = 20.0f;
 		toExplosion(go);
 		break;
@@ -459,6 +496,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
+		LOG_NONE("Projectile collided with terrain");
 		go->exRadius = 5.0f;
 		toExplosion(go);
 		break;
@@ -472,28 +510,24 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
-	//if (go->Iframes <= 0.0)
+	LOG_ERROR("Player plane exploded");
+	--planeLives;
+	++tankKills;
+	GameObject* ex = fetchGO();
+	ex->exRadius = 10.0f;
+	ex->pos = go->pos;
+	go->active = false;
+	toExplosion(ex);
+	if (planeLives <= 0)
 	{
-		--planeLives;
-		++tankKills;
-		GameObject* ex = fetchGO();
-		ex->exRadius = 10.0f;
-		ex->pos = go->pos;
-		go->active = false;
-		toExplosion(ex);
-		//go->Iframes = 5.0;
-		if (planeLives <= 0)
-		{
-			// TODO: Ryan & Yan Quan
-			// Switch scene and pass high score to YQ's function
-			planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
-		}
-		else
-		{
-			go->reset();
-			go->Iframes = 5.0;
-			go->active = true;
-		}
+		planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
+	}
+	else
+	{
+		go->defaultPos.x = Math::RandFloatMinMax(10.0f, 166.0f);
+		go->reset();
+		go->Iframes = 5.0;
+		go->active = true;
 	}
 }
 
@@ -501,6 +535,7 @@ void GOManager::tankDeath(GameObject* go)
 {
 	if (go->Iframes <= 0.0)
 	{
+		LOG_ERROR("Player tank exploded");
 		--tankLives;
 		++planeKills;
 		GameObject* ex = fetchGO();
@@ -516,6 +551,7 @@ void GOManager::tankDeath(GameObject* go)
 		}
 		else
 		{
+			go->defaultPos.x = Math::RandFloatMinMax(10.0f, 166.0f);
 			go->reset();
 			go->Iframes = 5.0;
 			go->active = true;
