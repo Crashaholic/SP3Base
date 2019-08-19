@@ -47,7 +47,7 @@ void PlaneEnemy::Update(double dt)
 	if ((GOref->pos - targetMov).Length() > 0.5f)
 	{
 		vec3 tmpDir = (targetMov - GOref->pos).Normalized();
-		GOref->pos += tmpDir * 20 * dt;
+		GOref->pos += tmpDir * 20.0f * static_cast<float>(dt);
 	}
 	else
 	{

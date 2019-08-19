@@ -81,14 +81,14 @@ void Terrain::GenerateTerrainMesh()
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
 		v.pos.Set(Points[i].x, Points[i].y, Points[i].z);
-		v.color.Set(1, 1, 1);
+		v.color.Set(0.3f, 0.3f, 0.3f);
 		v.normal.Set(0, 1, 0);
 		vertex_buffer_data.push_back(v);
 	}
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
 		v.pos.Set(Bottom[i].x, Bottom[i].y, Bottom[i].z);
-		v.color.Set(1, 1, 1);
+		v.color.Set(0.4, 0.4, 0.4);
 		v.normal.Set(0, 1, 0);
 		vertex_buffer_data.push_back(v);
 	}
