@@ -39,8 +39,6 @@ GOManager::~GOManager()
 
 void GOManager::init()
 {
-	tChance = rand() % 6 + 1;
-
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));

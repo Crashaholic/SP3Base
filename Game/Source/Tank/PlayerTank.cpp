@@ -13,8 +13,7 @@ PlayerTank::~PlayerTank()
 
 void PlayerTank::Init()
 {
-	//tankSpeed = 25;
-	tankSpeed = Math::Max(25.f + (GOManager::GetInstance()->upgrade_1 * 35.f), 25.f);
+	tankSpeed = 25;
 
 	SetGORef(GOManager::GetInstance()->fetchGO());
 	GOref->reserved = true;
