@@ -534,3 +534,13 @@ void Scene::RGButtonRender(Button * b, std::string s)
 	RenderText(meshList[GEO_TEXT], s, Color(1, 1, 1));
 	modelStack.PopMatrix();
 }
+
+void Scene::windRender()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(156.0f, 80.0f, 0.0f);
+	modelStack.Rotate(GOManager::GetInstance()->windAngle, 0, 0, 1);
+	modelStack.Scale(8.0f, 8.0f, 8.0f);
+	RenderMesh(meshList[GEO_ARROW], false);
+	modelStack.PopMatrix();
+}

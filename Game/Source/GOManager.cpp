@@ -606,6 +606,7 @@ GameObject * GOManager::fetchGO()
 			go->vel.SetZero();
 			go->pos.SetZero();
 			go->hasLifeTime = false;
+			go->hasGravity = false;
 			go->lifeTime = 0.0;
 			go->transparency = 1.0f;
 			for (int i = 0; i < 8; ++i)
@@ -716,8 +717,24 @@ void GOManager::enemyDeath(GameObject * go)
 			}
 			up->active = true;
 			up->scale.Set(3.f, 3.f, 1.f);
-			up->vel.y = 5.0f;
+
+			switch (sceneID)
+			{
+			case STYPE::FROM_PLANE:
+				up->vel.y = 5.0f;
+				break;
+			case STYPE::FROM_TANK:
+				up->vel.y = -5.0f;
+				break;
+			default:
+				LOG_ERROR("Tried to spawn upgrade outside of appropriate scene!");
+				break;
+			}
+
 			up->pos = go->pos;
+			up->hasLifeTime = true;
+			up->lifeTime = 10.0;
+			up->norm.Set(1, 0, 0);
 		}
 		go->active = false;
 		break;
