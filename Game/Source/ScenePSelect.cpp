@@ -10,6 +10,8 @@
 
 #include "SceneManager.h"
 
+#include "Logging.h"
+
 ScenePSelect::ScenePSelect()
 {
 }
@@ -292,6 +294,7 @@ void ScenePSelect::Render()
 	defaultShader.SetVec3("coloredTexture[1]", vec3{ planeColor[1].r,planeColor[1].g,planeColor[1].b });
 	std::cout << planeColor[0].r << "-" << planeColor[0].g << "-" << planeColor[0].b << std::endl;
 	std::cout << planeColor[1].r << "-" << planeColor[1].g << "-" << planeColor[1].b << std::endl;
+	//LOG_NONE("Color: %", (Vector3)planeColor[0]);
 	RenderMesh(meshList[planes[currentPlane]], false);
 	modelStack.PopMatrix();
 	for (int i = 0; i < MAX_TEXTURES; ++i)

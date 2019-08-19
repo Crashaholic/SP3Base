@@ -289,6 +289,7 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::PLAYER_PLANE_A10:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
 			break;
+		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::PLAYER_PLANE_KOMET:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
 			break;

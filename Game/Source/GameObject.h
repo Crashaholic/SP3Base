@@ -46,6 +46,7 @@ struct GameObject
 	};
 	enum SCREENWRAP_MODE {
 		SW_CLEAR = 0,
+		SW_OFFSCREENCLEAR,
 		SW_WRAP,
 		SW_HYBRID,
 		SW_BOUNCE

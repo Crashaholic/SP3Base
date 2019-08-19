@@ -3,6 +3,7 @@
 #define SCENE_TANK_H
 
 #include "Scene.h"
+#include "Enemy/Plane/PlaneEnemy.h"
 
 class SceneTank : public Scene
 {
@@ -43,6 +44,9 @@ private:
 	// Physics
 	float m_speed;
 	Vector3 m_gravity;
+
+	PlaneEnemy e;
+
 };
 
 #endif
