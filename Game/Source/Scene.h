@@ -114,6 +114,8 @@ protected:
 
 	const float HUD_SPACING = 15.5f;
 	const float HUD_TXT_SPACING = 7.0f;
+
+	void windRender();
 };
 
 #endif
