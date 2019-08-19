@@ -59,12 +59,17 @@ void SceneTank::Init()
 
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_TANK;
+
+	e.SpawnNewPlaneEnemy({10,50,10}, player->GOref, m_worldWidth);
+
 	cleanVar();
 }
 
 void SceneTank::Update(double dt)
 {
 	player->Update(dt);
+	e.Update(dt);
+	//LOG_NONE("Tank's y: %", player->GOref->pos.y);
 	//Keyboard Section
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);

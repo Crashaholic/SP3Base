@@ -198,6 +198,12 @@ void ScenePlane::Update(double dt)
 			bool hit = false;
 			switch (go->wrapMode)
 			{
+			case GameObject::SW_OFFSCREENCLEAR:
+				if (go->pos.x > m_worldWidth + 5.0f
+					|| go->pos.x < -5.0f || go->pos.y < -5.0f)
+					go->active = false;
+				hit = true;
+				break;
 			case GameObject::SW_CLEAR:
 				if (go->pos.x > m_worldWidth
 					|| go->pos.x < 0 || go->pos.y < 0)
