@@ -60,12 +60,12 @@ void SceneTank::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_TANK;
 
-	e1.SpawnNewPlaneEnemy({10,50,10}, player->GOref, m_worldWidth);
-	e2.SpawnNewPlaneEnemy({10,54,10}, player->GOref, m_worldWidth);
-	e3.SpawnNewPlaneEnemy({10,58,10}, player->GOref, m_worldWidth);
-	e4.SpawnNewPlaneEnemy({10,60,10}, player->GOref, m_worldWidth);
-	e5.SpawnNewPlaneEnemy({10,64,10}, player->GOref, m_worldWidth);
-	e6.SpawnNewPlaneEnemy({10,68,10}, player->GOref, m_worldWidth);
+	e1.SpawnNewPlaneEnemy({10, 50, 10}, player->GOref, m_worldWidth);
+	//e2.SpawnNewPlaneEnemy({10, 54, 10}, player->GOref, m_worldWidth);
+	//e3.SpawnNewPlaneEnemy({10, 58, 10}, player->GOref, m_worldWidth);
+	//e4.SpawnNewPlaneEnemy({10, 60, 10}, player->GOref, m_worldWidth);
+	//e5.SpawnNewPlaneEnemy({10, 64, 10}, player->GOref, m_worldWidth);
+	//e6.SpawnNewPlaneEnemy({10, 68, 10}, player->GOref, m_worldWidth);
 
 	cleanVar();
 }
@@ -74,11 +74,11 @@ void SceneTank::Update(double dt)
 {
 	player->Update(dt);
 	e1.Update(dt);
-	e2.Update(dt);
-	e3.Update(dt);
-	e4.Update(dt);
-	e5.Update(dt);
-	e6.Update(dt);
+	//e2.Update(dt);
+	//e3.Update(dt);
+	//e4.Update(dt);
+	//e5.Update(dt);
+	//e6.Update(dt);
 	//LOG_NONE("Tank's y: %", player->GOref->pos.y);
 	//Keyboard Section
 	if (Application::IsKeyPressed('1'))

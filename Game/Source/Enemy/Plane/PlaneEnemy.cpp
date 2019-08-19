@@ -33,7 +33,7 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	GOref->reserved = true;
 	GOref->active = true;
 	this->m_worldWidth = m_worldWidth;
-	topSpeed = 10;
+	topSpeed = 20;
 	priAmmo = 0;
 	cooldownLimit = 3;
 	cooldown = cooldownLimit;
@@ -50,28 +50,31 @@ void PlaneEnemy::Update(double dt)
 {
 	if (GOref->active)
 	{
-		if ((GOref->pos - targetMov).Length() > 0.5f)
+		if (GOref->pos.x < targetMov.x && GOref->vel.x > 0 || GOref->pos.x > targetMov.x && GOref->vel.x < 0)
 		{
-			vec3 tmpDir = (targetMov - GOref->pos).Normalized();
-			GOref->pos += tmpDir * 20.0f * static_cast<float>(dt);
+			//LOG_NONE("targ.y: % | pos.y: %", targetMov.y, GOref->pos.y);
 		}
 		else
 		{
 			if (GOref->pos.x > m_worldWidth / 2.0f)
 			{
-				MoveTo({ 10, originalHeight, 0 });
-				GOref->angle = Math::DegreeToRadian(180);
+				MoveTo({ 10, Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0 });
+				GOref->angle = Math::DegreeToRadian(GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
 			}
 			else
 			{
-				MoveTo({ m_worldWidth - 10, originalHeight, 0 });
-				GOref->angle = Math::DegreeToRadian(0);
+				MoveTo({ m_worldWidth - 10,  Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0 });
+				GOref->angle = Math::DegreeToRadian(180 - GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
 			}
 		}
 
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		GOref->vel = GOref->dir * (topSpeed * 0.5f);
 		GOref->pos += GOref->vel * (float)dt;
+
+		LOG_NONE("angle: % | dir: %", GOref->angle, GOref->dir);
+
+
 		if (GOref->dir.x < 0)
 		{
 			GOref->scale.x = -4.4f;
@@ -93,7 +96,7 @@ void PlaneEnemy::Update(double dt)
 		{
 			if (priProjectiles[i])
 			{
-				if (!priProjectiles[i]->active || priProjectiles[i]->type != GameObject::PLAYER_PROJECTILE_BOMB)
+				if (!priProjectiles[i]->active || priProjectiles[i]->type != GameObject::ENEMY_PROJECTILE_BOMB)
 				{
 					priProjectiles[i] = NULL;
 					//break;
