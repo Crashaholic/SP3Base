@@ -512,7 +512,9 @@ void Scene::cleanVar()
 	GOManager::GetInstance()->tankHighscore = 0;
 	GOManager::GetInstance()->totalHits = 0;
 	GOManager::GetInstance()->totalShots = 0;
-	GOManager::GetInstance()->windAngle = Math::RandFloatMinMax(0.0f, 360.0f);
+	GOManager::GetInstance()->windBT = GOManager::GetInstance()->WIND_TIMER;
+	GOManager::GetInstance()->windVector = Vector3(1, 0, 0);
+	GOManager::GetInstance()->windVectorN = Vector3(1, 0, 0);
 }
 
 void Scene::RGButtonRender(Button * b, std::string s)
@@ -538,8 +540,13 @@ void Scene::RGButtonRender(Button * b, std::string s)
 void Scene::windRender()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(156.0f, 80.0f, 0.0f);
-	modelStack.Rotate(GOManager::GetInstance()->windAngle, 0, 0, 1);
+	modelStack.Translate(166.0f, 90.0f, 0.0f);
+
+	modelStack.Rotate(
+		Math::RadianToDegree(atan2(
+				GOManager::GetInstance()->windVector.y, 
+				GOManager::GetInstance()->windVector.x)), 0, 0, 1);
+
 	modelStack.Scale(8.0f, 8.0f, 8.0f);
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();

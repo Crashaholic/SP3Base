@@ -71,10 +71,14 @@ public:
 	float tankAccuracy;
 	int planeHighscore;
 	int tankHighscore;
-	float windAngle;
 
-	const float WIND_POWER = 10.0f;
-	const float UPGRADE_CHANCE = 100.0f;
+	double windBT;							// bouncetime to regulate time between direction randomisations (WIND_TIMER)
+	Vector3 windVector;						// current vector of wind
+	Vector3 windVectorN;					// future vector of wind
+	const float WIND_POWER = 5.0f;
+	const float WIND_TIMER = 10.0f;
+	const float WIND_RANGE = 90.0f;			// range of wind randomisation
+	const float UPGRADE_CHANCE = 100.0f;	// chance of upgrade dropping from enemies
 
 	// These values should only be used for sceneEnd to identify which data to display
 	enum STYPE

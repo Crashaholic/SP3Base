@@ -51,16 +51,23 @@ void GameObject::Update(double dt)
 			return;
 		}
 	}
-	if (hasGravity)
-	{
-		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
-	}
 	switch (type)
 	{
+	case PLAYER_PROJECTILE_MACHINE:
+		try
+		{
+			dir = vel.Normalized();
+		}
+		catch (DivideByZero)
+		{
+			dir.Set(1, 0, 0);
+		}
+		angle = atan2(dir.y, dir.x);
+		norm.Set(-dir.y, dir.x);
+		break;
 	case PLAYER_PROJECTILE_MISSILE:
 		vel += dir * static_cast<float>(dt)*100.0f;
-		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt)*vel.Length() * 0.1f;;
-
+		vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt)*vel.Length() * 0.1f;
 		try
 		{
 			norm = Vector3(-vel.y, vel.x).Normalized();
@@ -73,8 +80,9 @@ void GameObject::Update(double dt)
 		//norm.Set(-dir.y, dir.x);
 		break;
 
-	case PLAYER_PROJECTILE_BOMB:
 	case PLAYER_PROJECTILE_NUKE:
+	case PLAYER_PROJECTILE_BOMB:
+	case ENEMY_PROJECTILE_BOMB:
 		try
 		{
 			dir = vel.Normalized();

@@ -64,7 +64,7 @@ void ScenePlane::Init()
 	decal1 = LoadTGA("Image//A10decal2.tga");
 	// Testing cubes
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
-
+	/*
 	GameObject *g1 = GOManager::GetInstance()->fetchGO();
 	g1->scale.Set(8.0f, 8.0f, 8.0f);
 	g1->type = GameObject::GO_CUBE;
@@ -79,7 +79,7 @@ void ScenePlane::Init()
 	g2->angle = 90.0f;
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
-
+	*/
 	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
 	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 	spawnTimer = (float)SPAWNTIMER;
@@ -334,6 +334,7 @@ void ScenePlane::Render()
 	//RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_1),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_2),		Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 2.0f,	55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeKills),		Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 3.0f,	55.5f);
+	windRender();
 }
 
 void ScenePlane::Exit()

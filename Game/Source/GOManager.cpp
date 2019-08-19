@@ -24,7 +24,9 @@ GOManager::GOManager()
 	tankHighscore = 0;
 	totalHits = 0;
 	totalShots = 0;
-	windAngle = 0.0f;
+	windVector = Vector3(1, 0, 0);
+	windVectorN = Vector3(1, 0, 0);
+	windBT = WIND_TIMER;
 }
 
 GOManager::~GOManager()
@@ -47,6 +49,25 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
+	// Wind logic
+	if (windBT > 0.0)
+	{
+		windBT -= dt;
+	}
+	if (windBT <= 0.0)
+	{
+		windBT = WIND_TIMER;
+
+		float windAngle = Math::RadianToDegree(atan2(
+			GOManager::GetInstance()->windVector.y,
+			GOManager::GetInstance()->windVector.x));
+
+		float windAngleN = Math::RandFloatMinMax(windAngle - WIND_RANGE, windAngle + WIND_RANGE);
+
+		windVectorN = Vector3(cos(Math::DegreeToRadian(windAngleN)), sin(Math::DegreeToRadian(windAngleN)), 0.0f);
+	}
+	windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
@@ -54,6 +75,11 @@ void GOManager::update(double dt)
 		{
 			go->Update(dt);
 			go->pos += go->vel * static_cast<float>(dt);
+			if (go->hasGravity)
+			{
+				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+				go->vel += windVector * WIND_POWER * static_cast<float>(dt);
+			}
 			updateCorn(go);
 
 			if (terrainGate(go))

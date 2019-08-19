@@ -66,7 +66,7 @@ void A10::Update(double dt)
 				bullet->vel = Vector3(cos(bulletangle), sin(bulletangle), 0) * 100;
 				bullet->pos = GOref->pos;
 				bullet->scale.Set(1, 2, 1);
-				bullet->hasGravity = false;
+				bullet->hasGravity = true;
 				bullet->wrapMode = GameObject::SW_CLEAR;
 				for (int i = 0; i < MAX_TEXTURES; ++i)
 					bullet->color[i] = GOref->color[i];
