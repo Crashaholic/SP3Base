@@ -179,12 +179,11 @@ void SceneMenu::Render()
 	// renderButton();
 
 	//On screen text
-	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.54", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 53);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Main Menu", Color(0, 1, 0), 3, 0, 49);
 
 	for (int i = 0; i < 5; ++i)
 	{
