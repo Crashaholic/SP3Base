@@ -80,7 +80,8 @@ void Plane::Update(double dt)
 			else
 				++totalremaining;
 		}
-		if (priProjectiles.size() < static_cast<unsigned int>(GOManager::GetInstance()->upgrade_1))
+		priAmmo = GOManager::GetInstance()->upgrade_1 + 1;
+		if (priProjectiles.size() < static_cast<unsigned int>(priAmmo))
 		{
 			AddPri(priAmmo - (int)priProjectiles.size());
 		}
