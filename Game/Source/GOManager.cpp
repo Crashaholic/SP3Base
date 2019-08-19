@@ -24,6 +24,7 @@ GOManager::GOManager()
 	tankHighscore = 0;
 	totalHits = 0;
 	totalShots = 0;
+	windAngle = 0.0f;
 }
 
 GOManager::~GOManager()
@@ -520,8 +521,6 @@ void GOManager::tankDeath(GameObject* go)
 		toExplosion(ex);
 		if (tankLives <= 0)
 		{
-			// TODO: Ryan & Yan Quan
-			// Switch scene and pass high score to YQ's function
 			tankHighscore = tankKills + static_cast<int>(tankAccuracy / 10.0f) * tankKills;
 		}
 		else

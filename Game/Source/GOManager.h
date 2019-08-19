@@ -69,6 +69,9 @@ public:
 	float tankAccuracy;
 	int planeHighscore;
 	int tankHighscore;
+	float windAngle;
+
+	const float WIND_POWER = 10.0f;
 
 	// These values should only be used for sceneEnd to identify which data to display
 	enum STYPE
