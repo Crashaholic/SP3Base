@@ -17,6 +17,7 @@ void A10::Primary()
 	{
 		fire = true;
 		currentSpray = priAmmo;
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 
@@ -39,7 +40,7 @@ void A10::Secondary()
 		missile->wrapMode = GameObject::SW_CLEAR;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			missile->color[i] = GOref->color[i];
-
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 

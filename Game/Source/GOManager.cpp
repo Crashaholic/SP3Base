@@ -24,11 +24,6 @@ GOManager::GOManager()
 	tankHighscore = 0;
 	totalHits = 0;
 	totalShots = 0;
-
-	planeup = planeup2 = planeup3 = pUpgrade = false;
-	srand(time(NULL));
-	check = rand() % 2 + 1;
-	check2 = rand() % 3 + 1;
 	windAngle = 0.0f;
 }
 
@@ -52,10 +47,6 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
-	if (check == 1)
-	{
-		pUpgrade = true;
-	}
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject *go = m_goList[i];
@@ -153,6 +144,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		switch (go2->type)
 		{
 		// Enemy & other player
+		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
@@ -298,6 +290,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		switch (go2->type)
 		{
 		// if for some reason the player decides to crash into an enemy object
+		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
@@ -363,64 +356,38 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
-		LOG_NONE("Projectile collided with object");
-		switch (go2->type)
-		{
-		//test
-		case GameObject::PLAYER_TANK:
-		{
-			if (pUpgrade == true)
-			{
-				// chance to spawn either of the 3 upgrades
-				if (check2 == 1)
-					planeup = true;
-				if (check2 == 2)
-					planeup2 = true;
-				if (check2 == 3)
-					planeup3 = true;
-			}
-			break;
-		}
-		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_TANK_PASSIVE:
-		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
-			switch (go1->type)
-			{
-			case GameObject::PLAYER_PROJECTILE_SHELL:
-				++tankKills;
-				break;
-			case GameObject::PLAYER_PROJECTILE_MISSILE:
-			case GameObject::PLAYER_PROJECTILE_BOMB:
-				++planeKills;
-				break;
-			}
-			exResponse(go2);
-			break;
-		}
 		go1->exRadius = 7.0f;
-		toExplosion(go1);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	{
-		LOG_NONE("Projectile collided with object");
 		go1->exRadius = 20.0f;
-		toExplosion(go1);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
-		LOG_NONE("Projectile collided with object");
 		go1->exRadius = 5.0f;
-		toExplosion(go1);
 		break;
 	}
 	default:
 	{
 		break;
 	}
+	}
+	// Check projectiles again
+	switch (go1->type)
+	{
+	case GameObject::PLAYER_PROJECTILE_SHELL:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+		LOG_NONE("Projectile collided with object");
+		enemyDeath(go2);
+		toExplosion(go1);
 	}
 }
 
@@ -456,7 +423,7 @@ bool GOManager::checkTerrain(GameObject * go)
 
 void GOManager::terrainResponse(GameObject * go)
 {
-	// handles response between game objects and terrain
+	// Handles response between game objects and terrain
 	switch (go->type)
 	{
 	case GameObject::PLAYER_PLANE_KOMET:
@@ -482,30 +449,37 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_BOMB:
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
-		LOG_NONE("Projectile collided with terrain");
 		go->exRadius = 7.0f;
-		toExplosion(go);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	{
-		LOG_NONE("Projectile collided with terrain");
 		go->exRadius = 20.0f;
-		toExplosion(go);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
-		LOG_NONE("Projectile collided with terrain");
 		go->exRadius = 5.0f;
-		toExplosion(go);
 		break;
 	}
 	default:
 	{
 		break;
 	}
+	}
+	// Check projectiles again
+	switch (go->type)
+	{
+	case GameObject::PLAYER_PROJECTILE_SHELL:
+	case GameObject::PLAYER_PROJECTILE_MISSILE:
+	case GameObject::PLAYER_PROJECTILE_BOMB:
+	case GameObject::ENEMY_PROJECTILE_BOMB:
+	case GameObject::PLAYER_PROJECTILE_NUKE:
+	case GameObject::PLAYER_PROJECTILE_MACHINE:
+	case GameObject::ENEMY_PROJECTILE_MACHINE:
+		LOG_NONE("Projectile collided with terrain");
+		toExplosion(go);
 	}
 }
 
@@ -521,7 +495,8 @@ void GOManager::planeDeath(GameObject * go)
 	toExplosion(ex);
 	if (planeLives <= 0)
 	{
-		planeHighscore = planeKills + static_cast<int>(planeAccuracy / 10.0f) * planeKills;
+		int accuracyBonus = static_cast<int>(planeAccuracy * planeKills);
+		planeHighscore = planeKills + accuracyBonus;
 	}
 	else
 	{
@@ -534,27 +509,25 @@ void GOManager::planeDeath(GameObject * go)
 
 void GOManager::tankDeath(GameObject* go)
 {
-	if (go->Iframes <= 0.0)
+	LOG_ERROR("Player tank exploded");
+	--tankLives;
+	++planeKills;
+	GameObject* ex = fetchGO();
+	ex->exRadius = 10.0f;
+	ex->pos = go->pos;
+	go->active = false;
+	toExplosion(ex);
+	if (tankLives <= 0)
 	{
-		LOG_ERROR("Player tank exploded");
-		--tankLives;
-		++planeKills;
-		GameObject* ex = fetchGO();
-		ex->exRadius = 10.0f;
-		ex->pos = go->pos;
-		go->active = false;
-		toExplosion(ex);
-		if (tankLives <= 0)
-		{
-			tankHighscore = tankKills + static_cast<int>(tankAccuracy / 10.0f) * tankKills;
-		}
-		else
-		{
-			go->defaultPos.x = Math::RandFloatMinMax(10.0f, 166.0f);
-			go->reset();
-			go->Iframes = 5.0;
-			go->active = true;
-		}
+		int accuracyBonus = static_cast<int>(tankAccuracy * tankKills);
+		tankHighscore = tankKills + accuracyBonus;
+	}
+	else
+	{
+		go->defaultPos.x = Math::RandFloatMinMax(10.0f, 166.0f);
+		go->reset();
+		go->Iframes = 5.0;
+		go->active = true;
 	}
 }
 
@@ -586,9 +559,12 @@ void GOManager::toExplosion(GameObject * go)
 			if ((a->corn[i] - go->pos).Length() < length)
 				length = (a->corn[i] - go->pos).Length();
 		}
-		if (length < go->exRadius)
+		if (a->Iframes <= 0.0)
 		{
-			exResponse(a);
+			if (length < go->exRadius)
+			{
+				exResponse(a);
+			}
 		}
 	}
 }
@@ -610,22 +586,12 @@ void GOManager::exResponse(GameObject * go)
 			tankDeath(go);
 			break;
 		}
-		case GameObject::ENEMY_PLANE_PASSIVE:
-		case GameObject::ENEMY_PLANE_AGGRESSIVE:
-		case GameObject::ENEMY_TANK_PASSIVE:
-		case GameObject::ENEMY_TANK_AGGRESSIVE:
-		case GameObject::ENEMY_BUILDING:
-		{
-			++planeKills;
-			++tankKills;
-			go->active = false;
-			break;
-		}
 		default:
 		{
 			break;
 		}
 		}
+		enemyDeath(go);
 	}
 }
 
@@ -716,5 +682,49 @@ void GOManager::updateCorn(GameObject * go)
 		go->corn[1] = go->pos + hori1 - vert1;
 		go->corn[2] = go->pos + hori1 + vert1;
 		go->corn[3] = go->pos - hori1 + vert1;
+	}
+}
+
+void GOManager::enemyDeath(GameObject * go)
+{
+	switch (go->type)
+	{
+	case GameObject::ENEMY_PLANE_PASSIVE:
+	case GameObject::ENEMY_PLANE_AGGRESSIVE:
+	case GameObject::ENEMY_TANK_PASSIVE:
+	case GameObject::ENEMY_TANK_AGGRESSIVE:
+	case GameObject::ENEMY_BUILDING:
+	{
+		++planeKills;
+		++tankKills;
+		float i = Math::RandFloatMinMax(0.0f, 100.0f);
+		if (i <= UPGRADE_CHANCE)
+		{
+			int j = Math::RandIntMinMax(0, 2);
+			GameObject *up = GOManager::GetInstance()->fetchGO();
+			switch (j)
+			{
+			case 0:
+				up->type = GameObject::UPGRADE_1;
+				break;
+			case 1:
+				up->type = GameObject::UPGRADE_2;
+				break;
+			case 2:
+				up->type = GameObject::UPGRADE_3;
+				break;
+			}
+			up->active = true;
+			up->scale.Set(3.f, 3.f, 1.f);
+			up->vel.y = 5.0f;
+			up->pos = go->pos;
+		}
+		go->active = false;
+		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 }

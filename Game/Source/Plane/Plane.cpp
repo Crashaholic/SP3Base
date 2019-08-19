@@ -17,7 +17,7 @@ void Plane::Primary()
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 				bomb->color[i] = GOref->color[i];
 			priprojectiles[i] = bomb;
-			++GOManager::GetInstance()->totalShots;
+			GOManager::GetInstance()->totalShots += 1;
 			break;
 		}
 	}
@@ -27,7 +27,7 @@ void Plane::Secondary()
 {
 	if (secAmmo > 0)
 	{
-		++GOManager::GetInstance()->totalShots;
+		GOManager::GetInstance()->totalShots += 1;
 		GameObject* bomb = GOManager::GetInstance()->fetchGO();
 		bomb->type = GameObject::PLAYER_PROJECTILE_NUKE;
 		bomb->vel = GOref->vel;

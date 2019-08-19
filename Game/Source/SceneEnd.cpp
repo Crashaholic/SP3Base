@@ -7,6 +7,7 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include <sstream>
+#include "Logging.h"
 
 #include "SceneManager.h"
 
@@ -135,6 +136,7 @@ void SceneEnd::Render()
 
 	std::ostringstream s1;
 	std::ostringstream s2;
+	s2.precision(3);
 	std::ostringstream s3;
 
 	switch (GOManager::GetInstance()->sceneID)
@@ -145,7 +147,7 @@ void SceneEnd::Render()
 		s2 << "Accuracy : ";
 		s3 << "Score    : ";
 		s1 << GOManager::GetInstance()->planeKills;
-		s2 << GOManager::GetInstance()->planeAccuracy;
+		s2 << static_cast<int>(GOManager::GetInstance()->planeAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->planeHighscore;
 		break;
 	}
@@ -155,7 +157,7 @@ void SceneEnd::Render()
 		s2 << "Accuracy : ";
 		s3 << "Score    : ";
 		s1 << GOManager::GetInstance()->tankKills;
-		s2 << GOManager::GetInstance()->tankAccuracy;
+		s2 << static_cast<int>(GOManager::GetInstance()->tankAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->tankHighscore;
 		break;
 	}

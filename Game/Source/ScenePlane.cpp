@@ -89,10 +89,6 @@ void ScenePlane::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_PLANE;
 	cleanVar();
-
-	//upgrade check
-	std::cout << "Chance:" << GOManager::GetInstance()->check << std::endl;
-	std::cout << "Upgrade:" << GOManager::GetInstance()->check2 << std::endl;
 }
 
 void ScenePlane::Update(double dt)
@@ -108,37 +104,6 @@ void ScenePlane::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if(Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	if (GOManager::GetInstance()->planeKills == 2 && GOManager::GetInstance()->planeup == true) // check upgrade 1
-	{
-		GOManager::GetInstance()->planeup = false;
-		GameObject *upg = GOManager::GetInstance()->fetchGO();
-		upg->type = GameObject::UPGRADE_1;
-		upg->active = true;
-		upg->scale.Set(3.f, 3.f, 1.f);
-		upg->vel.y = 200 * static_cast<float>(dt);
-		upg->pos = player->GOref->pos;
-	}
-	if (GOManager::GetInstance()->planeKills == 2 && GOManager::GetInstance()->planeup2 == true) // check upgrade 2
-	{
-		GOManager::GetInstance()->planeup2 = false;
-		GameObject *upg = GOManager::GetInstance()->fetchGO();
-		upg->type = GameObject::UPGRADE_2;
-		upg->active = true;
-		upg->scale.Set(3.f, 3.f, 1.f);
-		upg->vel.y = 200 * static_cast<float>(dt);
-		upg->pos = player->GOref->pos;
-	}
-	if (GOManager::GetInstance()->planeKills == 2 && GOManager::GetInstance()->planeup3 == true) // check upgrade 3
-	{
-		GOManager::GetInstance()->planeup3 = false;
-		GameObject *upg = GOManager::GetInstance()->fetchGO();
-		upg->type = GameObject::UPGRADE_3;
-		upg->active = true;
-		upg->scale.Set(3.f, 3.f, 1.f);
-		upg->vel.y = 200 * static_cast<float>(dt);
-		upg->pos = player->GOref->pos;
-	}
 
 	if(Application::IsKeyPressed('+'))
 	{
