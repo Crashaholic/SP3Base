@@ -17,14 +17,14 @@ void A10::Primary()
 	{
 		fire = true;
 		currentSpray = priAmmo;
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 
 void A10::Secondary()
 {
-	//if (secAmmo > 0)
+	if (secAmmo > 0)
 	{
-		//--secAmmo;
 		GameObject* missile = GOManager::GetInstance()->fetchGO();
 		missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
 		if(GOref->dir.x>=0)
@@ -39,7 +39,10 @@ void A10::Secondary()
 		missile->wrapMode = GameObject::SW_CLEAR;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			missile->color[i] = GOref->color[i];
+		--secAmmo;
+		--GOManager::GetInstance()->upgrade_2;
 
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 
@@ -48,7 +51,7 @@ void A10::Update(double dt)
 	if (GOref->active)
 	{
 		Plane::Update(dt);
-
+		priAmmo = GOManager::GetInstance()->upgrade_1 + 3;
 		reload -= dt;
 		if (currentSpray > 0)
 		{
@@ -77,6 +80,7 @@ void A10::Update(double dt)
 				reload = sprayRecoverTime;
 			}
 		}
+		GOManager::GetInstance()->upgrade_2 = secAmmo;
 	}
 }
 

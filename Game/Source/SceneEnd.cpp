@@ -7,6 +7,7 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include <sstream>
+#include "Logging.h"
 
 #include "SceneManager.h"
 
@@ -38,6 +39,9 @@ void SceneEnd::Init()
 	bBack->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	sBack = "Back";
 	onButton = false;
+
+	// TODO: Yan Quan pls add codes to audit the highscore as this scene inits
+	// Yeepity Boopity Doopity
 }
 
 void SceneEnd::Update(double dt)
@@ -81,12 +85,10 @@ void SceneEnd::Update(double dt)
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
 	}
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
 
 		if (onButton)
 			SceneManager::getSceneManager().switchToScene("Menu", this);
@@ -95,12 +97,10 @@ void SceneEnd::Update(double dt)
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
 		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
 	}
 	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 	}
 
 	// Physics Simulation Section
@@ -136,6 +136,7 @@ void SceneEnd::Render()
 
 	std::ostringstream s1;
 	std::ostringstream s2;
+	s2.precision(3);
 	std::ostringstream s3;
 
 	switch (GOManager::GetInstance()->sceneID)
@@ -146,7 +147,7 @@ void SceneEnd::Render()
 		s2 << "Accuracy : ";
 		s3 << "Score    : ";
 		s1 << GOManager::GetInstance()->planeKills;
-		s2 << GOManager::GetInstance()->planeAccuracy;
+		s2 << static_cast<int>(GOManager::GetInstance()->planeAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->planeHighscore;
 		break;
 	}
@@ -156,7 +157,7 @@ void SceneEnd::Render()
 		s2 << "Accuracy : ";
 		s3 << "Score    : ";
 		s1 << GOManager::GetInstance()->tankKills;
-		s2 << GOManager::GetInstance()->tankAccuracy;
+		s2 << static_cast<int>(GOManager::GetInstance()->tankAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->tankHighscore;
 		break;
 	}

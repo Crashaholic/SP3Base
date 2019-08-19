@@ -109,8 +109,6 @@ protected:
 	float m_worldWidth;
 	float m_worldHeight;
 
-	float windAngle;
-
 	void cleanVar();
 	void RGButtonRender(Button* b, std::string s);
 

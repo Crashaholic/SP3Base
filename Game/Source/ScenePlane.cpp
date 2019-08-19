@@ -104,7 +104,7 @@ void ScenePlane::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if(Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
+
 	if(Application::IsKeyPressed('+'))
 	{
 	}
@@ -153,37 +153,34 @@ void ScenePlane::Update(double dt)
 	if(!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
 		
 		double x, y;
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
 		
-		//vec3 n = terr.GetNormal(Vector3(
-		//	static_cast<float>(x / w * m_worldWidth), 
-		//	static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
-		//	static_cast<float>(0.0f))
-		//);
-
-		//LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f); //Commented out because we don't always need the information
+		/*
+		vec3 n = terr.GetNormal(Vector3(
+			static_cast<float>(x / w * m_worldWidth), 
+			static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
+			static_cast<float>(0.0f))
+		);
+		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f); //Commented out because we don't always need the information
+		*/
 	}
 	else if(bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
-		std::cout << "LBUTTON UP" << std::endl;
 	}
 	
 	static bool bRButtonState = false;
 	if(!bRButtonState && Application::IsMousePressed(1))
 	{
 		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
 	}
 	else if(bRButtonState && !Application::IsMousePressed(1))
 	{
 		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 	}
 	m_goList = GOManager::GetInstance()->getlist();
 	// Physics Simulation Section
@@ -333,7 +330,8 @@ void ScenePlane::Render()
 	// HUD
 	render1PHUD();
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3,	4.0f,							55.5f);
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_1),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(plane->getPri()),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
+	//RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_1),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_2),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 2.0f,	55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeKills), Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 3.0f,	55.5f);
 }
