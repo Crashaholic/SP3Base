@@ -80,9 +80,10 @@ void Plane::Update(double dt)
 			else
 				++totalremaining;
 		}
-		if (priProjectiles.size() < GOManager::GetInstance()->upgrade_1)
+		priAmmo = GOManager::GetInstance()->upgrade_1 + 1;
+		if (priProjectiles.size() < (unsigned int)priAmmo)
 		{
-			AddPri(GOManager::GetInstance()->upgrade_1 - (int)priProjectiles.size());
+			AddPri(priAmmo - (int)priProjectiles.size());
 		}
 		secAmmo = GOManager::GetInstance()->upgrade_2;
 		//GOManager::GetInstance()->upgrade_1 = totalremaining;
@@ -175,7 +176,7 @@ void Plane::AddPri(int num)
 	{
 		priProjectiles.push_back(NULL);
 	}
-	priAmmo += num;
+	//priAmmo += num;
 }
 
 void Plane::AddSec(int num)

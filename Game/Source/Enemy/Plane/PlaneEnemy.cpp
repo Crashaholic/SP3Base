@@ -77,13 +77,13 @@ void PlaneEnemy::Update(double dt)
 	if (abs(GOref->pos.x - playerGO->pos.x) < 20.0f /*&&*/ )
 		Primary();
 
-	for (unsigned int i = 0; i < priprojectiles.size(); ++i)
+	for (unsigned int i = 0; i < priProjectiles.size(); ++i)
 	{
-		if (priprojectiles[i])
+		if (priProjectiles[i])
 		{
-			if (!priprojectiles[i]->active || priprojectiles[i]->type != GameObject::PLAYER_PROJECTILE_BOMB)
+			if (!priProjectiles[i]->active || priProjectiles[i]->type != GameObject::PLAYER_PROJECTILE_BOMB)
 			{
-				priprojectiles[i] = NULL;
+				priProjectiles[i] = NULL;
 				//break;
 			}
 		}
@@ -92,9 +92,9 @@ void PlaneEnemy::Update(double dt)
 
 void PlaneEnemy::Primary()
 {
-	for (unsigned int i = 0; i < priprojectiles.size(); ++i)
+	for (unsigned int i = 0; i < priProjectiles.size(); ++i)
 	{
-		if (!priprojectiles[i])
+		if (!priProjectiles[i])
 		{
 			GameObject* bomb = GOManager::GetInstance()->fetchGO();
 			bomb->type = GameObject::ENEMY_PROJECTILE_BOMB;
@@ -105,7 +105,7 @@ void PlaneEnemy::Primary()
 			bomb->wrapMode = GameObject::SW_CLEAR;
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 				bomb->color[i] = GOref->color[i];
-			priprojectiles[i] = bomb;
+			priProjectiles[i] = bomb;
 			++GOManager::GetInstance()->totalShots;
 			break;
 		}
