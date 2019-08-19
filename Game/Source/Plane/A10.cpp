@@ -17,6 +17,7 @@ void A10::Primary()
 	{
 		fire = true;
 		currentSpray = priAmmo;
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 
@@ -41,6 +42,7 @@ void A10::Secondary()
 		--secAmmo;
 		--GOManager::GetInstance()->upgrade_2;
 
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 

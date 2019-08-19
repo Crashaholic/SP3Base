@@ -116,8 +116,6 @@ void Scene::Init()
 
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
-
-	windAngle = 0.0f;
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -291,6 +289,7 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::PLAYER_PLANE_A10:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
 			break;
+		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::PLAYER_PLANE_KOMET:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
 			break;
@@ -513,6 +512,7 @@ void Scene::cleanVar()
 	GOManager::GetInstance()->tankHighscore = 0;
 	GOManager::GetInstance()->totalHits = 0;
 	GOManager::GetInstance()->totalShots = 0;
+	GOManager::GetInstance()->windAngle = Math::RandFloatMinMax(0.0f, 360.0f);
 }
 
 void Scene::RGButtonRender(Button * b, std::string s)

@@ -89,10 +89,6 @@ void ScenePlane::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_PLANE;
 	cleanVar();
-
-	//upgrade check
-	std::cout << "Chance:" << GOManager::GetInstance()->check << std::endl;
-	std::cout << "Upgrade:" << GOManager::GetInstance()->check2 << std::endl;
 }
 
 void ScenePlane::Update(double dt)
@@ -108,7 +104,7 @@ void ScenePlane::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if(Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
+
 	if(Application::IsKeyPressed('+'))
 	{
 	}
@@ -199,6 +195,12 @@ void ScenePlane::Update(double dt)
 			bool hit = false;
 			switch (go->wrapMode)
 			{
+			case GameObject::SW_OFFSCREENCLEAR:
+				if (go->pos.x > m_worldWidth + 5.0f
+					|| go->pos.x < -5.0f || go->pos.y < -5.0f)
+					go->active = false;
+				hit = true;
+				break;
 			case GameObject::SW_CLEAR:
 				if (go->pos.x > m_worldWidth
 					|| go->pos.x < 0 || go->pos.y < 0)
