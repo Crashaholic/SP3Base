@@ -15,13 +15,13 @@ class Plane
 protected:
 	float topSpeed;
 	float turnSpeed;
-	int maxProjectiles;
+	//int maxProjectiles;
 	int priAmmo;
 	int secAmmo;
 protected:
 	virtual void Primary();
 	virtual void Secondary();
-	std::vector<GameObject*> priprojectiles;
+	std::vector<GameObject*> priProjectiles;
 public:
 	virtual void SetGORef(GameObject* GOref);
 

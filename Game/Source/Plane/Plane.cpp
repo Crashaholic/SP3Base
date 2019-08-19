@@ -3,9 +3,9 @@
 
 void Plane::Primary()
 {
-	for (unsigned int i = 0; i < priprojectiles.size(); ++i)
+	for (unsigned int i = 0; i < priProjectiles.size(); ++i)
 	{
-		if (!priprojectiles[i])
+		if (!priProjectiles[i])
 		{
 			GameObject* bomb = GOManager::GetInstance()->fetchGO();
 			bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
@@ -38,6 +38,7 @@ void Plane::Secondary()
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			bomb->color[i].Set(1, 0, 0);
 		--secAmmo;
+		--GOManager::GetInstance()->upgrade_2;
 	}
 	//bomb = dynamic_cast<GameObject*>(bomb);
 }
@@ -66,20 +67,25 @@ void Plane::Update(double dt)
 			GOref->scale.y = 1.4f;
 		}
 		int totalremaining = 0;
-		for (unsigned int i = 0; i < priprojectiles.size(); ++i)
+		for (unsigned int i = 0; i < priProjectiles.size(); ++i)
 		{
-			if (priprojectiles[i])
+			if (priProjectiles[i])
 			{
-				if (!priprojectiles[i]->active || priprojectiles[i]->type !=GameObject::PLAYER_PROJECTILE_BOMB)
+				if (!priProjectiles[i]->active || priProjectiles[i]->type !=GameObject::PLAYER_PROJECTILE_BOMB)
 				{
-					priprojectiles[i] = NULL;
+					priProjectiles[i] = NULL;
 					//break;
 				}
 			}
 			else
 				++totalremaining;
 		}
-		GOManager::GetInstance()->upgrade_1 = totalremaining;
+		if (priProjectiles.size() < GOManager::GetInstance()->upgrade_1)
+		{
+			AddPri(GOManager::GetInstance()->upgrade_1 - (int)priProjectiles.size());
+		}
+		secAmmo = GOManager::GetInstance()->upgrade_2;
+		//GOManager::GetInstance()->upgrade_1 = totalremaining;
 		GOManager::GetInstance()->upgrade_2 = secAmmo;
 	}
 }
@@ -129,8 +135,9 @@ void Plane::Init()
 	SetGORef(GOManager::GetInstance()->fetchGO());
 	GOref->reserved = true;
 	GOref->angle = 0.0f;
-	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
-	topSpeed = 10.0f;
+	GOref->dir.Set(1.0f, 0.0f, 0.0f);
+	GOref->norm.Set(1.0f, 0.0f, 0.0f);
+	topSpeed = 15.0f;
 	turnSpeed = 5.0f;
 	GOref->pos.Set(10.0f, 80.0f, 0.0f);
 	GOref->defaultPos = GOref->pos;
@@ -145,9 +152,10 @@ void Plane::Init()
 	AddPri(1);
 	secAmmo = 0;
 	AddSec(3);
+	priProjectiles = { NULL };
 	for (int i = 0; i < priAmmo-1; ++i)
 	{
-		priprojectiles.push_back(NULL);
+		priProjectiles.push_back(NULL);
 	}
 }
 
@@ -165,7 +173,7 @@ void Plane::AddPri(int num)
 {
 	for (int i = 0; i < num; ++i)
 	{
-		priprojectiles.push_back(NULL);
+		priProjectiles.push_back(NULL);
 	}
 	priAmmo += num;
 }
