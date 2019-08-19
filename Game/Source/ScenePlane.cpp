@@ -133,6 +133,10 @@ void ScenePlane::Update(double dt)
 	{
 		SpawnEnemy();
 	}
+	if (Application::IsKeyPressed('M'))
+	{
+		std::cout << "TankC:" << GOManager::GetInstance()->tChance << std::endl;
+	}
 
 	static bool hPressed = false;
 	if (Application::IsKeyPressed('H'))

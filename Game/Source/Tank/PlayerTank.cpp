@@ -13,7 +13,9 @@ PlayerTank::~PlayerTank()
 
 void PlayerTank::Init()
 {
-	tankSpeed = 25;
+	//tankSpeed = 25;
+	tankSpeed = Math::Max(25.f + (GOManager::GetInstance()->upgrade_1 * 35.f), 25.f);
+
 	SetGORef(GOManager::GetInstance()->fetchGO());
 	GOref->reserved = true;
 	GOref->type = GameObject::PLAYER_TANK;
@@ -86,6 +88,10 @@ void PlayerTank::Update(double dt)
 			object->vel = GOref->dir * 30.0f;
 			object->hasGravity = false;
 			bulletCooldown = Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.2f), 0.2f);
+		}
+		if (Application::IsKeyPressed('K'))
+		{
+			std::cout << "TankS:" << tankSpeed << std::endl;
 		}
 	}
 }
