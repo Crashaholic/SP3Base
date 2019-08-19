@@ -330,8 +330,8 @@ void ScenePlane::Render()
 	// HUD
 	render1PHUD();
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3,	4.0f,							55.5f);
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(plane->getPri()),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
-	//RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_1),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
+	//RenderTextOnScreen(meshList[GEO_TEXT], to_string(plane->getPri()),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_1),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING,			55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->upgrade_2),	Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 2.0f,	55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeKills), Color(0, 0, 0), 3,	4.0f + HUD_TXT_SPACING * 3.0f,	55.5f);
 }
