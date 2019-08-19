@@ -44,6 +44,8 @@ public:
 	bool overlap(float min1, float max1, float min2, float max2);
 	void updateCorn(GameObject* go);
 
+	void enemyDeath(GameObject* go);
+
 	// Replaces UPGRADE_3 in collision response
 	int planeLives;
 	int tankLives;
@@ -69,10 +71,11 @@ public:
 	float tankAccuracy;
 	int planeHighscore;
 	int tankHighscore;
+	float windAngle;
 
-	bool planeup, planeup2, planeup3, pUpgrade;
-	int check, check2;
-	int tChance;
+	const float WIND_POWER = 10.0f;
+	const float UPGRADE_CHANCE = 100.0f;
+
 	// These values should only be used for sceneEnd to identify which data to display
 	enum STYPE
 	{
