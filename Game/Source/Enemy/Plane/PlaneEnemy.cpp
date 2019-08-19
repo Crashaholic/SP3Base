@@ -32,6 +32,8 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	GOref->defaultPos = GOref->pos;
 	GOref->reserved = true;
 	GOref->active = true;
+	GOref->hasGravity = false;
+	GOref->vel.Set(1, 0, 0);
 	this->m_worldWidth = m_worldWidth;
 	topSpeed = 20;
 	priAmmo = 0;
@@ -39,6 +41,7 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	cooldown = cooldownLimit;
 	originalHeight = pos.y;
 	AddPri(10);
+	target.Set(GOref->pos.x + m_worldWidth, GOref->pos.y, GOref->pos.z);
 }
 
 float GetAngle(vec3 a, vec3 b)
@@ -50,38 +53,53 @@ void PlaneEnemy::Update(double dt)
 {
 	if (GOref->active)
 	{
-		if (GOref->pos.x < targetMov.x && GOref->vel.x > 0 || GOref->pos.x > targetMov.x && GOref->vel.x < 0)
+		//if (GOref->pos.x < targetMov.x && GOref->vel.x > 0 || GOref->pos.x > targetMov.x && GOref->vel.x < 0)
+		//{
+		//	//LOG_NONE("targ.y: % | pos.y: %", targetMov.y, GOref->pos.y);
+		//}
+		//else
+		//{
+			//if (GOref->pos.x > m_worldWidth / 2.0f)
+			//{
+			//	MoveTo(vec3(10, Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0));
+			//	GOref->angle = Math::DegreeToRadian(GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
+			//}
+			//else
+			//{
+			//	MoveTo(vec3(m_worldWidth - 10, Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0));
+			//	GOref->angle = Math::DegreeToRadian(180 - GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
+			//}
+		//}
+		if (GOref->pos.x > m_worldWidth-11)
 		{
-			//LOG_NONE("targ.y: % | pos.y: %", targetMov.y, GOref->pos.y);
+			directionleft = true;
+			GOref->pos.x = m_worldWidth - 11;
+			//GOref->vel.x *= -1;
+			target.Set(0, originalHeight + Math::RandFloatMinMax((float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
 		}
-		else
+		else if (GOref->pos.x < 11)
 		{
-			if (GOref->pos.x > m_worldWidth / 2.0f)
-			{
-				MoveTo({ 10, Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0 });
-				GOref->angle = Math::DegreeToRadian(GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
-			}
-			else
-			{
-				MoveTo({ m_worldWidth - 10,  Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0 });
-				GOref->angle = Math::DegreeToRadian(180 - GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
-			}
+			directionleft = false;
+			GOref->pos.x = 11;
+			//GOref->vel.x *= -1;
+			target.Set(m_worldWidth, originalHeight + Math::RandFloatMinMax(- (float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
 		}
-
-		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
+		GOref->dir = (target - GOref->pos).Normalized();
+		//GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
+		GOref->norm = GOref->dir;
 		GOref->vel = GOref->dir * (topSpeed * 0.5f);
 		GOref->pos += GOref->vel * (float)dt;
 
-		LOG_NONE("angle: % | dir: %", GOref->angle, GOref->dir);
+		LOG_NONE("originalHeight: % | dir: % | pos: % | target: %", originalHeight, GOref->dir, GOref->pos, target);
 
 
 		if (GOref->dir.x < 0)
 		{
-			GOref->scale.x = -4.4f;
+			GOref->scale.y = -1.8f;
 		}
 		else
 		{
-			GOref->scale.x = 4.4f;
+			GOref->scale.y = 1.8f;
 		}
 	
 		cooldown = Math::Max(cooldown - 1.f * (float)dt, 0.f);
@@ -114,7 +132,7 @@ void PlaneEnemy::Primary()
 		{
 			GameObject* bomb = GOManager::GetInstance()->fetchGO();
 			bomb->type = GameObject::ENEMY_PROJECTILE_BOMB;
-			bomb->vel = { GOref->vel.x, GOref->vel.y, GOref->vel.z };
+			bomb->vel = GOref->vel;
 			bomb->pos = GOref->pos;
 			bomb->scale.Set(1, 2, 1);
 			bomb->hasGravity = true;
