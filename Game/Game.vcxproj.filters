@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Source\Tank\PlayerTank.cpp" />
-    <ClCompile Include="Enemy\Plane\PlaneEnemy.cpp" />
     <ClCompile Include="Source\Button\Button.cpp" />
     <ClCompile Include="Source\HighScoreSystem.cpp" />
     <ClCompile Include="Source\HighscoreSystem.h" />
@@ -33,13 +32,12 @@
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\Tank\Tank.cpp" />
-    <ClCompile Include="Enemy\Tank\TankEnemy.cpp" />
     <ClCompile Include="Source\Scene2P.cpp" />
     <ClCompile Include="Source\Scene2Select.cpp" />
+    <ClCompile Include="Source\Enemy\Plane\PlaneEnemy.cpp" />
+    <ClCompile Include="Source\Enemy\Tank\TankEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy\EnemyBase.h" />
-    <ClInclude Include="Enemy\Plane\PlaneEnemy.h" />
     <ClInclude Include="Source\Tank\PlayerTank.h" />
     <ClInclude Include="Source\Button\Button.h" />
     <ClInclude Include="Source\Plane\A10.h" />
@@ -70,9 +68,11 @@
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\Tank\Tank.h" />
-    <ClInclude Include="Enemy\Tank\TankEnemy.h" />
     <ClInclude Include="Source\Scene2P.h" />
     <ClInclude Include="Source\Scene2Select.h" />
+    <ClInclude Include="Source\Enemy\Plane\PlaneEnemy.h" />
+    <ClInclude Include="Source\Enemy\Tank\TankEnemy.h" />
+    <ClInclude Include="Source\Enemy\EnemyBase.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />
