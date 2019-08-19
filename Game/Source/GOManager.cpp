@@ -51,7 +51,7 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
-	if (check == 1)
+	//if (check == 1)
 	{
 		pUpgrade = true;
 	}
@@ -367,19 +367,6 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 		//test
 		case GameObject::PLAYER_TANK:
-		{
-			if (pUpgrade == true)
-			{
-				// chance to spawn either of the 3 upgrades
-				if (check2 == 1)
-					planeup = true;
-				if (check2 == 2)
-					planeup2 = true;
-				if (check2 == 3)
-					planeup3 = true;
-			}
-			break;
-		}
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::ENEMY_TANK_PASSIVE:
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
@@ -397,6 +384,49 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 			exResponse(go2);
 			break;
 		}
+		if (pUpgrade == true)
+		{
+			// chance to spawn either of the 3 upgrades
+			if (check2 == 1)
+				planeup = true;
+			if (check2 == 2)
+				planeup2 = true;
+			if (check2 == 3)
+				planeup3 = true;
+		}
+		if (planeKills % 2) // check upgrade 1
+		{
+			planeup = false;
+			GameObject *upg = fetchGO();
+			upg->type = GameObject::UPGRADE_1;
+			upg->active = true;
+			upg->scale.Set(3.f, 3.f, 1.f);
+			upg->vel.y = 5;
+			upg->pos = go2->pos;
+			//upg->pos = player->GOref->pos;
+		}
+		if (planeKills % 2 && planeup2 == true) // check upgrade 2
+		{
+			planeup2 = false;
+			GameObject *upg = GOManager::GetInstance()->fetchGO();
+			upg->type = GameObject::UPGRADE_2;
+			upg->active = true;
+			upg->scale.Set(3.f, 3.f, 1.f);
+			upg->vel.y = 5;
+			upg->pos = go2->pos;
+		}
+		if (planeKills % 2 && planeup3 == true) // check upgrade 3
+		{
+			planeup3 = false;
+			GameObject *upg = GOManager::GetInstance()->fetchGO();
+			upg->type = GameObject::UPGRADE_3;
+			upg->active = true;
+			upg->scale.Set(3.f, 3.f, 1.f);
+			upg->vel.y = 5;
+			upg->pos = go2->pos;
+		}
+
+
 		go1->exRadius = 7.0f;
 		toExplosion(go1);
 		break;
