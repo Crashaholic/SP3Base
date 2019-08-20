@@ -72,6 +72,7 @@ public:
 	int planeHighscore;
 	int tankHighscore;
 
+	bool wind;								// activates wind
 	double windBT;							// bouncetime to regulate time between direction randomisations (WIND_TIMER)
 	Vector3 windVector;						// current vector of wind
 	Vector3 windVectorN;					// future vector of wind

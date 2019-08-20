@@ -542,6 +542,7 @@ void Scene::cleanVar()
 	GOManager::GetInstance()->windVector = Vector3(1, 0, 0);
 	GOManager::GetInstance()->windVectorN = Vector3(1, 0, 0);
 	GOManager::GetInstance()->rain = false;
+	GOManager::GetInstance()->wind = true;
 }
 
 void Scene::RGButtonRender(Button * b, std::string s)

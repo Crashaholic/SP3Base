@@ -209,7 +209,7 @@ void Scene2Select::Update(double dt)
 			SceneManager::planeColor[0] = planeColor[0];
 			SceneManager::planeColor[1] = planeColor[1];
 			meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal1];
-			SceneManager::getSceneManager().switchToScene("Plane", this);
+			SceneManager::getSceneManager().switchToScene("2P", this);
 			break;
 		case 1:
 			--currentPlane;
@@ -247,7 +247,7 @@ void Scene2Select::Update(double dt)
 			SceneManager::tankColor[0] = tankColor[0];
 			SceneManager::tankColor[1] = tankColor[1];
 			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal2];
-			SceneManager::getSceneManager().switchToScene("Plane", this);
+			SceneManager::getSceneManager().switchToScene("2P", this);
 			break;
 		case 1:
 			--currentTank;

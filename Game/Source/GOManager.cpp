@@ -25,6 +25,7 @@ GOManager::GOManager()
 	windVectorN = Vector3(1, 0, 0);
 	windBT = WIND_TIMER;
 	rain = false;
+	wind = true;
 }
 
 GOManager::~GOManager()
@@ -64,7 +65,14 @@ void GOManager::update(double dt)
 
 		windVectorN = Vector3(cos(Math::DegreeToRadian(windAngleN)), sin(Math::DegreeToRadian(windAngleN)), 0.0f);
 	}
-	windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+	if (wind)
+	{
+		windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+	}
+	else
+	{
+		windVector.SetZero();
+	}
 
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{

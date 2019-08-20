@@ -78,6 +78,7 @@ void Scene2P::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
 	cleanVar();
+	GOManager::GetInstance()->wind = false;
 }
 
 void Scene2P::Update(double dt)
@@ -234,7 +235,7 @@ void Scene2P::Render()
 	render2PHUD();
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3, 4.0f, 55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(0, 0, 0), 3, 4.0f, 50.5f);
-	windRender();
+	//windRender();
 }
 
 void Scene2P::Exit()
