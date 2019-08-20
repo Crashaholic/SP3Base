@@ -24,7 +24,7 @@ Scene2P::~Scene2P()
 void Scene2P::Init()
 {
 	Scene::Init();
-	glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
 	//plane = dynamic_cast<Komet*>(new Plane);
 	plane = new Komet;
@@ -308,12 +308,13 @@ void Scene2P::Render()
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 0, 0);
 
 	// HUD
 	render2PHUD();
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(1, 1, 1), 3, 4.0f, 55.5f);
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(1, 1, 1), 3, 4.0f, 50.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3, 4.0f, 55.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(0, 0, 0), 3, 4.0f, 50.5f);
+	windRender();
 }
 
 void Scene2P::Exit()
