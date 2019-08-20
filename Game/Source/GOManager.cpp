@@ -535,6 +535,7 @@ void GOManager::planeDeath(GameObject * go)
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
 	toExplosion(ex);
 	if (planeLives <= 0)
@@ -559,6 +560,7 @@ void GOManager::tankDeath(GameObject* go)
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
 	toExplosion(ex);
 	if (tankLives <= 0)

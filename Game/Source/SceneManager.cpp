@@ -8,8 +8,8 @@ std::string	SceneManager::tankDecalChoice;
 Color		SceneManager::tankColor[2];
 
 int			SceneManager::money;
-bool		SceneManager::warthog;
-bool		SceneManager::harrier;
+bool		SceneManager::planeUnlock[3];
+int			SceneManager::planeCost[3];
 
 SceneManager::SceneManager()
 {
@@ -21,6 +21,13 @@ SceneManager::SceneManager()
 	tankColor[0].Set(1, 1, 1);
 	tankColor[1].Set(1, 1, 1);
 	tankDecalChoice = "";
+
+	planeUnlock[0] = true;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		planeCost[i] = 150 * i;
+	}
 }
 
 
@@ -97,8 +104,8 @@ void SceneManager::readMonies()
 				}
 				if (comma == 1)
 				{
-					warthog = stoi(line.substr(i - 1, 1));
-					harrier = stoi(line.substr(i + 1, 1));
+					planeUnlock[1] = stoi(line.substr(i - 1, 1));
+					planeUnlock[2] = stoi(line.substr(i + 1, 1));
 				}
 				++comma;
 			}
@@ -110,6 +117,6 @@ void SceneManager::readMonies()
 void SceneManager::writeMonies(int money, bool warthog, bool harrier)
 {
 	fstream stream;
-	stream.open("SaveData/monies.txt");
+	stream.open("SaveData/monies.txt", ofstream::out | ofstream::trunc);
 	stream << money << "," << warthog << "," << harrier;
 }
