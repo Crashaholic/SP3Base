@@ -145,8 +145,8 @@ void Plane::Init()
 	GOref->angle = 0.0f;
 	GOref->dir.Set(1.0f, 0.0f, 0.0f);
 	GOref->norm.Set(1.0f, 0.0f, 0.0f);
-	topSpeed = 15.0f;
-	turnSpeed = 5.0f;
+	topSpeed = 12.0f;
+	turnSpeed = 4.0f;
 	GOref->pos.Set(10.0f, 80.0f, 0.0f);
 	GOref->defaultPos = GOref->pos;
 	GOref->vel.SetZero();

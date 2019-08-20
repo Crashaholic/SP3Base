@@ -5,7 +5,6 @@
 void A10::Init()
 {
 	Plane::Init();
-	turnSpeed = 5.0f;
 	GOref->type = GameObject::PLAYER_PLANE_A10;
 	priAmmo = 3;
 	GOref->scale.Set(5.7f, 1.4f, 1.0f);
