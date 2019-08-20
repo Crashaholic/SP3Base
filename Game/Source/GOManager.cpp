@@ -473,17 +473,20 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::ENEMY_PROJECTILE_BOMB:
 	{
 		go->exRadius = 7.0f;
+		terreference->DeformTerrain(go->pos, go->exRadius);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	{
 		go->exRadius = 20.0f;
+		terreference->DeformTerrain(go->pos, go->exRadius);
 		break;
 	}
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 	{
 		go->exRadius = 5.0f;
+		terreference->DeformTerrain(go->pos, go->exRadius);
 		break;
 	}
 	default:

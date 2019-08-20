@@ -11,7 +11,7 @@ protected:
 public:
 	TurretTank();
 	~TurretTank();
-
+	virtual void Turret_LeftRight(double dt, bool left);
 
 	virtual void Init();
 	//virtual void Update(double dt) = 0;

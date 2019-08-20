@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include "MeshBuilder.h"
+#include <vector>
 
 #define TERRAIN_SIZE 16
 #define TERRAIN_UP 3
@@ -23,6 +24,6 @@ public:
 
 	void GenerateRandomHeight(float worldWidth);
 	void GenerateTerrainMesh();
-
+	void DeformTerrain(Vector3 ExplosionPosition, float ExplosionRadius);
 };
 

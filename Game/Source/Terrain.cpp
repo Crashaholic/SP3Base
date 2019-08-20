@@ -1,7 +1,6 @@
 #include "Terrain.h"
 #include "MyMath.h"
 #include "Logging.h"
-#include <vector>
 #include <GL\glew.h>
 
 Terrain::Terrain()
@@ -72,10 +71,10 @@ void Terrain::GenerateRandomHeight(float worldWidth)
 void Terrain::GenerateTerrainMesh()
 {
 	Vertex v;
-	std::vector<Vertex> vertex_buffer_data;
 	std::vector<GLuint> index_buffer_data;
 	v.pos.Set(0, 0, 0);
 	v.color.Set(1, 1, 1);
+	std::vector<Vertex> vertex_buffer_data;
 	vertex_buffer_data.push_back(v);
 	index_buffer_data.push_back(0);
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
@@ -88,7 +87,7 @@ void Terrain::GenerateTerrainMesh()
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
 		v.pos.Set(Bottom[i].x, Bottom[i].y, Bottom[i].z);
-		v.color.Set(0.4, 0.4, 0.4);
+		v.color.Set(0.4f, 0.4f, 0.4f);
 		v.normal.Set(0, 1, 0);
 		vertex_buffer_data.push_back(v);
 	}
@@ -110,6 +109,19 @@ void Terrain::GenerateTerrainMesh()
 
 	tMesh->indexSize = index_buffer_data.size();
 }
+
+void Terrain::DeformTerrain(Vector3 ExplosionPosition, float ExplosionRadius)
+{
+	for (unsigned int i = 0; i < TERRAIN_SIZE; ++i)
+	{
+		if ((Points[i] - ExplosionPosition).Length() > ExplosionRadius*2.0f)
+			continue;
+		Points[i].y -= ExplosionRadius / Math::Max(1.0f,(Points[i] - ExplosionPosition).Length());
+		Points[i].y = Math::Max(Points[i].y, 1.0f);
+	}
+	GenerateTerrainMesh();
+}
+
 Vector3 Terrain::GetHeight(Vector3 TankPos)
 {
 	vec3 R, L;

@@ -7,9 +7,6 @@ public:
 	~PlayerTank();
 	void Init();
 	void Update(double dt);
-	void move_leftright();
-	void SetGORef(GameObject* GOref);
-	float tankSpeed;
-	double bulletCooldown;
+	void ReadInput(double dt, char left, char right, char aimleft, char aimright, char fire);
 };
 

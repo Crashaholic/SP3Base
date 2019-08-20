@@ -34,7 +34,7 @@ void Plane::Secondary()
 		bomb->pos = GOref->pos;
 		bomb->scale.Set(1, 2, 1);
 		bomb->hasGravity = true;
-		bomb->wrapMode = GameObject::SW_BOUNCE;
+		bomb->wrapMode = GameObject::SW_CLEAR;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			bomb->color[i].Set(1, 0, 0);
 		--secAmmo;
@@ -117,8 +117,6 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 	{
 		press2 = false;
 	}
-	//else if (Application::IsKeyPressed(sec))
-	//	Secondary();
 }
 
 int Plane::getPri()
