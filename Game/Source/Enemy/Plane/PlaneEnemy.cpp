@@ -6,9 +6,9 @@ PlaneEnemy::PlaneEnemy()
 {
 }
 
-PlaneEnemy::PlaneEnemy(vec3 pos, GameObject * ref)
+PlaneEnemy::PlaneEnemy(vec3 pos, GameObject * ref, float m_worldWidth)
 {
-	SpawnNewPlaneEnemy(pos, ref, 100);
+	SpawnNewPlaneEnemy(pos, ref, m_worldWidth);
 }
 
 
@@ -19,17 +19,18 @@ PlaneEnemy::~PlaneEnemy()
 
 void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth) // ref is Player's GO reference
 {
-	targetMov = { m_worldWidth - 10, pos.y, 0 };
+	targetMov = {0, pos.y, 0 };
 	targetPos = ref->pos;
 	this->SetPlayerGORef(ref);
 	this->SetGORef(GOManager::GetInstance()->fetchGO());
-	GOref->type = GameObject::ENEMY_PLANE_PASSIVE;
+	GOref->type = (Math::RandIntMinMax(0, 1) ? GameObject::ENEMY_PLANE_PASSIVE : GameObject::ENEMY_PLANE_AGGRESSIVE);
 	GOref->pos = pos;
 	GOref->scale.Set(4.4f, 1.8f, 1.0f);
 	GOref->angle -= Math::DegreeToRadian(0);
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f); 
 	GOref->norm = GOref->dir;
 	GOref->defaultPos = GOref->pos;
+	GOref->wrapMode = GameObject::SW_OFFSCREENCLEAR;
 	GOref->reserved = true;
 	GOref->active = true;
 	GOref->hasGravity = false;
@@ -41,7 +42,6 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	cooldown = cooldownLimit;
 	originalHeight = pos.y;
 	AddPri(10);
-	target.Set(GOref->pos.x + m_worldWidth, GOref->pos.y, GOref->pos.z);
 }
 
 float GetAngle(vec3 a, vec3 b)
@@ -70,28 +70,25 @@ void PlaneEnemy::Update(double dt)
 			//	GOref->angle = Math::DegreeToRadian(180 - GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
 			//}
 		//}
-		if (GOref->pos.x > m_worldWidth-11)
+		if (GOref->pos.x > m_worldWidth - 5)
 		{
 			directionleft = true;
-			GOref->pos.x = m_worldWidth - 11;
+			GOref->pos.x = m_worldWidth - 5;
 			//GOref->vel.x *= -1;
-			target.Set(0, originalHeight + Math::RandFloatMinMax((float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
+			targetMov.Set(0, originalHeight + Math::RandFloatMinMax((float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
 		}
 		else if (GOref->pos.x < 11)
 		{
 			directionleft = false;
 			GOref->pos.x = 11;
 			//GOref->vel.x *= -1;
-			target.Set(m_worldWidth, originalHeight + Math::RandFloatMinMax(- (float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
+			targetMov.Set(m_worldWidth, originalHeight + Math::RandFloatMinMax(- (float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
 		}
-		GOref->dir = (target - GOref->pos).Normalized();
+		GOref->dir = (targetMov - GOref->pos).Normalized();
 		//GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		GOref->norm = GOref->dir;
 		GOref->vel = GOref->dir * (topSpeed * 0.5f);
 		GOref->pos += GOref->vel * (float)dt;
-
-		LOG_NONE("originalHeight: % | dir: % | pos: % | target: %", originalHeight, GOref->dir, GOref->pos, target);
-
 
 		if (GOref->dir.x < 0)
 		{
@@ -101,23 +98,26 @@ void PlaneEnemy::Update(double dt)
 		{
 			GOref->scale.y = 1.8f;
 		}
-	
-		cooldown = Math::Max(cooldown - 1.f * (float)dt, 0.f);
 
-		if (abs(GOref->pos.x - playerGO->pos.x) < 30.0f && cooldown <= 0.f)
+		if (GOref->type == GameObject::ENEMY_PLANE_AGGRESSIVE)
 		{
-			Primary();
-			cooldown = cooldownLimit;
-		}
+			cooldown = Math::Max(cooldown - 1.f * (float)dt, 0.f);
 
-		for (unsigned int i = 0; i < priProjectiles.size(); ++i)
-		{
-			if (priProjectiles[i])
+			if (abs(GOref->pos.x - playerGO->pos.x) < 30.0f && cooldown <= 0.f)
 			{
-				if (!priProjectiles[i]->active || priProjectiles[i]->type != GameObject::ENEMY_PROJECTILE_BOMB)
+				Primary();
+				cooldown = cooldownLimit;
+			}
+
+			for (unsigned int i = 0; i < priProjectiles.size(); ++i)
+			{
+				if (priProjectiles[i])
 				{
-					priProjectiles[i] = NULL;
-					//break;
+					if (!priProjectiles[i]->active || priProjectiles[i]->type != GameObject::ENEMY_PROJECTILE_BOMB)
+					{
+						priProjectiles[i] = NULL;
+						//break;
+					}
 				}
 			}
 		}

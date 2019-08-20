@@ -10,10 +10,9 @@ class PlaneEnemy : public Plane, public EnemyBase
 public:
 	bool directionleft = false;
 	const static int HEIGHT_RANGE = 20;
-	Vector3 target;
 
 	PlaneEnemy();
-	PlaneEnemy(vec3 pos, GameObject* ref);
+	PlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth);
 	~PlaneEnemy();
 
 	float cooldown;

@@ -64,7 +64,7 @@ void Terrain::GenerateRandomHeight(float worldWidth)
 			}
 			lastY = Points[i].y;
 		}
-		LOG_NONE("Points[%]: %", i, Points[i]);
+		//LOG_NONE("Points[%]: %", i, Points[i]);
 	}
 }
 
