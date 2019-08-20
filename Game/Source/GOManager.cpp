@@ -637,6 +637,7 @@ void GOManager::exResponse(GameObject * go, bool fromPlayer)
 		{
 			switch (go->type)
 			{
+			case GameObject::PLAYER_PLANE_HARRIER:
 			case GameObject::PLAYER_PLANE_KOMET:
 			case GameObject::PLAYER_PLANE_A10:
 			{

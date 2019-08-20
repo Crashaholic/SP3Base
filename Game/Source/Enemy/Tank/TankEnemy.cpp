@@ -76,7 +76,7 @@ void TankEnemy::Fire()
 		object->pos = GOref->pos;
 		object->vel = GOref->dir * 60.0f;
 		object->hasGravity = false;
-		bulletCooldown = (double)Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.5f), 0.5f);
+		bulletCooldown = (double)Math::RandFloatMinMax(0.5f,1.0f);
 	}
 }
 
@@ -88,11 +88,11 @@ void TankEnemy::Update(double dt)
 		float leftTarget = GOref->scale.x;
 		float rightTarget = m_worldWidth - GOref->scale.x;
 		bulletCooldown -= dt;
-				FireAt(playerGO->pos);
-				//MoveTo(playerGO->pos);
-				GOref->dir = (playerGO->pos - GOref->pos).Normalized();
-				Fire();
-		if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
+		FireAt(playerGO->pos);
+		//MoveTo(playerGO->pos);
+		GOref->dir = (playerGO->pos - GOref->pos).Normalized();
+		Fire();
+		//if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
 		{
 			switch (Stage)
 			{
@@ -107,7 +107,7 @@ void TankEnemy::Update(double dt)
 					GOref->pos.x = targetMov.x;
 					targetMov.x = leftTarget;
 					Stage = 2;
-					GOref->scale.x != -1;
+					GOref->scale.x *= -1;
 				}
 				break;
 			}
@@ -122,7 +122,7 @@ void TankEnemy::Update(double dt)
 					GOref->pos.x = targetMov.x;
 					targetMov.x = rightTarget;
 					Stage = 1;
-					GOref->scale.x != -1;
+					GOref->scale.x *= -1;
 				}
 				break;
 				//if (GOref->pos.x - targetMov.x > (float)Range)
@@ -139,43 +139,43 @@ void TankEnemy::Update(double dt)
 			}
 			}
 		}
-		else
-		{
-			switch (Stage)
-			{
-			case 1:
-			{
-				if (GOref->pos.x < targetMov.x)
-				{
-					Move_LeftRight(dt, 0);
-				}
-				else
-				{
-					GOref->pos.x = targetMov.x;
-					targetMov.x = leftTarget;
-					Stage = 2;
-					GOref->scale.x != -1;
-				}
-				break;
-			}
-			case 2:
-			{
-				if (GOref->pos.x > targetMov.x)
-				{
-					Move_LeftRight(dt, 1);
-				}
-				else
-				{
-					GOref->pos.x = targetMov.x;
-					targetMov.x = rightTarget;
-					Stage = 1;
-					GOref->scale.x != -1;
-				}
-				break;
-			}
+		//else
+		//{
+		//	switch (Stage)
+		//	{
+		//	case 1:
+		//	{
+		//		if (GOref->pos.x < targetMov.x)
+		//		{
+		//			Move_LeftRight(dt, 0);
+		//		}
+		//		else
+		//		{
+		//			GOref->pos.x = targetMov.x;
+		//			targetMov.x = leftTarget;
+		//			Stage = 2;
+		//			GOref->scale.x *= -1;
+		//		}
+		//		break;
+		//	}
+		//	case 2:
+		//	{
+		//		if (GOref->pos.x > targetMov.x)
+		//		{
+		//			Move_LeftRight(dt, 1);
+		//		}
+		//		else
+		//		{
+		//			GOref->pos.x = targetMov.x;
+		//			targetMov.x = rightTarget;
+		//			Stage = 1;
+		//			GOref->scale.x *= -1;
+		//		}
+		//		break;
+		//	}
 
-			}
-		}
+		//	}
+		//}
 	}
 	else
 		isDead = true;
