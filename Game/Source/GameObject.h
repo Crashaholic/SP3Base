@@ -13,6 +13,7 @@ struct GameObject
 		GO_CUBE,
 
 		// Refer to diagram in discord
+		PLAYER_PLANE_HARRIER,
 		PLAYER_PLANE_KOMET,
 		PLAYER_PLANE_A10,
 		PLAYER_TANK,

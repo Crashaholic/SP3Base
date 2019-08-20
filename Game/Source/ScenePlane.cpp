@@ -34,7 +34,7 @@ void ScenePlane::Init()
 		break;
 	case GEO_PLAYER_PLANE_A10:
 	default:
-		plane = new A10;
+		plane = new Harrier;
 		break;
 	}
 	plane->Init();
@@ -251,9 +251,15 @@ void ScenePlane::Update(double dt)
 					go->pos.y = m_worldHeight - 0.1f;
 			case GameObject::SW_HYBRID:
 				if (go->pos.x > m_worldWidth)
+				{
 					go->pos.x = 0;
+					hit = true;
+				}
 				if (go->pos.x < 0)
+				{
 					go->pos.x = m_worldWidth - 0.1f;
+					hit = true;
+				}
 				if (go->pos.y > m_worldHeight)
 				{
 					go->vel.y *= -1.0f;
@@ -268,7 +274,6 @@ void ScenePlane::Update(double dt)
 					go->pos.y = 0;
 					hit = true;
 				}
-				go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
 				break;
 			}
 		}
@@ -324,7 +329,7 @@ void ScenePlane::Render()
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
-	ss << "FPS: " << fps;
+	ss << "FPS: " << plane->GOref->angle;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 0, 0);
 
 	// HUD

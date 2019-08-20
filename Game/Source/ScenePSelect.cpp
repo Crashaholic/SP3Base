@@ -67,6 +67,11 @@ void ScenePSelect::Init()
 	decals[1][1] = LoadTGA("Image//A10decal1.tga");
 	decals[1][2] = LoadTGA("Image//A10decal2.tga");
 
+	planes[2] = GEO_PLAYER_PLANE_HARRIER;
+	decals[2][0] = 0;
+	decals[2][1] = LoadTGA("Image//Harrierdecal1.tga");
+	decals[2][2] = LoadTGA("Image//Harrierdecal2.tga");
+
 	sArray[0] = "Start";
 	sArray[1] = "< Plane";
 	sArray[2] = "Plane >";
@@ -288,6 +293,9 @@ void ScenePSelect::Render()
 		break;
 	case GEO_PLAYER_PLANE_A10:
 		modelStack.Scale(5.7f, 1.4f, 1.0f);
+		break;
+	case GEO_PLAYER_PLANE_HARRIER:
+		modelStack.Scale(6.4f, 2.0f, 1.0f);
 		break;
 	}
 	defaultShader.SetVec3("coloredTexture[0]", vec3{ planeColor[0].r,planeColor[0].g,planeColor[0].b });	

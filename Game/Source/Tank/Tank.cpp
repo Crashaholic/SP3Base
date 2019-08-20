@@ -35,7 +35,7 @@ void Tank::Fire()
 		object->type = GameObject::PLAYER_PROJECTILE_SHELL;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = GOref->pos;
-		object->vel = GOref->dir * 30.0f;
+		object->vel = GOref->dir * 60.0f;
 		object->hasGravity = false;
 		bulletCooldown = (double)Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.5f), 0.5f);
 	}

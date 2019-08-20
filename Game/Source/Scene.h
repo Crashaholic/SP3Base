@@ -13,6 +13,9 @@
 #include <vector>
 #include <string>
 #include "Tank/Tank.h"
+#include "Plane/A10.h"
+#include "Plane/Komet.h"
+#include "Plane/Harrier.h"
 
 class Scene
 {
@@ -29,6 +32,7 @@ protected:
 
 		GEO_PLAYER_PLANE_KOMET,
 		GEO_PLAYER_PLANE_A10,
+		GEO_PLAYER_PLANE_HARRIER,
 		GEO_PLAYER_TANK,
 		GEO_PLAYER_TANKGUN,
 

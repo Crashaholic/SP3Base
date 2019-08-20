@@ -75,6 +75,8 @@ void Scene::Init()
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
 	meshList[GEO_PLAYER_PLANE_KOMET] = MeshBuilder::GenerateQuad("PLAYER_PLANE_KOMET", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_KOMET]->textureID[0] = LoadTGA("Image//Komet.tga");
+	meshList[GEO_PLAYER_PLANE_HARRIER] = MeshBuilder::GenerateQuad("PLAYER_PLANE_HARRIER", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_PLANE_HARRIER]->textureID[0] = LoadTGA("Image//Harrier.tga");
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
@@ -292,6 +294,9 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::PLAYER_PLANE_KOMET:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
+			break;
+		case GameObject::PLAYER_PLANE_HARRIER:
+			RenderMesh(meshList[GEO_PLAYER_PLANE_HARRIER], false);
 			break;
 		case GameObject::PLAYER_TANK:
 			RenderMesh(meshList[GEO_PLAYER_TANK], false);

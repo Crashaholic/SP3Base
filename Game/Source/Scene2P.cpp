@@ -78,6 +78,8 @@ void Scene2P::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
 	cleanVar();
+
+	GOManager::GetInstance()->upgrade_1 += 1;
 }
 
 void Scene2P::Update(double dt)

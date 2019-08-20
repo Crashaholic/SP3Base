@@ -71,7 +71,6 @@ void GOManager::update(double dt)
 		if (go->active)
 		{
 			go->Update(dt);
-			go->pos += go->vel * static_cast<float>(dt);
 			if (go->hasGravity)
 			{
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
@@ -125,6 +124,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 	switch (go1->type)
 	{
 	// Player To
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
@@ -149,6 +149,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		{
 			switch (go1->type)
 			{
+			case GameObject::PLAYER_PLANE_HARRIER:
 			case GameObject::PLAYER_PLANE_KOMET:
 			case GameObject::PLAYER_PLANE_A10:
 				return true;
@@ -186,6 +187,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		// case GameObject::ENEMY_BUILDING:
+		case GameObject::PLAYER_PLANE_HARRIER:
 		case GameObject::PLAYER_PLANE_KOMET:
 		case GameObject::PLAYER_PLANE_A10:
 			return true;
@@ -198,6 +200,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 	{
 		switch (go2->type)
 		{
+		case GameObject::PLAYER_PLANE_HARRIER:
 		case GameObject::PLAYER_PLANE_KOMET:
 		case GameObject::PLAYER_PLANE_A10:
 		case GameObject::PLAYER_TANK:
@@ -306,6 +309,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	switch (go1->type)
 	{
 	// Player
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
@@ -325,6 +329,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 			// check go1 again
 			switch (go1->type)
 			{
+			case GameObject::PLAYER_PLANE_HARRIER:
 			case GameObject::PLAYER_PLANE_KOMET:
 			case GameObject::PLAYER_PLANE_A10:
 			{
@@ -418,6 +423,7 @@ bool GOManager::terrainGate(GameObject * go)
 {
 	switch (go->type)
 	{
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::UPGRADE_1:
@@ -449,6 +455,7 @@ void GOManager::terrainResponse(GameObject * go)
 	// Handles response between game objects and terrain
 	switch (go->type)
 	{
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	{
@@ -601,6 +608,7 @@ void GOManager::exResponse(GameObject * go)
 	{
 		switch (go->type)
 		{
+		case GameObject::PLAYER_PLANE_HARRIER:
 		case GameObject::PLAYER_PLANE_KOMET:
 		case GameObject::PLAYER_PLANE_A10:
 		{

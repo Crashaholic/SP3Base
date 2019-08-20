@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Scene2Select.cpp" />
     <ClCompile Include="Source\Enemy\Plane\PlaneEnemy.cpp" />
     <ClCompile Include="Source\Enemy\Tank\TankEnemy.cpp" />
+    <ClCompile Include="Source\Plane\Harrier.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tank\PlayerTank.h" />
@@ -73,6 +74,7 @@
     <ClInclude Include="Source\Enemy\Plane\PlaneEnemy.h" />
     <ClInclude Include="Source\Enemy\Tank\TankEnemy.h" />
     <ClInclude Include="Source\Enemy\EnemyBase.h" />
+    <ClInclude Include="Source\Plane\Harrier.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />
