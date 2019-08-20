@@ -135,7 +135,7 @@ void Scene::Init()
 				Math::RandFloatMinMax(-150.0f, 126.0f),
 				Math::RandFloatMinMax(100.0f + a->scale.y, 270.0f),
 				0.0f);
-			a->vel = GOManager::GetInstance()->windVector * GOManager::GetInstance()->WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+			a->vel = GOManager::GetInstance()->windVector * GOManager::GetInstance()->WIND_POWER + GOManager::GetInstance()->gravity;
 			a->hasGravity = true;
 			a->reserved = true;
 		}

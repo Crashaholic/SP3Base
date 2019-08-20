@@ -49,7 +49,6 @@ void ScenePlane::Init()
 
 	bLightEnabled = true;
 	m_speed = 1.f;
-	m_gravity.Set(0, -9.8f, 0); 
 	bulletCooldown = 0.f;
 	tankSpeed = 5.f;
 	Math::InitRNG();

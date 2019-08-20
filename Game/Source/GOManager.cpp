@@ -83,7 +83,7 @@ void GOManager::update(double dt)
 			go->pos += go->vel * static_cast<float>(dt);
 			if (go->hasGravity)
 			{
-				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+				go->vel += gravity * static_cast<float>(dt);
 				go->vel += windVector * WIND_POWER * static_cast<float>(dt);
 			}
 
@@ -99,7 +99,7 @@ void GOManager::update(double dt)
 						Math::RandFloatMinMax(-50.0f - windVector.x * 100.0f, 226.0f - windVector.x * 100.0f),
 						Math::RandFloatMinMax(100.0f + go->scale.y, 270.0f),
 						0.0f);
-					go->vel = windVector * WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+					go->vel = windVector * WIND_POWER + gravity;
 				}
 				continue;
 			}
