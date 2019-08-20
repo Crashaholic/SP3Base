@@ -177,7 +177,7 @@ void Harrier::Update(double dt)
 				reload = sprayRecoverTime;
 			}
 		}
-		GOManager::GetInstance()->upgrade_2 = secAmmo;
+		//GOManager::GetInstance()->upgrade_2 = secAmmo;
 
 
 	}

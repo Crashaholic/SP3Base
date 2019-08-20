@@ -17,7 +17,9 @@ public:
 	void Update(double dt) override;
 	void Move_LeftRight(double dt, bool left) override;
 
-	unsigned int Range = 5;
+	void Fire();
+
+	unsigned int Range = 20;
 
 
 	//Stage 1 = Enter Scene

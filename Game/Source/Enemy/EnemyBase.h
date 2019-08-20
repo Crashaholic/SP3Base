@@ -5,6 +5,7 @@ struct GameObject;
 
 struct EnemyBase
 {
+	bool isDead = false;
 	vec3 targetMov;
 	vec3 targetPos;
 	float m_worldWidth;

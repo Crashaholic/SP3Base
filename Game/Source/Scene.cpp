@@ -82,6 +82,10 @@ void Scene::Init()
 	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[1] = LoadTGA("Image//Bomb1decal.tga");
+	meshList[GEO_ENEMY_TANK_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_PASSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_TANK_PASSIVE]->textureID[0] = LoadTGA("Image//Tank1.tga");
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_AGGRESSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANK]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
@@ -324,6 +328,19 @@ void Scene::RenderGO(GameObject *go)
 			break;
 		case GameObject::PLAYER_TANK:
 			RenderMesh(meshList[GEO_PLAYER_TANK], false);
+			modelStack.PopMatrix();
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
+			break;
+		case GameObject::ENEMY_TANK_PASSIVE:
+			RenderMesh(meshList[GEO_ENEMY_TANK_PASSIVE], false);
+			break;
+
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+			RenderMesh(meshList[GEO_ENEMY_TANK_AGGRESSIVE], false);
 			modelStack.PopMatrix();
 			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -676,7 +693,8 @@ void Scene::goWrap()
 					go->pos.y = 0;
 					hit = true;
 				}
-				go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
+				if (hit)
+					go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
 				break;
 			case GameObject::SW_NONE:
 				break;

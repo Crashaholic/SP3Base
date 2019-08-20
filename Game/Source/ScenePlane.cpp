@@ -280,7 +280,7 @@ void ScenePlane::EndWave()
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject* go = m_goList[i];
-		if (!go->reserved)
+		if (!go->reserved && go->type != GameObject::UPGRADE_1&& go->type != GameObject::UPGRADE_2&& go->type != GameObject::UPGRADE_3)
 		{
 			go->active = false;
 		}
@@ -312,7 +312,20 @@ void ScenePlane::SpawnEnemy()
 	{
 		bool spawner = rand() % 2;
 		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
-		enemyList.push_back(new TankEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, player->GOref, m_worldWidth));
+		bool spawned = false;
+		for (unsigned int i = 0; i < enemyList.size(); ++i)
+		{
+			if (enemyList[i]->isDead)
+			{
+				delete enemyList[i];
+				enemyList[i] = new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth);
+				//enemyList[i] = new TankEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, plane->GOref, m_worldWidth);
+				spawned = true;
+				break;
+			}
+		}
+		if (!spawned)
+			enemyList.push_back(new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

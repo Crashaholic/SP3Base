@@ -677,6 +677,37 @@ GameObject * GOManager::fetchGO()
 	return fetchGO();
 }
 
+GameObject * GOManager::fetchReservedGO()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if ((!go->active) && (go->reserved))
+		{
+			go->active = true;
+
+			go->vel.SetZero();
+			go->pos.SetZero();
+			go->hasLifeTime = false;
+			go->hasGravity = false;
+			go->lifeTime = 0.0;
+			go->transparency = 1.0f;
+			for (int i = 0; i < 8; ++i)
+				go->color[i].Set(1, 1, 1);
+			go->wrapMode = GameObject::SW_CLEAR;
+			go->type = GameObject::GO_NONE;
+			return go;
+		}
+	}
+	for (unsigned int i = 0; i < 10; ++i)
+	{
+		GameObject* go = new GameObject(GameObject::GO_NONE);
+		go->reserved = true;
+		m_goList.push_back(go);
+	}
+	return fetchReservedGO();
+}
+
 std::vector<GameObject*>& GOManager::getlist()
 {
 	return m_goList;

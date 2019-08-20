@@ -36,6 +36,7 @@ public:
 	void exResponse(GameObject* go);
 
 	GameObject* fetchGO();
+	GameObject* fetchReservedGO();
 	std::vector<GameObject*>& getlist();
 	void addGO(GameObject* go);
 
