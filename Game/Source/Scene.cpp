@@ -137,6 +137,7 @@ void Scene::Init()
 				0.0f);
 			a->vel = GOManager::GetInstance()->windVector * GOManager::GetInstance()->WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
 			a->hasGravity = true;
+			a->reserved = true;
 		}
 	}
 }
