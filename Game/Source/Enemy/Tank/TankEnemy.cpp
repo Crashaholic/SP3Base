@@ -20,7 +20,7 @@ void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth
 	targetPos = ref->pos;
 	this->SetPlayerGORef(ref);
 	this->GOref = (GOManager::GetInstance()->fetchReservedGO());
-	GOref->type = (Math::RandIntMinMax(0, 0) ? GameObject::ENEMY_TANK_PASSIVE : GameObject::ENEMY_TANK_AGGRESSIVE);
+	GOref->type = (Math::RandIntMinMax(0, 1) ? GameObject::ENEMY_TANK_PASSIVE : GameObject::ENEMY_TANK_AGGRESSIVE);
 	GOref->pos = pos;
 	if (GOref->type == GameObject::ENEMY_TANK_PASSIVE)
 	{
@@ -52,14 +52,23 @@ void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth
 void TankEnemy::Move_LeftRight(double dt, bool left)
 {
 	if (left)
+	{
 		this->GOref->pos.x -= tankSpeed * static_cast<float>(dt) * GOref->norm.x;
+		//if (GOref->scale.x > 0)
+		//	GOref->scale.x = -GOref->scale.x;
+	}
 	else
+	{
 		this->GOref->pos.x += tankSpeed * static_cast<float>(dt) * GOref->norm.x;
+		//if (GOref->scale.x < 0)
+			//GOref->scale.x = -GOref->scale.x;
+	}
+
 	Terrain* terreference = GOManager::GetInstance()->terreference;
-	Vector3 frontCheck = GOref->pos + Vector3(GOref->scale.x / 2, 0, 0);
-	Vector3 rearCheck = GOref->pos - Vector3(GOref->scale.x / 2, 0, 0);
-	GOref->angle = atan2(terreference->GetHeight(frontCheck).y - terreference->GetHeight(rearCheck).y, GOref->scale.x);
-	GOref->norm.Set(cos(GOref->angle), sin(GOref->angle), 0);
+	Vector3 frontCheck = GOref->pos + Vector3(fabs(GOref->scale.x) / 2, 0, 0);
+	Vector3 rearCheck = GOref->pos - Vector3(fabs(GOref->scale.x) / 2, 0, 0);
+	GOref->angle = atan2(terreference->GetHeight(frontCheck).y - terreference->GetHeight(rearCheck).y, fabs(GOref->scale.x));
+	GOref->norm.Set(fabs(cos(GOref->angle)), sin(GOref->angle), 0);
 	//GOref->dir.Set(-GOref->norm.y, GOref->norm.x);
 	GOref->pos.y = (terreference->GetHeight(frontCheck).y + terreference->GetHeight(rearCheck).y) / 2 + heightOffset;
 	//GOref->pos.x = Math::Clamp(GOref->pos.x, 4.f, 173.f);
@@ -76,7 +85,7 @@ void TankEnemy::Fire()
 		object->pos = GOref->pos;
 		object->vel = GOref->dir * 60.0f;
 		object->hasGravity = false;
-		bulletCooldown = (double)Math::RandFloatMinMax(0.5f,1.0f);
+		bulletCooldown = (double)Math::RandFloatMinMax(1.0f,0.5f);
 	}
 }
 
@@ -91,9 +100,9 @@ void TankEnemy::Update(double dt)
 		FireAt(playerGO->pos);
 		//MoveTo(playerGO->pos);
 		GOref->dir = (playerGO->pos - GOref->pos).Normalized();
-		Fire();
 		//if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
-		{
+		Fire();
+		
 			switch (Stage)
 			{
 			case 1:
@@ -105,12 +114,13 @@ void TankEnemy::Update(double dt)
 				else
 				{
 					GOref->pos.x = targetMov.x;
+					GOref->angle += Math::DegreeToRadian(180.0f);
 					targetMov.x = leftTarget;
 					Stage = 2;
-					GOref->scale.x *= -1;
+					//GOref->scale.x *= -1;
 				}
-				break;
 			}
+				break;
 			case 2:
 			{
 				if (GOref->pos.x > targetMov.x)
@@ -120,11 +130,11 @@ void TankEnemy::Update(double dt)
 				else
 				{
 					GOref->pos.x = targetMov.x;
+					GOref->angle += Math::DegreeToRadian(180.0f);
 					targetMov.x = rightTarget;
 					Stage = 1;
-					GOref->scale.x *= -1;
+					//GOref->scale.x *= -1;
 				}
-				break;
 				//if (GOref->pos.x - targetMov.x > (float)Range)
 				//{
 				//	Move_LeftRight(dt, 1);
@@ -137,8 +147,9 @@ void TankEnemy::Update(double dt)
 				//}
 				//break;
 			}
+				break;
 			}
-		}
+		
 		//else
 		//{
 		//	switch (Stage)

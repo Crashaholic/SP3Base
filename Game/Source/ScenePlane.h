@@ -28,7 +28,6 @@ public:
 
 private:
 	Plane *plane;
-	Tank* player;
 	Terrain terr;
 
 	Camera camera;

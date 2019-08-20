@@ -56,10 +56,6 @@ void ScenePlane::Init()
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	GOManager::GetInstance()->terreference = &terr;
-	player = new PlayerTank;
-	player->Init();
-	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
-	player->GOref->color[1].Set(SceneManager::tankColor[1].r, SceneManager::tankColor[1].g, SceneManager::tankColor[1].b);
 
 	meshList[SceneManager::tankChoice]->textureID[1] = LoadTGA(SceneManager::tankDecalChoice.c_str());
 
@@ -95,7 +91,6 @@ void ScenePlane::Init()
 
 void ScenePlane::Update(double dt)
 {
-	player->Update(dt);
 	plane->Update(dt);
 	for (uint32_t i = 0; i < enemyList.size(); i++)
 	{
@@ -265,7 +260,7 @@ void ScenePlane::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
-	delete player;
+	delete plane;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }
 
