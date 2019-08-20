@@ -110,6 +110,7 @@ bool GameObject::hasCollider()
 	{
 	case GO_NONE:
 	case EXPLOSION:
+	case GO_RAIN:
 	case GO_TOTAL:
 		return false;
 	}

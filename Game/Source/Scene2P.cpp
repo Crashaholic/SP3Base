@@ -24,7 +24,7 @@ Scene2P::~Scene2P()
 void Scene2P::Init()
 {
 	Scene::Init();
-	glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
 	//plane = dynamic_cast<Komet*>(new Plane);
 	plane = new Komet;
@@ -170,91 +170,11 @@ void Scene2P::Update(double dt)
 	{
 		bRButtonState = false;
 	}
-	m_goList = GOManager::GetInstance()->getlist();
+	
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
-
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-		{
-			// unspawn bullets when they leave screen
-			bool hit = false;
-			switch (go->wrapMode)
-			{
-			case GameObject::SW_CLEAR:
-				if (go->pos.x > m_worldWidth
-					|| go->pos.x < 0 || go->pos.y < 0)
-					go->active = false;
-				hit = true;
-				break;
-			case GameObject::SW_BOUNCE:
-				if (go->pos.x > m_worldWidth)
-				{
-					go->vel.x *= -1.0f;
-					go->dir.x *= -1.0f;
-					go->pos.x = m_worldWidth;
-					hit = true;
-				}
-				if (go->pos.y > m_worldHeight)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = m_worldHeight;
-					hit = true;
-				}
-				if (go->pos.x < 0)
-				{
-					go->vel.x *= -1.0f;
-					go->dir.x *= -1.0f;
-					go->pos.x = 0;
-					hit = true;
-				}
-				if (go->pos.y < 0)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = 0;
-					hit = true;
-				}
-				if (hit)
-					go->angle = (atan2(go->dir.y, go->dir.x));
-				break;
-			case GameObject::SW_WRAP:
-				if (go->pos.x > m_worldWidth)
-					go->pos.x = 0;
-				if (go->pos.x < 0)
-					go->pos.x = m_worldWidth - 0.1f;
-
-				if (go->pos.y > m_worldHeight)
-					go->pos.y = 0;
-				if (go->pos.y < 0)
-					go->pos.y = m_worldHeight - 0.1f;
-			case GameObject::SW_HYBRID:
-				if (go->pos.x > m_worldWidth)
-					go->pos.x = 0;
-				if (go->pos.x < 0)
-					go->pos.x = m_worldWidth - 0.1f;
-				if (go->pos.y > m_worldHeight)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = m_worldHeight;
-					hit = true;
-				}
-				if (go->pos.y < 0)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = 0;
-					hit = true;
-				}
-				go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
-				break;
-			}
-		}
-	}
+	m_goList = GOManager::GetInstance()->getlist();
+	goWrap();
 	GOManager::GetInstance()->update(dt);
 
 	// After GOManager has updated, check for 0 lives
@@ -308,12 +228,13 @@ void Scene2P::Render()
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 0, 0);
 
 	// HUD
 	render2PHUD();
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(1, 1, 1), 3, 4.0f, 55.5f);
-	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(1, 1, 1), 3, 4.0f, 50.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3, 4.0f, 55.5f);
+	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(0, 0, 0), 3, 4.0f, 50.5f);
+	windRender();
 }
 
 void Scene2P::Exit()

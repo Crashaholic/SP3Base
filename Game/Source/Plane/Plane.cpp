@@ -34,7 +34,7 @@ void Plane::Secondary()
 		bomb->pos = GOref->pos;
 		bomb->scale.Set(1, 2, 1);
 		bomb->hasGravity = true;
-		bomb->wrapMode = GameObject::SW_BOUNCE;
+		bomb->wrapMode = GameObject::SW_CLEAR;
 		for (int i = 0; i < MAX_TEXTURES; ++i)
 			bomb->color[i].Set(1, 0, 0);
 		--secAmmo;
@@ -91,12 +91,21 @@ void Plane::Update(double dt)
 	}
 }
 
+void Plane::Turn_CWCCW(double dt, bool CCW)
+{
+	if(CCW)
+		GOref->angle += turnSpeed * (float)dt;
+	else
+		GOref->angle -= turnSpeed * (float)dt;
+
+}
+
 void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 {
 	if (Application::IsKeyPressed(left))
-		GOref->angle += turnSpeed * (float)dt;
+		Turn_CWCCW(dt, true);
 	else if (Application::IsKeyPressed(right))
-		GOref->angle -= turnSpeed * (float)dt;
+		Turn_CWCCW(dt, false);
 
 	static bool press1 = false, press2 = false;
 	if (Application::IsKeyPressed(pri) && !press1)
@@ -117,8 +126,6 @@ void Plane::ReadInput(double dt, char left, char right, char pri, char sec)
 	{
 		press2 = false;
 	}
-	//else if (Application::IsKeyPressed(sec))
-	//	Secondary();
 }
 
 int Plane::getPri()

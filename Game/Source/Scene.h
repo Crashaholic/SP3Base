@@ -61,6 +61,8 @@ protected:
 		GEO_EXPLOSION,
 		GEO_DEBUG,						// Debug balls
 
+		GEO_RAIN,
+
 		NUM_GEOMETRY,
 	};	
 	Mesh* meshList[NUM_GEOMETRY];
@@ -99,6 +101,7 @@ protected:
 
 	Light lights[1];
 	std::vector<Button*>buttonList;
+	std::vector<GameObject *> m_goList;
 
 	MS modelStack;
 	MS viewStack;
@@ -116,6 +119,9 @@ protected:
 	const float HUD_TXT_SPACING = 7.0f;
 
 	void windRender();
+	void rainRandom();
+
+	void goWrap();
 };
 
 #endif
