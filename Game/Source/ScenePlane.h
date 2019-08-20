@@ -47,7 +47,6 @@ private:
 
 
 	// Physics
-	std::vector<GameObject *> m_goList;
 	float m_speed;
 	Vector3 m_gravity;
 
