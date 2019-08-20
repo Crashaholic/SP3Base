@@ -116,8 +116,32 @@ void Scene::Init()
 	meshList[GEO_ARROW] = MeshBuilder::GenerateQuad("arrow", Color(1.f, 0.f, 0.f), 2.0f);
 	meshList[GEO_ARROW]->textureID[0] = LoadTGA("Image//arrow.tga");
 
+	meshList[GEO_RAIN] = MeshBuilder::GenerateCube("rain", Color(0.5f, 0.5f, 1.0f), 2.f);
+
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
+
+	rainRandom();
+	if (GOManager::GetInstance()->rain == true)
+	{
+		// Push back number of rain objects according to rain intensity
+		for (int i = 0; i < GOManager::GetInstance()->RAIN_INTENSITY; ++i)
+		{
+			GameObject *a = GOManager::GetInstance()->fetchGO();
+			a->scale.Set(4.0f, 0.2f, 1.0f);
+			a->type = GameObject::GO_RAIN;
+			a->wrapMode = GameObject::SW_NONE;
+			a->angle = -90.0f;
+			a->norm.Set(cos(Math::DegreeToRadian(a->angle)), sin(Math::DegreeToRadian(a->angle)), 0.0f);
+			a->pos.Set(
+				Math::RandFloatMinMax(-150.0f, 126.0f),
+				Math::RandFloatMinMax(100.0f + a->scale.y, 270.0f),
+				0.0f);
+			a->vel = GOManager::GetInstance()->windVector * GOManager::GetInstance()->WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+			a->hasGravity = true;
+			a->reserved = true;
+		}
+	}
 }
 
 void Scene::RenderText(Mesh* mesh, std::string text, Color color)
@@ -306,7 +330,6 @@ void Scene::RenderGO(GameObject *go)
 			modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
 			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
-
 			break;
 		case GameObject::PLAYER_PROJECTILE_MACHINE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
@@ -329,6 +352,9 @@ void Scene::RenderGO(GameObject *go)
 			break;
 		case GameObject::UPGRADE_3:
 			RenderMesh(meshList[GEO_UPGRADE_3], false);
+			break;
+		case GameObject::GO_RAIN:
+			RenderMesh(meshList[GEO_RAIN], false);
 			break;
 		}
 		modelStack.PopMatrix();
@@ -520,6 +546,7 @@ void Scene::cleanVar()
 	GOManager::GetInstance()->windBT = GOManager::GetInstance()->WIND_TIMER;
 	GOManager::GetInstance()->windVector = Vector3(1, 0, 0);
 	GOManager::GetInstance()->windVectorN = Vector3(1, 0, 0);
+	GOManager::GetInstance()->rain = false;
 }
 
 void Scene::RGButtonRender(Button * b, std::string s)
@@ -545,7 +572,7 @@ void Scene::RGButtonRender(Button * b, std::string s)
 void Scene::windRender()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(166.0f, 90.0f, 0.0f);
+	modelStack.Translate(m_worldWidth / 2.0f, 90.0f, 0.0f);
 
 	modelStack.Rotate(
 		Math::RadianToDegree(atan2(
@@ -555,4 +582,105 @@ void Scene::windRender()
 	modelStack.Scale(8.0f, 8.0f, 8.0f);
 	RenderMesh(meshList[GEO_ARROW], false);
 	modelStack.PopMatrix();
+}
+
+void Scene::rainRandom()
+{
+	if (Math::RandFloatMinMax(0.0f, 100.0f) < GOManager::GetInstance()->RAIN_CHANCE)
+		GOManager::GetInstance()->rain = true;
+	else
+		GOManager::GetInstance()->rain = false;
+}
+
+void Scene::goWrap()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			// unspawn bullets when they leave screen
+			bool hit = false;
+			switch (go->wrapMode)
+			{
+			case GameObject::SW_OFFSCREENCLEAR:
+				if (go->pos.x > m_worldWidth + 5.0f
+					|| go->pos.x < -5.0f || go->pos.y < -5.0f)
+					go->active = false;
+				hit = true;
+				break;
+			case GameObject::SW_CLEAR:
+				if (go->pos.x > m_worldWidth || go->pos.y > m_worldHeight*2
+					|| go->pos.x < 0 || go->pos.y < 0)
+					go->active = false;
+				hit = true;
+				break;
+			case GameObject::SW_BOUNCE:
+				if (go->pos.x > m_worldWidth)
+				{
+					go->vel.x *= -1.0f;
+					go->dir.x *= -1.0f;
+					go->pos.x = m_worldWidth;
+					hit = true;
+				}
+				if (go->pos.y > m_worldHeight)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = m_worldHeight;
+					hit = true;
+				}
+				if (go->pos.x < 0)
+				{
+					go->vel.x *= -1.0f;
+					go->dir.x *= -1.0f;
+					go->pos.x = 0;
+					hit = true;
+				}
+				if (go->pos.y < 0)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = 0;
+					hit = true;
+				}
+				if (hit)
+					go->angle = (atan2(go->dir.y, go->dir.x));
+				break;
+			case GameObject::SW_WRAP:
+				if (go->pos.x > m_worldWidth)
+					go->pos.x = 0;
+				if (go->pos.x < 0)
+					go->pos.x = m_worldWidth - 0.1f;
+
+				if (go->pos.y > m_worldHeight)
+					go->pos.y = 0;
+				if (go->pos.y < 0)
+					go->pos.y = m_worldHeight - 0.1f;
+			case GameObject::SW_HYBRID:
+				if (go->pos.x > m_worldWidth)
+					go->pos.x = 0;
+				if (go->pos.x < 0)
+					go->pos.x = m_worldWidth - 0.1f;
+				if (go->pos.y > m_worldHeight)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = m_worldHeight;
+					hit = true;
+				}
+				if (go->pos.y < 0)
+				{
+					go->vel.y *= -1.0f;
+					go->dir.y *= -1.0f;
+					go->pos.y = 0;
+					hit = true;
+				}
+				go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
+				break;
+			case GameObject::SW_NONE:
+				break;
+			}
+		}
+	}
 }

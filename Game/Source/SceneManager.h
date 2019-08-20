@@ -2,6 +2,7 @@
 #pragma once
 #include "Scene.h"
 #include <unordered_map>
+#include <fstream>
 
 using namespace std;
 
@@ -32,5 +33,12 @@ public:
 	static int tankChoice;
 	static std::string tankDecalChoice;
 	static Color tankColor[2];
+
+	// Money unlock system
+	static int money;
+	static bool planeUnlock[3];
+	static int planeCost[3];
+	void readMonies();
+	void writeMonies(int money, bool warthog, bool harrier);
 };
 

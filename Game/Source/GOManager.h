@@ -78,7 +78,12 @@ public:
 	const float WIND_POWER = 5.0f;
 	const float WIND_TIMER = 10.0f;
 	const float WIND_RANGE = 90.0f;			// range of wind randomisation
+
 	const float UPGRADE_CHANCE = 100.0f;	// chance of upgrade dropping from enemies
+
+	bool rain;
+	const float RAIN_CHANCE = 50.0f;		// chance of rain occuring
+	static const int RAIN_INTENSITY = 50;	// number of rain objects
 
 	// These values should only be used for sceneEnd to identify which data to display
 	enum STYPE

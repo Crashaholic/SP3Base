@@ -24,6 +24,7 @@ GOManager::GOManager()
 	windVector = Vector3(1, 0, 0);
 	windVectorN = Vector3(1, 0, 0);
 	windBT = WIND_TIMER;
+	rain = false;
 }
 
 GOManager::~GOManager()
@@ -75,6 +76,23 @@ void GOManager::update(double dt)
 			{
 				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
 				go->vel += windVector * WIND_POWER * static_cast<float>(dt);
+			}
+
+			// Rain logic
+			if (go->type == GameObject::GO_RAIN)
+			{
+				go->norm = go->vel;
+				if ((go->pos.x < -8.0f)		||
+					(go->pos.x > 184.0f)	||
+					(go->pos.y < -8.0f))
+				{
+					go->pos.Set(
+						Math::RandFloatMinMax(-50.0f - windVector.x * 100.0f, 226.0f - windVector.x * 100.0f),
+						Math::RandFloatMinMax(100.0f + go->scale.y, 270.0f),
+						0.0f);
+					go->vel = windVector * WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+				}
+				continue;
 			}
 			updateCorn(go);
 
@@ -524,6 +542,7 @@ void GOManager::planeDeath(GameObject * go)
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
 	toExplosion(ex);
 	if (planeLives <= 0)
@@ -548,6 +567,7 @@ void GOManager::tankDeath(GameObject* go)
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
 	toExplosion(ex);
 	if (tankLives <= 0)
@@ -654,7 +674,7 @@ GameObject * GOManager::fetchGO()
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	return m_goList[m_goList.size() - 1];
+	return fetchGO();
 }
 
 std::vector<GameObject*>& GOManager::getlist()

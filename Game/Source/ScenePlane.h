@@ -5,6 +5,8 @@
 #include "Terrain.h"
 //Include All planes here
 
+#include "Enemy/Tank/TankEnemy.h"
+
 class ScenePlane : public Scene
 {
 	static const int MAX_SPEED = 20;
@@ -45,7 +47,6 @@ private:
 
 
 	// Physics
-	std::vector<GameObject *> m_goList;
 	float m_speed;
 	Vector3 m_gravity;
 
@@ -57,6 +58,8 @@ private:
 	float tankSpeed;
 	double bulletCooldown;
 	bool tUpgrade;
+
+	std::vector<TankEnemy*> enemyList;
 };
 
 #endif

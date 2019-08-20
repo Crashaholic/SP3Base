@@ -43,6 +43,8 @@ struct GameObject
 		SPAWNPOINT_ENEMY_TANK,
 		SPAWNPOINT_ENEMY_PLANE,
 
+		GO_RAIN,
+
 		GO_TOTAL, //must be last
 	};
 	enum SCREENWRAP_MODE {
@@ -50,7 +52,8 @@ struct GameObject
 		SW_OFFSCREENCLEAR,
 		SW_WRAP,
 		SW_HYBRID,
-		SW_BOUNCE
+		SW_BOUNCE,
+		SW_NONE
 	};
 	GAMEOBJECT_TYPE type;
 	SCREENWRAP_MODE wrapMode;

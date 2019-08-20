@@ -51,8 +51,8 @@ void SceneTank::Init()
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
 
-	SpawnPos1 = vec3(-2, terr.GetHeight({ -2, 0, 0 }).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0 }).y, 0);
+	SpawnPos1 = vec3(-4.9999f, 0, 0);
+	SpawnPos2 = vec3(m_worldWidth + 4.9999f, 0, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
@@ -60,26 +60,17 @@ void SceneTank::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_TANK;
 
-	e1.SpawnNewPlaneEnemy({10, 50, 10}, player->GOref, m_worldWidth);
-	//e2.SpawnNewPlaneEnemy({10, 54, 10}, player->GOref, m_worldWidth);
-	//e3.SpawnNewPlaneEnemy({10, 58, 10}, player->GOref, m_worldWidth);
-	//e4.SpawnNewPlaneEnemy({10, 60, 10}, player->GOref, m_worldWidth);
-	//e5.SpawnNewPlaneEnemy({10, 64, 10}, player->GOref, m_worldWidth);
-	//e6.SpawnNewPlaneEnemy({10, 68, 10}, player->GOref, m_worldWidth);
-
 	cleanVar();
 }
 
 void SceneTank::Update(double dt)
 {
 	player->Update(dt);
-	e1.Update(dt);
-	//e2.Update(dt);
-	//e3.Update(dt);
-	//e4.Update(dt);
-	//e5.Update(dt);
-	//e6.Update(dt);
-	//LOG_NONE("Tank's y: %", player->GOref->pos.y);
+	for (uint32_t i = 0; i < enemyList.size(); i++)
+	{
+		enemyList[i]->Update(dt);
+	}
+
 	//Keyboard Section
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -151,9 +142,11 @@ void SceneTank::Update(double dt)
 		bRButtonState = false;
 	}
 
-	// Physics Simulation Section
 	fps = (float)(1.f / dt);
-	GOManager::GetInstance()->update(dt);
+	m_goList = GOManager::GetInstance()->getlist();
+	goWrap();
+	// Physics Simulation Section
+	GOManager::GetInstance()->update(dt); 
 
 	// After GOManager has updated, check for 0 lives
 	if (GOManager::GetInstance()->tankLives <= 0)
@@ -234,8 +227,6 @@ void SceneTank::EndWave()
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
-	//tank->pos = terr.GetHeight(tank->pos);
-	//tank2->pos = terr.GetHeight(tank->pos) + vec3{ 0, 2, 0 };
 }
 
 void SceneTank::SpawnEnemy()
@@ -248,10 +239,8 @@ void SceneTank::SpawnEnemy()
 	else
 	{
 		bool spawner = rand() % 2;
-		//GameObject* t = GOManager::GetInstance()->fetchGO();
-		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
-		//TODO: TANK TARGET/MOVE CODE HERE
-		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
+		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
+		enemyList.push_back(new PlaneEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, player->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

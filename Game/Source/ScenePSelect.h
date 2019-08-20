@@ -31,6 +31,7 @@ private:
 	// 3: Prev Decal
 	// 4: Next Decal
 	// 5: Back To Main
+	// 6: Purchase
 
 	Button* slArray[NUM_PSLIDER];
 	

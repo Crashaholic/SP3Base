@@ -59,7 +59,10 @@ void ScenePlane::Init()
 	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;
 	player->Init();
+	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
+	player->GOref->color[1].Set(SceneManager::tankColor[1].r, SceneManager::tankColor[1].g, SceneManager::tankColor[1].b);
 
+	meshList[SceneManager::tankChoice]->textureID[1] = LoadTGA(SceneManager::tankDecalChoice.c_str());
 
 	decal1 = LoadTGA("Image//A10decal2.tga");
 	// Testing cubes
@@ -95,6 +98,10 @@ void ScenePlane::Update(double dt)
 {
 	player->Update(dt);
 	plane->Update(dt);
+	for (uint32_t i = 0; i < enemyList.size(); i++)
+	{
+		enemyList[i]->Update(dt);
+	}
 	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -182,102 +189,11 @@ void ScenePlane::Update(double dt)
 	{
 		bRButtonState = false;
 	}
-	m_goList = GOManager::GetInstance()->getlist();
+	
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
-
-	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	{
-		GameObject *go = (GameObject *)*it;
-		if (go->active)
-		{
-			// unspawn bullets when they leave screen
-			bool hit = false;
-			switch (go->wrapMode)
-			{
-			case GameObject::SW_OFFSCREENCLEAR:
-				if (go->pos.x > m_worldWidth + 5.0f
-					|| go->pos.x < -5.0f || go->pos.y < -5.0f)
-					go->active = false;
-				hit = true;
-				break;
-			case GameObject::SW_CLEAR:
-				if (go->pos.x > m_worldWidth
-					|| go->pos.x < 0 || go->pos.y < 0)
-					go->active = false;
-				hit = true;
-				break;
-			case GameObject::SW_BOUNCE:
-				if (go->pos.x > m_worldWidth)
-				{
-					go->vel.x *= -1.0f;
-					go->dir.x *= -1.0f;
-					go->pos.x = m_worldWidth;
-					hit = true;
-				}
-				if (go->pos.y > m_worldHeight)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = m_worldHeight;
-					hit = true;
-				}
-				if (go->pos.x < 0)
-				{
-					go->vel.x *= -1.0f;
-					go->dir.x *= -1.0f;
-					go->pos.x = 0;
-					hit = true;
-				}
-				if (go->pos.y < 0)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = 0;
-					hit = true;
-				}
-				if (hit)
-					go->angle = (atan2(go->dir.y, go->dir.x));
-				break;
-			case GameObject::SW_WRAP:
-				if (go->pos.x > m_worldWidth)
-					go->pos.x = 0;
-				if (go->pos.x < 0)
-					go->pos.x = m_worldWidth - 0.1f;
-
-				if (go->pos.y > m_worldHeight)
-					go->pos.y = 0;
-				if (go->pos.y < 0)
-					go->pos.y = m_worldHeight - 0.1f;
-			case GameObject::SW_HYBRID:
-				if (go->pos.x > m_worldWidth)
-				{
-					go->pos.x = 0;
-					hit = true;
-				}
-				if (go->pos.x < 0)
-				{
-					go->pos.x = m_worldWidth - 0.1f;
-					hit = true;
-				}
-				if (go->pos.y > m_worldHeight)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = m_worldHeight;
-					hit = true;
-				}
-				if (go->pos.y < 0)
-				{
-					go->vel.y *= -1.0f;
-					go->dir.y *= -1.0f;
-					go->pos.y = 0;
-					hit = true;
-				}
-				break;
-			}
-		}
-	}
+	m_goList = GOManager::GetInstance()->getlist();
+	goWrap();
 	GOManager::GetInstance()->update(dt);
 
 	// After GOManager has updated, check for 0 lives
@@ -382,11 +298,7 @@ void ScenePlane::EndWave()
 		building->hasGravity = false;
 		building->scale = Vector3(1, 1, 1)*10;
 		building->norm.Set(1, 0, 0);
-		//building->
 	}
-
-	//tank->pos = terr.GetHeight(tank->pos);
-	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
@@ -399,10 +311,8 @@ void ScenePlane::SpawnEnemy()
 	else
 	{
 		bool spawner = rand() % 2;
-		//GameObject* t = GOManager::GetInstance()->fetchGO();
-		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
-		//TODO: TANK TARGET/MOVE CODE HERE
-		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
+		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
+		enemyList.push_back(new TankEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, player->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;
