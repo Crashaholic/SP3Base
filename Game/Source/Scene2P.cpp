@@ -23,6 +23,10 @@ Scene2P::~Scene2P()
 
 void Scene2P::Init()
 {
+	// We have to do this first before calling scene init
+	cleanVar();
+	GOManager::GetInstance()->wind = false;
+
 	Scene::Init();
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
@@ -73,11 +77,10 @@ void Scene2P::Init()
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
-
+	
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
-	cleanVar();
-	GOManager::GetInstance()->wind = false;
+	GOManager::GetInstance()->upgrade_1 = 1;
 }
 
 void Scene2P::Update(double dt)

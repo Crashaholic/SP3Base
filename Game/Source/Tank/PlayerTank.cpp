@@ -62,7 +62,7 @@ void PlayerTank::Update(double dt)
 		{
 			bulletCooldown -= dt;
 		}
-		ReadInput(dt, 'J', 'L', 'I', 'P', 'N');
+		ReadInput(dt, 'K', 'I', 'J', 'L', VK_SPACE);
 	}
 }
 

@@ -32,8 +32,8 @@ public:
 
 	void planeDeath(GameObject* go);
 	void tankDeath(GameObject* go);
-	void toExplosion(GameObject* go);
-	void exResponse(GameObject* go);
+	void toExplosion(GameObject* go, bool fromPlayer);
+	void exResponse(GameObject* go, bool fromPlayer);
 
 	GameObject* fetchGO();
 	std::vector<GameObject*>& getlist();

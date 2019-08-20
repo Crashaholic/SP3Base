@@ -165,7 +165,6 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
-		case GameObject::PLAYER_TANK: //test
 		case GameObject::GO_CUBE:
 		{
 			return true;
@@ -345,7 +344,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
 		case GameObject::ENEMY_BUILDING:
 		{
-			toExplosion(go2);
+			toExplosion(go2, false);
 			LOG_TRACE("Player collided with enemy");
 
 			// check go1 again
@@ -436,7 +435,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
-		toExplosion(go1);
+		toExplosion(go1, false);
 	}
 }
 
@@ -531,7 +530,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with terrain");
-		toExplosion(go);
+		toExplosion(go, false);
 	}
 }
 
@@ -545,7 +544,7 @@ void GOManager::planeDeath(GameObject * go)
 	ex->pos = go->pos;
 	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
-	toExplosion(ex);
+	toExplosion(ex, true);
 	if (planeLives <= 0)
 	{
 		int accuracyBonus = static_cast<int>(planeAccuracy * planeKills);
@@ -570,7 +569,7 @@ void GOManager::tankDeath(GameObject* go)
 	ex->pos = go->pos;
 	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
-	toExplosion(ex);
+	toExplosion(ex, true);
 	if (tankLives <= 0)
 	{
 		int accuracyBonus = static_cast<int>(tankAccuracy * tankKills);
@@ -585,7 +584,7 @@ void GOManager::tankDeath(GameObject* go)
 	}
 }
 
-void GOManager::toExplosion(GameObject * go)
+void GOManager::toExplosion(GameObject * go, bool fromPlayer)
 {
 	go->type = GameObject::EXPLOSION;
 	go->scale = Vector3(1, 1, 1) * go->exRadius;
@@ -617,33 +616,36 @@ void GOManager::toExplosion(GameObject * go)
 		{
 			if (length < go->exRadius)
 			{
-				exResponse(a);
+				exResponse(a, fromPlayer);
 			}
 		}
 	}
 }
 
-void GOManager::exResponse(GameObject * go)
+void GOManager::exResponse(GameObject * go, bool fromPlayer)
 {
 	if (go->active == true)
 	{
-		switch (go->type)
+		if (fromPlayer == false)
 		{
-		case GameObject::PLAYER_PLANE_KOMET:
-		case GameObject::PLAYER_PLANE_A10:
-		{
-			planeDeath(go);
-			break;
-		}
-		case GameObject::PLAYER_TANK:
-		{
-			tankDeath(go);
-			break;
-		}
-		default:
-		{
-			break;
-		}
+			switch (go->type)
+			{
+			case GameObject::PLAYER_PLANE_KOMET:
+			case GameObject::PLAYER_PLANE_A10:
+			{
+				planeDeath(go);
+				break;
+			}
+			case GameObject::PLAYER_TANK:
+			{
+				tankDeath(go);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
 		}
 		enemyDeath(go);
 	}
