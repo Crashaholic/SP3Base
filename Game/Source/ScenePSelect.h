@@ -3,7 +3,7 @@
 #define SCENE_PSELECT_H
 #define MAX_PDECALS 2
 #define MAX_PLANES 2
-#define NUM_PBUTTON 6
+#define NUM_PBUTTON 7
 #define NUM_PSLIDER 6
 #include "Scene.h"
 
@@ -31,6 +31,7 @@ private:
 	// 3: Prev Decal
 	// 4: Next Decal
 	// 5: Back To Main
+	// 6: Purchase
 
 	Button* slArray[NUM_PSLIDER];
 	

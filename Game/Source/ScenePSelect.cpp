@@ -54,6 +54,9 @@ void ScenePSelect::Init()
 	slArray[0]->init(Vector3(center.x , center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	slArray[1]->init(Vector3(center.x , center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	slArray[2]->init(Vector3(center.x , center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+
+	// Purchase button
+	bArray[6]->init(Vector3(center.x, center.y + 50.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 															  
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	
@@ -73,6 +76,7 @@ void ScenePSelect::Init()
 	sArray[3] = "< Decal";
 	sArray[4] = "Decal >";
 	sArray[5] = "Back";
+	sArray[6] = "Purchase";
 
 	bLightEnabled = true;
 	Math::InitRNG();
@@ -122,7 +126,6 @@ void ScenePSelect::Update(double dt)
 		default:
 			break;
 		}
-
 	}
 
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -150,7 +153,12 @@ void ScenePSelect::Update(double dt)
 			SceneManager::planeColor[0] = planeColor[0];
 			SceneManager::planeColor[1] = planeColor[1];
 			meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal];
-			SceneManager::getSceneManager().switchToScene("Plane", this);
+
+			if (SceneManager::planeUnlock[currentPlane] == true)
+			{
+				SceneManager::getSceneManager().switchToScene("Plane", this);
+			}
+			
 			break;
 		case 1:
 			--currentPlane;
@@ -166,6 +174,14 @@ void ScenePSelect::Update(double dt)
 			break;
 		case 5:
 			SceneManager::getSceneManager().switchToScene("Menu", this);
+			break;
+		case 6:
+			// Purchase plane
+			if (SceneManager::money > SceneManager::planeCost[currentPlane])
+			{
+				SceneManager::money -= SceneManager::planeCost[currentPlane];
+				SceneManager::planeUnlock[currentPlane] = true;
+			}
 			break;
 		default:
 			break;
@@ -246,6 +262,14 @@ void ScenePSelect::Render()
 
 	for (int i = 0; i < NUM_PBUTTON; ++i)
 	{
+		// Render purchase button only when the current plane is not bought
+		if (i == 6)
+		{
+			if (SceneManager::planeUnlock[currentPlane] == true)
+			{
+				continue;
+			}
+		}
 		RGButtonRender(bArray[i], sArray[i]);
 	}
 	for (int i = 0; i < NUM_PSLIDER; ++i)
@@ -302,26 +326,34 @@ void ScenePSelect::Render()
 		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ 1.f,1.f,1.f });
 	}
 
+	RenderTextOnScreen(meshList[GEO_TEXT], "Monies:", Color(0, 0, 0), 3, 66, 54);
+	std::ostringstream monies;
+	monies << "$" << SceneManager::money;
+	RenderTextOnScreen(meshList[GEO_TEXT], monies.str(), Color(0, 0, 0), 3, 66, 51);
+
+	// Render cost of plane
+	if (SceneManager::planeUnlock[currentPlane] == false)
+	{
+		std::ostringstream cost;
+		cost << "$" << SceneManager::planeCost[currentPlane];
+		RenderTextOnScreen(meshList[GEO_TEXT], cost.str(), Color(0.3f, 0, 0), 3, 36, 40);
+	}
+
 	//RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
-	renderButton();
+	//renderButton();
 }
 
 void ScenePSelect::Exit()
 {
+	// As we exit the scene, write the new data to the txt file
+	SceneManager::getSceneManager().writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
+
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
 		if (meshList[i])
 			delete meshList[i];
 	}
-	//for (int i = 0; i < NUM_PBUTTON; ++i)
-	//{
-	//	delete bArray[i];
-	//}
-	//for (int i = 0; i < NUM_PSLIDER; ++i)
-	//{
-	//	delete slArray[i];
-	//}
 
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 

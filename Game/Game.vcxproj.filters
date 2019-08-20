@@ -80,5 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Scores\highscores.txt" />
+    <Text Include="SaveData\highscores.txt" />
+    <Text Include="SaveData\monies.txt" />
   </ItemGroup>
 </Project>

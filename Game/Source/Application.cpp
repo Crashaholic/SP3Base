@@ -138,6 +138,7 @@ void Application::Init()
 	manager->addScene("2Select", sc8);
 	manager->addScene("2P", sc9);
 	manager->firstScene("Menu");
+	manager->readMonies();
 }
 
 void Application::Run()
