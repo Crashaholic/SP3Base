@@ -23,6 +23,10 @@ Scene2P::~Scene2P()
 
 void Scene2P::Init()
 {
+	// We have to do this first before calling scene init
+	cleanVar();
+	GOManager::GetInstance()->wind = false;
+
 	Scene::Init();
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
@@ -36,7 +40,6 @@ void Scene2P::Init()
 
 	bLightEnabled = true;
 	m_speed = 1.f;
-	m_gravity.Set(0, -9.8f, 0); 
 	bulletCooldown = 0.f;
 	tankSpeed = 5.f;
 	Math::InitRNG();
@@ -74,12 +77,10 @@ void Scene2P::Init()
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
-
+	
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
-	cleanVar();
-
-	GOManager::GetInstance()->upgrade_1 += 1;
+	GOManager::GetInstance()->upgrade_1 = 1;
 }
 
 void Scene2P::Update(double dt)
@@ -236,7 +237,7 @@ void Scene2P::Render()
 	render2PHUD();
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->planeLives), Color(0, 0, 0), 3, 4.0f, 55.5f);
 	RenderTextOnScreen(meshList[GEO_TEXT], to_string(GOManager::GetInstance()->tankLives),	Color(0, 0, 0), 3, 4.0f, 50.5f);
-	windRender();
+	//windRender();
 }
 
 void Scene2P::Exit()

@@ -43,7 +43,6 @@ void SceneTank::Init()
 
 	bLightEnabled = true;
 	m_speed = 1.f;
-	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
 
 	terr.GenerateRandomHeight(m_worldWidth);

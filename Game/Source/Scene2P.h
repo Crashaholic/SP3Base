@@ -46,7 +46,6 @@ private:
 
 	// Physics
 	float m_speed;
-	Vector3 m_gravity;
 
 	unsigned decal1;
 

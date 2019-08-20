@@ -43,7 +43,6 @@ private:
 
 	// Physics
 	float m_speed;
-	Vector3 m_gravity;
 
 	std::vector<PlaneEnemy*> enemyList;
 

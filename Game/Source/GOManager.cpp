@@ -25,6 +25,7 @@ GOManager::GOManager()
 	windVectorN = Vector3(1, 0, 0);
 	windBT = WIND_TIMER;
 	rain = false;
+	wind = true;
 }
 
 GOManager::~GOManager()
@@ -64,7 +65,14 @@ void GOManager::update(double dt)
 
 		windVectorN = Vector3(cos(Math::DegreeToRadian(windAngleN)), sin(Math::DegreeToRadian(windAngleN)), 0.0f);
 	}
-	windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+	if (wind)
+	{
+		windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+	}
+	else
+	{
+		windVector.SetZero();
+	}
 
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
@@ -74,7 +82,7 @@ void GOManager::update(double dt)
 			go->Update(dt);
 			if (go->hasGravity)
 			{
-				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+				go->vel += gravity * static_cast<float>(dt);
 				go->vel += windVector * WIND_POWER * static_cast<float>(dt);
 			}
 
@@ -90,7 +98,7 @@ void GOManager::update(double dt)
 						Math::RandFloatMinMax(-50.0f - windVector.x * 100.0f, 226.0f - windVector.x * 100.0f),
 						Math::RandFloatMinMax(100.0f + go->scale.y, 270.0f),
 						0.0f);
-					go->vel = windVector * WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+					go->vel = windVector * WIND_POWER + gravity;
 				}
 				continue;
 			}
@@ -157,7 +165,6 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
-		case GameObject::PLAYER_TANK: //test
 		case GameObject::GO_CUBE:
 		{
 			return true;
@@ -341,7 +348,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
 		case GameObject::ENEMY_BUILDING:
 		{
-			toExplosion(go2);
+			toExplosion(go2, false);
 			LOG_TRACE("Player collided with enemy");
 
 			// check go1 again
@@ -433,7 +440,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
-		toExplosion(go1);
+		toExplosion(go1, false);
 	}
 }
 
@@ -530,7 +537,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with terrain");
-		toExplosion(go);
+		toExplosion(go, false);
 	}
 }
 
@@ -544,7 +551,7 @@ void GOManager::planeDeath(GameObject * go)
 	ex->pos = go->pos;
 	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
-	toExplosion(ex);
+	toExplosion(ex, true);
 	if (planeLives <= 0)
 	{
 		int accuracyBonus = static_cast<int>(planeAccuracy * planeKills);
@@ -569,7 +576,7 @@ void GOManager::tankDeath(GameObject* go)
 	ex->pos = go->pos;
 	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
-	toExplosion(ex);
+	toExplosion(ex, true);
 	if (tankLives <= 0)
 	{
 		int accuracyBonus = static_cast<int>(tankAccuracy * tankKills);
@@ -584,7 +591,7 @@ void GOManager::tankDeath(GameObject* go)
 	}
 }
 
-void GOManager::toExplosion(GameObject * go)
+void GOManager::toExplosion(GameObject * go, bool fromPlayer)
 {
 	go->type = GameObject::EXPLOSION;
 	go->scale = Vector3(1, 1, 1) * go->exRadius;
@@ -616,34 +623,36 @@ void GOManager::toExplosion(GameObject * go)
 		{
 			if (length < go->exRadius)
 			{
-				exResponse(a);
+				exResponse(a, fromPlayer);
 			}
 		}
 	}
 }
 
-void GOManager::exResponse(GameObject * go)
+void GOManager::exResponse(GameObject * go, bool fromPlayer)
 {
 	if (go->active == true)
 	{
-		switch (go->type)
+		if (fromPlayer == false)
 		{
-		case GameObject::PLAYER_PLANE_HARRIER:
-		case GameObject::PLAYER_PLANE_KOMET:
-		case GameObject::PLAYER_PLANE_A10:
-		{
-			planeDeath(go);
-			break;
-		}
-		case GameObject::PLAYER_TANK:
-		{
-			tankDeath(go);
-			break;
-		}
-		default:
-		{
-			break;
-		}
+			switch (go->type)
+			{
+			case GameObject::PLAYER_PLANE_KOMET:
+			case GameObject::PLAYER_PLANE_A10:
+			{
+				planeDeath(go);
+				break;
+			}
+			case GameObject::PLAYER_TANK:
+			{
+				tankDeath(go);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
 		}
 		enemyDeath(go);
 	}
