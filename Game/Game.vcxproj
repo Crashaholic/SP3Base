@@ -153,6 +153,7 @@
     <None Include="Shader\comg.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="SaveData\highscores.txt" />
     <Text Include="Scores\highscores.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
