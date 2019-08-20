@@ -9,7 +9,7 @@ class TankEnemy : public Tank, public EnemyBase
 {
 public:
 	TankEnemy();
-	TankEnemy(vec3 pos, GameObject* ref);
+	TankEnemy(vec3 pos, GameObject* ref, float m_worldWidth);
 	~TankEnemy();
 
 	// ref is Player's GO reference
