@@ -32,6 +32,7 @@ public:
 	virtual void AddPri(int num);
 	virtual void AddSec(int num);
 	virtual void Update(double dt);
+	virtual void Turn_CWCCW(double dt, bool CCW);
 	void ReadInput(double dt, char left, char right, char pri, char sec);
 	int getPri();
 	int getSec();
