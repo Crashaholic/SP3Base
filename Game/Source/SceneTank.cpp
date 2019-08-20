@@ -51,8 +51,8 @@ void SceneTank::Init()
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
 
-	SpawnPos1 = vec3(-2, 0, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, 0, 0);
+	SpawnPos1 = vec3(-4.9999f, 0, 0);
+	SpawnPos2 = vec3(m_worldWidth + 4.9999f, 0, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;

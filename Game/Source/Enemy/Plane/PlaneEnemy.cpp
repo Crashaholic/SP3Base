@@ -53,23 +53,6 @@ void PlaneEnemy::Update(double dt)
 {
 	if (GOref->active)
 	{
-		//if (GOref->pos.x < targetMov.x && GOref->vel.x > 0 || GOref->pos.x > targetMov.x && GOref->vel.x < 0)
-		//{
-		//	//LOG_NONE("targ.y: % | pos.y: %", targetMov.y, GOref->pos.y);
-		//}
-		//else
-		//{
-			//if (GOref->pos.x > m_worldWidth / 2.0f)
-			//{
-			//	MoveTo(vec3(10, Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0));
-			//	GOref->angle = Math::DegreeToRadian(GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
-			//}
-			//else
-			//{
-			//	MoveTo(vec3(m_worldWidth - 10, Math::RandFloatMinMax(originalHeight - HEIGHT_RANGE, originalHeight + HEIGHT_RANGE), 0));
-			//	GOref->angle = Math::DegreeToRadian(180 - GetAngle(GOref->dir * 50, (targetMov - GOref->pos).Normalized() * 50));
-			//}
-		//}
 		if (GOref->pos.x > m_worldWidth - 5)
 		{
 			directionleft = true;

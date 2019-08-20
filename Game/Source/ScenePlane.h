@@ -7,6 +7,8 @@
 #include "Plane/A10.h"
 #include "Plane/Komet.h"
 
+#include "Enemy/Tank/TankEnemy.h"
+
 class ScenePlane : public Scene
 {
 	static const int MAX_SPEED = 20;
@@ -58,6 +60,8 @@ private:
 	float tankSpeed;
 	double bulletCooldown;
 	bool tUpgrade;
+
+	std::vector<TankEnemy*> enemyList;
 };
 
 #endif

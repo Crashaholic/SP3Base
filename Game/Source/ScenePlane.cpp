@@ -98,6 +98,10 @@ void ScenePlane::Update(double dt)
 {
 	player->Update(dt);
 	plane->Update(dt);
+	for (uint32_t i = 0; i < enemyList.size(); i++)
+	{
+		enemyList[i]->Update(dt);
+	}
 	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -294,11 +298,7 @@ void ScenePlane::EndWave()
 		building->hasGravity = false;
 		building->scale = Vector3(1, 1, 1)*10;
 		building->norm.Set(1, 0, 0);
-		//building->
 	}
-
-	//tank->pos = terr.GetHeight(tank->pos);
-	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
@@ -311,10 +311,8 @@ void ScenePlane::SpawnEnemy()
 	else
 	{
 		bool spawner = rand() % 2;
-		//GameObject* t = GOManager::GetInstance()->fetchGO();
-		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
-		//TODO: TANK TARGET/MOVE CODE HERE
-		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
+		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
+		enemyList.push_back(new TankEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, player->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

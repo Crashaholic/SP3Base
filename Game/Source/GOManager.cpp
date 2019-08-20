@@ -664,7 +664,7 @@ GameObject * GOManager::fetchGO()
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	return m_goList[m_goList.size() - 1];
+	return fetchGO();
 }
 
 std::vector<GameObject*>& GOManager::getlist()
