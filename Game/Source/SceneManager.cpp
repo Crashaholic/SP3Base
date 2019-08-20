@@ -1,12 +1,15 @@
 #include "SceneManager.h"
 
-int				SceneManager::planeChoice;
+int			SceneManager::planeChoice;
 std::string	SceneManager::planeDecalChoice;
-Color			SceneManager::planeColor[2];
-int				SceneManager::tankChoice;
+Color		SceneManager::planeColor[2];
+int			SceneManager::tankChoice;
 std::string	SceneManager::tankDecalChoice;
-Color			SceneManager::tankColor[2];
+Color		SceneManager::tankColor[2];
 
+int			SceneManager::money;
+bool		SceneManager::warthog;
+bool		SceneManager::harrier;
 
 SceneManager::SceneManager()
 {
@@ -23,10 +26,12 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-	// WIP
-	// unordered_map<string, Scene*> empty;
-	// using std::swap;
-	// swap(sceneList, empty);
+	// Legacy
+	/*
+	unordered_map<string, Scene*> empty;
+	using std::swap;
+	swap(sceneList, empty);
+	*/
 }
 
 void SceneManager::firstScene(string name)
@@ -63,4 +68,48 @@ Scene * SceneManager::getActiveScene()
 unordered_map<string, Scene*>& SceneManager::getList()
 {
 	return sceneList;
+}
+
+void SceneManager::readMonies()
+{
+	string line;
+	ifstream stream;
+	stream.open("SaveData/monies.txt");
+	if (!stream)
+	{
+		cout << "File doesn't exist." << endl;
+		exit(1);
+	}
+	while (getline(stream, line))
+	{
+		int comma = 0;
+		int markr = 0; // after first comma
+
+		for (unsigned int i = 0; i < line.length(); ++i)
+		{
+			// detect comma in line
+			// note: second param in substr() indicates length
+			if (line[i] == ',')
+			{
+				if (comma == 0)
+				{
+					money = stoi(line.substr(0, i));
+				}
+				if (comma == 1)
+				{
+					warthog = stoi(line.substr(i - 1, 1));
+					harrier = stoi(line.substr(i + 1, 1));
+				}
+				++comma;
+			}
+		}
+	}
+	stream.close();
+}
+
+void SceneManager::writeMonies(int money, bool warthog, bool harrier)
+{
+	fstream stream;
+	stream.open("SaveData/monies.txt");
+	stream << money << "," << warthog << "," << harrier;
 }
