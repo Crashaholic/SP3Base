@@ -32,6 +32,7 @@ void Tank::Fire()
 	{
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
+		object->wrapMode = GameObject::SW_CLEAR;
 		object->type = GameObject::PLAYER_PROJECTILE_SHELL;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = GOref->pos;

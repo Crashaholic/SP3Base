@@ -605,7 +605,7 @@ void Scene::goWrap()
 				hit = true;
 				break;
 			case GameObject::SW_CLEAR:
-				if (go->pos.x > m_worldWidth
+				if (go->pos.x > m_worldWidth || go->pos.y > m_worldHeight*2
 					|| go->pos.x < 0 || go->pos.y < 0)
 					go->active = false;
 				hit = true;
