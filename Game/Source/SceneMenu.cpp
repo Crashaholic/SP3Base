@@ -9,7 +9,8 @@
 #include <sstream>
 
 #include "SceneManager.h"
-#include "../../Game/SoundEngine/SoundEngine.h"
+#include "Logging.h"
+
 SceneMenu::SceneMenu()
 {
 }
@@ -55,12 +56,9 @@ void SceneMenu::Init()
 	sArray[2] = "2 Player";
 	sArray[3] = "Highscores";
 	sArray[4] = "Mute";
-	muted = false;
-	sound = true;
-	choice = 0;
 
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	//sound = true;
+	choice = 0;
 }
 
 void SceneMenu::Update(double dt)
@@ -115,13 +113,12 @@ void SceneMenu::Update(double dt)
 			break;
 		case 3:
 			SceneManager::getSceneManager().switchToScene("Score", this);
-			CSoundEngine::GetInstance()->PlayASound("Select");
 			break;
 		case 4:
-			if (muted == false)
-				muted = true;
+			if (GOManager::GetInstance()->muted == false)
+				GOManager::GetInstance()->muted = true;
 			else
-				muted = false;
+				GOManager::GetInstance()->muted = false;
 			break;
 		default:
 			break;
@@ -134,7 +131,7 @@ void SceneMenu::Update(double dt)
 		case 3:
 		case 4:
 		case 5:
-			CSoundEngine::GetInstance()->PlayASound("Select");
+			GOManager::GetInstance()->playSound("Select");
 		}
 	}
 	static bool bRButtonState = false;
@@ -148,21 +145,21 @@ void SceneMenu::Update(double dt)
 	}
 
 	// Button checks
-	if (muted == false)
+	if (GOManager::GetInstance()->muted == false)
 	{
 		sArray[4] = "Mute";
-		CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
-		sound = true;
+		//CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+		//sound = true;
 	}
-	if (muted == true)
+	if (GOManager::GetInstance()->muted == true)
 	{
 		sArray[4] = "Unmute";
-		CSoundEngine::GetInstance()->Destroy();
-		sound = false;
+		//CSoundEngine::GetInstance()->Destroy();
+		//sound = false;
 	}
 	if (Application::IsKeyPressed('O'))
 	{
-		std::cout << sound << std::endl;
+		LOG_NONE("Muted: %", GOManager::GetInstance()->muted);
 	}
 
 	int inactive = 0;

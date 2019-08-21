@@ -1,5 +1,4 @@
 #include "Tank.h"
-#include "../../Game/SoundEngine/SoundEngine.h"
 
 Tank::Tank()
 {
@@ -11,8 +10,6 @@ Tank::~Tank()
 
 void Tank::Init()
 {
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
 }
 
 void Tank::Update(double dt)
@@ -44,7 +41,7 @@ void Tank::Fire()
 		bulletCooldown = (double)Math::Max(1.5f - (GOManager::GetInstance()->upgrade_1 * 0.5f), 0.5f);
 		if (object->active == true)
 		{
-			CSoundEngine::GetInstance()->PlayASound("TShoot");
+			GOManager::GetInstance()->playSound("TShoot");
 		}
 	}
 }

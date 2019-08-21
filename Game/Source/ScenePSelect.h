@@ -6,7 +6,7 @@
 #define NUM_PBUTTON 7
 #define NUM_PSLIDER 6
 #include "Scene.h"
-#include "SceneMenu.h"
+
 class ScenePSelect : public Scene
 {
 public:
@@ -42,9 +42,6 @@ private:
 
 	unsigned int decals[MAX_PLANES][MAX_PDECALS + 1];
 	int planes[MAX_PLANES];
-
-	SceneMenu* menu;
-
 };
 
 #endif

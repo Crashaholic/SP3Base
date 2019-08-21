@@ -4,7 +4,9 @@
 #include "SingletonTemplate.h"
 #include "Vector3.h"
 #include "GameObject.h"
+#include "../../Game/SoundEngine/SoundEngine.h"
 #include <vector>
+#include <string>
 
 class GOManager:public Singleton<GOManager>
 {
@@ -101,6 +103,9 @@ public:
 	Terrain* terreference;
 
 	const Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
+
+	bool muted;
+	void playSound(std::string name);
 };
 
 #endif

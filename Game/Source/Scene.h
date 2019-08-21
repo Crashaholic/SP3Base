@@ -17,6 +17,8 @@
 #include "Plane/Komet.h"
 #include "Plane/Harrier.h"
 
+#include "Logging.h"
+
 class Scene
 {
 protected:

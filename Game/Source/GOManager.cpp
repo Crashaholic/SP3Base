@@ -4,7 +4,6 @@
 #include "GOManager.h"
 #include "SceneManager.h"
 #include "Logging.h"
-#include "../../Game/SoundEngine/SoundEngine.h"
 
 GOManager::GOManager()
 {
@@ -27,6 +26,7 @@ GOManager::GOManager()
 	windBT = WIND_TIMER;
 	rain = false;
 	wind = true;
+	muted = false;
 }
 
 GOManager::~GOManager()
@@ -45,6 +45,8 @@ void GOManager::init()
 	CSoundEngine::GetInstance()->AddSound("HitEnemy", "Audio//Hit enemy.mp3");
 	CSoundEngine::GetInstance()->AddSound("HitTerr", "Audio//Hit terrain.wav");
 	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
 
 	for (unsigned int i = 0; i < 10; ++i)
 	{
@@ -382,7 +384,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			LOG_TRACE("Player picked up UPGRADE_1");
 			++upgrade_1;
-			CSoundEngine::GetInstance()->PlayASound("Upgrade");
+			playSound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -390,7 +392,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			LOG_TRACE("Player picked up UPGRADE_2");
 			++upgrade_2;
-			CSoundEngine::GetInstance()->PlayASound("Upgrade");
+			playSound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -399,7 +401,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 			LOG_TRACE("Player picked up UPGRADE_3");
 			++planeLives;
 			++tankLives;
-			CSoundEngine::GetInstance()->PlayASound("Upgrade");
+			playSound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -449,7 +451,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
-		CSoundEngine::GetInstance()->PlayASound("HitEnemy");
+		playSound("HitEnemy");
 		toExplosion(go1, false);
 	}
 }
@@ -547,7 +549,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with terrain");
-		CSoundEngine::GetInstance()->PlayASound("HitTerr");
+		playSound("HitTerr");
 		toExplosion(go, false);
 	}
 }
@@ -849,5 +851,13 @@ void GOManager::enemyDeath(GameObject * go)
 	{
 		break;
 	}
+	}
+}
+
+void GOManager::playSound(std::string name)
+{
+	if (muted == false)
+	{
+		CSoundEngine::GetInstance()->PlayASound(name);
 	}
 }

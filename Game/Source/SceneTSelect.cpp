@@ -9,7 +9,6 @@
 #include <sstream>
 
 #include "SceneManager.h"
-#include "../../Game/SoundEngine/SoundEngine.h"
 
 SceneTSelect::SceneTSelect()
 {
@@ -72,9 +71,6 @@ void SceneTSelect::Init()
 
 	bLightEnabled = true;
 	Math::InitRNG();
-
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
 }
 
 void SceneTSelect::Update(double dt)
@@ -191,7 +187,7 @@ void SceneTSelect::Update(double dt)
 		case 3:
 		case 4:
 		case 5:
-			CSoundEngine::GetInstance()->PlayASound("Select");
+			GOManager::GetInstance()->playSound("Select");
 		}
 	}
 	currentTank = Math::Wrap(currentTank, 0, MAX_TANKS - 1);

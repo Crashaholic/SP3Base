@@ -18,7 +18,7 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	bool sound;
+	//bool sound;
 private:
 	Camera camera;
 	float fps;
@@ -28,7 +28,6 @@ private:
 
 	// Text
 	string sArray[5];
-	bool muted;
 	int choice;
 };
 

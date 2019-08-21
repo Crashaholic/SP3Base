@@ -10,7 +10,6 @@
 
 #include "SceneManager.h"
 #include "Logging.h"
-#include "../../Game/SoundEngine/SoundEngine.h"
 
 Scene2Select::Scene2Select()
 {
@@ -116,9 +115,6 @@ void Scene2Select::Init()
 	Math::InitRNG();
 	currentDecal1 = 0;
 	currentPlane = 0;
-
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
 }
 
 void Scene2Select::Update(double dt)
@@ -284,7 +280,7 @@ void Scene2Select::Update(double dt)
 		case 3:
 		case 4:
 		case 5:
-			CSoundEngine::GetInstance()->PlayASound("Select");
+			GOManager::GetInstance()->playSound("Select");
 		}
 		switch (choice2)
 		{
@@ -294,7 +290,7 @@ void Scene2Select::Update(double dt)
 		case 3:
 		case 4:
 		case 5:
-			CSoundEngine::GetInstance()->PlayASound("Select");
+			GOManager::GetInstance()->playSound("Select");
 		}
 	}
 	currentPlane = Math::Wrap(currentPlane, 0, MAX_PLANES - 1);
