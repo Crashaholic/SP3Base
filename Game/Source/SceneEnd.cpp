@@ -28,7 +28,6 @@ void SceneEnd::Init()
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	bLightEnabled = true;
 	m_speed = 1.f;
-	m_gravity.Set(0, -9.8f, 0);
 	Math::InitRNG();
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	m_ghost->active = true;

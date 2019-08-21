@@ -26,6 +26,7 @@ GOManager::GOManager()
 	windVectorN = Vector3(1, 0, 0);
 	windBT = WIND_TIMER;
 	rain = false;
+	wind = true;
 }
 
 GOManager::~GOManager()
@@ -70,7 +71,14 @@ void GOManager::update(double dt)
 
 		windVectorN = Vector3(cos(Math::DegreeToRadian(windAngleN)), sin(Math::DegreeToRadian(windAngleN)), 0.0f);
 	}
-	windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+	if (wind)
+	{
+		windVector = (windVector + windVectorN * static_cast<float>(dt)).Normalized();
+	}
+	else
+	{
+		windVector.SetZero();
+	}
 
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
@@ -78,10 +86,9 @@ void GOManager::update(double dt)
 		if (go->active)
 		{
 			go->Update(dt);
-			go->pos += go->vel * static_cast<float>(dt);
 			if (go->hasGravity)
 			{
-				go->vel += Vector3(0.0f, -9.8f, 0.0f) * static_cast<float>(dt);
+				go->vel += gravity * static_cast<float>(dt);
 				go->vel += windVector * WIND_POWER * static_cast<float>(dt);
 			}
 
@@ -97,7 +104,7 @@ void GOManager::update(double dt)
 						Math::RandFloatMinMax(-50.0f - windVector.x * 100.0f, 226.0f - windVector.x * 100.0f),
 						Math::RandFloatMinMax(100.0f + go->scale.y, 270.0f),
 						0.0f);
-					go->vel = windVector * WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+					go->vel = windVector * WIND_POWER + gravity;
 				}
 				continue;
 			}
@@ -149,6 +156,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 	switch (go1->type)
 	{
 	// Player To
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
@@ -163,7 +171,6 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::UPGRADE_1:
 		case GameObject::UPGRADE_2:
 		case GameObject::UPGRADE_3:
-		case GameObject::PLAYER_TANK: //test
 		case GameObject::GO_CUBE:
 		{
 			return true;
@@ -173,6 +180,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		{
 			switch (go1->type)
 			{
+			case GameObject::PLAYER_PLANE_HARRIER:
 			case GameObject::PLAYER_PLANE_KOMET:
 			case GameObject::PLAYER_PLANE_A10:
 				return true;
@@ -210,6 +218,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_PLANE_PASSIVE:
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		// case GameObject::ENEMY_BUILDING:
+		case GameObject::PLAYER_PLANE_HARRIER:
 		case GameObject::PLAYER_PLANE_KOMET:
 		case GameObject::PLAYER_PLANE_A10:
 			return true;
@@ -222,6 +231,7 @@ bool GOManager::collisionGate(GameObject * go1, GameObject * go2)
 	{
 		switch (go2->type)
 		{
+		case GameObject::PLAYER_PLANE_HARRIER:
 		case GameObject::PLAYER_PLANE_KOMET:
 		case GameObject::PLAYER_PLANE_A10:
 		case GameObject::PLAYER_TANK:
@@ -330,6 +340,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	switch (go1->type)
 	{
 	// Player
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::PLAYER_TANK:
@@ -343,12 +354,13 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		case GameObject::ENEMY_TANK_AGGRESSIVE:
 		case GameObject::ENEMY_BUILDING:
 		{
-			toExplosion(go2);
+			toExplosion(go2, false);
 			LOG_TRACE("Player collided with enemy");
 
 			// check go1 again
 			switch (go1->type)
 			{
+			case GameObject::PLAYER_PLANE_HARRIER:
 			case GameObject::PLAYER_PLANE_KOMET:
 			case GameObject::PLAYER_PLANE_A10:
 			{
@@ -439,6 +451,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		enemyDeath(go2);
 		toExplosion(go1);
 		CSoundEngine::GetInstance()->PlayASound("HitEnemy");
+		toExplosion(go1, false);
 	}
 }
 
@@ -446,6 +459,7 @@ bool GOManager::terrainGate(GameObject * go)
 {
 	switch (go->type)
 	{
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	case GameObject::UPGRADE_1:
@@ -477,6 +491,7 @@ void GOManager::terrainResponse(GameObject * go)
 	// Handles response between game objects and terrain
 	switch (go->type)
 	{
+	case GameObject::PLAYER_PLANE_HARRIER:
 	case GameObject::PLAYER_PLANE_KOMET:
 	case GameObject::PLAYER_PLANE_A10:
 	{
@@ -535,6 +550,7 @@ void GOManager::terrainResponse(GameObject * go)
 		LOG_NONE("Projectile collided with terrain");
 		toExplosion(go);
 		CSoundEngine::GetInstance()->PlayASound("HitTerr");
+		toExplosion(go, false);
 	}
 }
 
@@ -546,8 +562,9 @@ void GOManager::planeDeath(GameObject * go)
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
-	toExplosion(ex);
+	toExplosion(ex, true);
 	if (planeLives <= 0)
 	{
 		int accuracyBonus = static_cast<int>(planeAccuracy * planeKills);
@@ -570,8 +587,9 @@ void GOManager::tankDeath(GameObject* go)
 	GameObject* ex = fetchGO();
 	ex->exRadius = 10.0f;
 	ex->pos = go->pos;
+	terreference->DeformTerrain(ex->pos, ex->exRadius);
 	go->active = false;
-	toExplosion(ex);
+	toExplosion(ex, true);
 	if (tankLives <= 0)
 	{
 		int accuracyBonus = static_cast<int>(tankAccuracy * tankKills);
@@ -586,7 +604,7 @@ void GOManager::tankDeath(GameObject* go)
 	}
 }
 
-void GOManager::toExplosion(GameObject * go)
+void GOManager::toExplosion(GameObject * go, bool fromPlayer)
 {
 	go->type = GameObject::EXPLOSION;
 	go->scale = Vector3(1, 1, 1) * go->exRadius;
@@ -618,33 +636,37 @@ void GOManager::toExplosion(GameObject * go)
 		{
 			if (length < go->exRadius)
 			{
-				exResponse(a);
+				exResponse(a, fromPlayer);
 			}
 		}
 	}
 }
 
-void GOManager::exResponse(GameObject * go)
+void GOManager::exResponse(GameObject * go, bool fromPlayer)
 {
 	if (go->active == true)
 	{
-		switch (go->type)
+		if (fromPlayer == false)
 		{
-		case GameObject::PLAYER_PLANE_KOMET:
-		case GameObject::PLAYER_PLANE_A10:
-		{
-			planeDeath(go);
-			break;
-		}
-		case GameObject::PLAYER_TANK:
-		{
-			tankDeath(go);
-			break;
-		}
-		default:
-		{
-			break;
-		}
+			switch (go->type)
+			{
+			case GameObject::PLAYER_PLANE_HARRIER:
+			case GameObject::PLAYER_PLANE_KOMET:
+			case GameObject::PLAYER_PLANE_A10:
+			{
+				planeDeath(go);
+				break;
+			}
+			case GameObject::PLAYER_TANK:
+			{
+				tankDeath(go);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
 		}
 		enemyDeath(go);
 	}
@@ -675,7 +697,38 @@ GameObject * GOManager::fetchGO()
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
 	}
-	return m_goList[m_goList.size() - 1];
+	return fetchGO();
+}
+
+GameObject * GOManager::fetchReservedGO()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if ((!go->active) && (go->reserved))
+		{
+			go->active = true;
+
+			go->vel.SetZero();
+			go->pos.SetZero();
+			go->hasLifeTime = false;
+			go->hasGravity = false;
+			go->lifeTime = 0.0;
+			go->transparency = 1.0f;
+			for (int i = 0; i < 8; ++i)
+				go->color[i].Set(1, 1, 1);
+			go->wrapMode = GameObject::SW_CLEAR;
+			go->type = GameObject::GO_NONE;
+			return go;
+		}
+	}
+	for (unsigned int i = 0; i < 10; ++i)
+	{
+		GameObject* go = new GameObject(GameObject::GO_NONE);
+		go->reserved = true;
+		m_goList.push_back(go);
+	}
+	return fetchReservedGO();
 }
 
 std::vector<GameObject*>& GOManager::getlist()

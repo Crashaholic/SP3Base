@@ -13,7 +13,7 @@ protected:
 public:
 	A10();
 	~A10();
-private:
+protected:
 	const double reloadSpeed = 0.05;
 	const double sprayRecoverTime = 1.0;
 	const float inaccuracy = 5.0f;

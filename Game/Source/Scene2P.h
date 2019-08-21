@@ -4,8 +4,6 @@
 #include "Scene.h"
 #include "Terrain.h"
 //Include All planes here
-#include "Plane/A10.h"
-#include "Plane/Komet.h"
 
 class Scene2P : public Scene
 {
@@ -48,7 +46,6 @@ private:
 
 	// Physics
 	float m_speed;
-	Vector3 m_gravity;
 
 	unsigned decal1;
 

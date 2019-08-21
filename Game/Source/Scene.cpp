@@ -75,11 +75,17 @@ void Scene::Init()
 	meshList[GEO_PLAYER_PLANE_A10]->textureID[0] = LoadTGA("Image//A10.tga");
 	meshList[GEO_PLAYER_PLANE_KOMET] = MeshBuilder::GenerateQuad("PLAYER_PLANE_KOMET", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_KOMET]->textureID[0] = LoadTGA("Image//Komet.tga");
+	meshList[GEO_PLAYER_PLANE_HARRIER] = MeshBuilder::GenerateQuad("PLAYER_PLANE_HARRIER", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_PLANE_HARRIER]->textureID[0] = LoadTGA("Image//Harrier.tga");
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[1] = LoadTGA("Image//Bomb1decal.tga");
+	meshList[GEO_ENEMY_TANK_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_PASSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_TANK_PASSIVE]->textureID[0] = LoadTGA("Image//Tank1.tga");
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_AGGRESSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANK]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
@@ -135,8 +141,18 @@ void Scene::Init()
 				Math::RandFloatMinMax(-150.0f, 126.0f),
 				Math::RandFloatMinMax(100.0f + a->scale.y, 270.0f),
 				0.0f);
-			a->vel = GOManager::GetInstance()->windVector * GOManager::GetInstance()->WIND_POWER + Vector3(0.0f, -9.8f, 0.0f);
+
+			if (GOManager::GetInstance()->wind)
+			{
+				a->vel = GOManager::GetInstance()->windVector * GOManager::GetInstance()->WIND_POWER + GOManager::GetInstance()->gravity;
+			}
+			else
+			{
+				a->vel = GOManager::GetInstance()->gravity;
+			}
+
 			a->hasGravity = true;
+			a->reserved = true;
 		}
 	}
 }
@@ -316,8 +332,24 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::PLAYER_PLANE_KOMET:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
 			break;
+		case GameObject::PLAYER_PLANE_HARRIER:
+			RenderMesh(meshList[GEO_PLAYER_PLANE_HARRIER], false);
+			break;
 		case GameObject::PLAYER_TANK:
 			RenderMesh(meshList[GEO_PLAYER_TANK], false);
+			modelStack.PopMatrix();
+			modelStack.PushMatrix();
+			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+			modelStack.Rotate(Math::RadianToDegree(atan2(go->dir.y, go->dir.x)), 0, 0, 1);
+			modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
+			break;
+		case GameObject::ENEMY_TANK_PASSIVE:
+			RenderMesh(meshList[GEO_ENEMY_TANK_PASSIVE], false);
+			break;
+
+		case GameObject::ENEMY_TANK_AGGRESSIVE:
+			RenderMesh(meshList[GEO_ENEMY_TANK_AGGRESSIVE], false);
 			modelStack.PopMatrix();
 			modelStack.PushMatrix();
 			modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -541,6 +573,7 @@ void Scene::cleanVar()
 	GOManager::GetInstance()->windVector = Vector3(1, 0, 0);
 	GOManager::GetInstance()->windVectorN = Vector3(1, 0, 0);
 	GOManager::GetInstance()->rain = false;
+	GOManager::GetInstance()->wind = true;
 }
 
 void Scene::RGButtonRender(Button * b, std::string s)
@@ -604,7 +637,7 @@ void Scene::goWrap()
 				hit = true;
 				break;
 			case GameObject::SW_CLEAR:
-				if (go->pos.x > m_worldWidth
+				if (go->pos.x > m_worldWidth || go->pos.y > m_worldHeight*2
 					|| go->pos.x < 0 || go->pos.y < 0)
 					go->active = false;
 				hit = true;
@@ -670,7 +703,8 @@ void Scene::goWrap()
 					go->pos.y = 0;
 					hit = true;
 				}
-				go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
+				if (hit)
+					go->angle = /*Math::RadianToDegree*/(atan2(go->vel.y, go->vel.x));
 				break;
 			case GameObject::SW_NONE:
 				break;

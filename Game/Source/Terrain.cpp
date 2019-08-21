@@ -17,12 +17,54 @@ Terrain::~Terrain()
 	}
 }
 
-Vector3 Terrain::GetNormal(Vector3 ObjectPosition)
+Vector3 Terrain::GetHeight(Vector3 Position)
 {
+	if (Position.x > Points[TERRAIN_SIZE - 1].x) // checking for outside of screen on the right side
+	{
+		float newY;
+		newY = Points[TERRAIN_SIZE - 2].y +
+			(((Points[TERRAIN_SIZE - 1].x - 1.f / TERRAIN_SIZE) - Points[TERRAIN_SIZE - 2].x) /
+			(Points[TERRAIN_SIZE - 1].x - Points[TERRAIN_SIZE - 2].x)) 
+			* (Points[TERRAIN_SIZE - 1].y - Points[TERRAIN_SIZE - 2].y);
+		return vec3(Position.x, newY);
+	}
+	else if (Position.x < Points[0].x) // checking for outside of screen on the left side
+	{
+		float newY;
+		newY = Points[0].y + ((Position.x - Points[0].x) / (Points[1].x - Points[0].x)) * (Points[1].y - Points[0].y);
+		return vec3(Position.x, newY);
+	}
+	vec3 R, L;
+	for (int i = 1; i < TERRAIN_SIZE; ++i)
+	{
+		if (Points[i].x > Position.x)
+		{
+			R = Points[i];
+			L = Points[i - 1];
+			break;
+		}
+	}
+	float newY;
+	newY = L.y + ((Position.x - L.x) / (R.x - L.x)) * (R.y - L.y);
+	return Vector3(Position.x, newY);
+}
+
+Vector3 Terrain::GetNormal(Vector3 Position)
+{
+	if (Position.x > Points[TERRAIN_SIZE - 1].x) // checking for outside of screen on the right side
+	{
+		vec3 v = (Points[TERRAIN_SIZE - 2] - Points[TERRAIN_SIZE - 1]).Normalized();
+		return vec3(v.y, -v.x, 0);
+	}
+	else if (Position.x < Points[0].x) // checking for outside of screen on the left side
+	{
+		vec3 v = (Points[0] - Points[1]).Normalized();
+		return vec3(v.y, -v.x, 0);
+	}
 	vec3 p1, p2;
 	for (int i = 1; i < TERRAIN_SIZE; ++i)
 	{
-		if (Points[i].x > ObjectPosition.x)
+		if (Points[i].x > Position.x)
 		{
 			p1 = Points[i];
 			p2 = Points[i - 1];
@@ -64,8 +106,9 @@ void Terrain::GenerateRandomHeight(float worldWidth)
 			}
 			lastY = Points[i].y;
 		}
-		LOG_NONE("Points[%]: %", i, Points[i]);
+		//LOG_NONE("Points[%]: %", i, Points[i]);
 	}
+
 }
 
 void Terrain::GenerateTerrainMesh()
@@ -120,21 +163,4 @@ void Terrain::DeformTerrain(Vector3 ExplosionPosition, float ExplosionRadius)
 		Points[i].y = Math::Max(Points[i].y, 1.0f);
 	}
 	GenerateTerrainMesh();
-}
-
-Vector3 Terrain::GetHeight(Vector3 TankPos)
-{
-	vec3 R, L;
-	for (int i = 1; i < TERRAIN_SIZE; ++i)
-	{
-		if (Points[i].x > TankPos.x)
-		{
-			R = Points[i];
-			L = Points[i - 1];
-			break;
-		}
-	}
-	float newY;
-	newY = L.y + ((TankPos.x - L.x) / (R.x - L.x)) * (R.y - L.y);
-	return Vector3(TankPos.x, newY);
 }

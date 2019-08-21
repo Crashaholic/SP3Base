@@ -76,6 +76,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Enemy\Tank\TankEnemy.cpp" />
+    <ClCompile Include="Source\Plane\Harrier.cpp" />
     <ClCompile Include="Source\Scene2P.cpp" />
     <ClCompile Include="Source\Scene2Select.cpp" />
     <ClCompile Include="SoundEngine\SoundEngine.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Source\Enemy\EnemyBase.h" />
     <ClInclude Include="Source\Enemy\Plane\PlaneEnemy.h" />
     <ClInclude Include="Source\Enemy\Tank\TankEnemy.h" />
+    <ClInclude Include="Source\Plane\Harrier.h" />
     <ClInclude Include="Source\Scene2P.h" />
     <ClInclude Include="Source\Scene2Select.h" />
     <ClInclude Include="SoundEngine\SoundEngine.h" />
@@ -155,6 +157,8 @@
     <None Include="Shader\comg.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="SaveData\highscores.txt" />
+    <Text Include="SaveData\monies.txt" />
     <Text Include="Scores\highscores.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -105,7 +105,7 @@ void Application::Init()
 	glfwMakeContextCurrent(m_window);
 
 	//Sets the key callback
-	//glfwSetKeyCallback(m_window, key_callback);
+	glfwSetKeyCallback(m_window, key_callback);
 	glfwSetWindowSizeCallback(m_window, resize_callback);
 
 	glewExperimental = true; // Needed for core profile
@@ -138,6 +138,7 @@ void Application::Init()
 	manager->addScene("2Select", sc8);
 	manager->addScene("2P", sc9);
 	manager->firstScene("Menu");
+	manager->readMonies();
 }
 
 void Application::Run()
@@ -150,7 +151,7 @@ void Application::Run()
 	//Start timer to calculate how long it takes to render this frame
 	m_timer.startTimer();    
 	//Check if the ESC key had been pressed or if the window had been closed
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window))
 	{
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();

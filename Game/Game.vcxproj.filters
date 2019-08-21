@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Scene2Select.cpp" />
     <ClCompile Include="Source\Enemy\Plane\PlaneEnemy.cpp" />
     <ClCompile Include="Source\Enemy\Tank\TankEnemy.cpp" />
+    <ClCompile Include="Source\Plane\Harrier.cpp" />
     <ClCompile Include="SoundEngine\SoundEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +75,7 @@
     <ClInclude Include="Source\Enemy\Plane\PlaneEnemy.h" />
     <ClInclude Include="Source\Enemy\Tank\TankEnemy.h" />
     <ClInclude Include="Source\Enemy\EnemyBase.h" />
+    <ClInclude Include="Source\Plane\Harrier.h" />
     <ClInclude Include="SoundEngine\SoundEngine.h" />
   </ItemGroup>
   <ItemGroup>
@@ -82,5 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Scores\highscores.txt" />
+    <Text Include="SaveData\highscores.txt" />
+    <Text Include="SaveData\monies.txt" />
   </ItemGroup>
 </Project>

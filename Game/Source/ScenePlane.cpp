@@ -34,7 +34,7 @@ void ScenePlane::Init()
 		break;
 	case GEO_PLAYER_PLANE_A10:
 	default:
-		plane = new A10;
+		plane = new Harrier;
 		break;
 	}
 	plane->Init();
@@ -49,7 +49,6 @@ void ScenePlane::Init()
 
 	bLightEnabled = true;
 	m_speed = 1.f;
-	m_gravity.Set(0, -9.8f, 0); 
 	bulletCooldown = 0.f;
 	tankSpeed = 5.f;
 	Math::InitRNG();
@@ -57,10 +56,6 @@ void ScenePlane::Init()
 	terr.GenerateRandomHeight(m_worldWidth);
 	terr.GenerateTerrainMesh();
 	GOManager::GetInstance()->terreference = &terr;
-	player = new PlayerTank;
-	player->Init();
-	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
-	player->GOref->color[1].Set(SceneManager::tankColor[1].r, SceneManager::tankColor[1].g, SceneManager::tankColor[1].b);
 
 	meshList[SceneManager::tankChoice]->textureID[1] = LoadTGA(SceneManager::tankDecalChoice.c_str());
 
@@ -96,8 +91,11 @@ void ScenePlane::Init()
 
 void ScenePlane::Update(double dt)
 {
-	player->Update(dt);
 	plane->Update(dt);
+	for (uint32_t i = 0; i < enemyList.size(); i++)
+	{
+		enemyList[i]->Update(dt);
+	}
 	// Keyboard Section
 	if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -241,7 +239,7 @@ void ScenePlane::Render()
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
-	ss << "FPS: " << fps;
+	ss << "FPS: " << plane->GOref->angle;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 0, 0);
 
 	// HUD
@@ -262,7 +260,7 @@ void ScenePlane::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
-	delete player;
+	delete plane;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }
 
@@ -276,7 +274,7 @@ void ScenePlane::EndWave()
 	for (unsigned int i = 0; i < m_goList.size(); ++i)
 	{
 		GameObject* go = m_goList[i];
-		if (!go->reserved)
+		if (!go->reserved && go->type != GameObject::UPGRADE_1&& go->type != GameObject::UPGRADE_2&& go->type != GameObject::UPGRADE_3)
 		{
 			go->active = false;
 		}
@@ -294,11 +292,7 @@ void ScenePlane::EndWave()
 		building->hasGravity = false;
 		building->scale = Vector3(1, 1, 1)*10;
 		building->norm.Set(1, 0, 0);
-		//building->
 	}
-
-	//tank->pos = terr.GetHeight(tank->pos);
-	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void ScenePlane::SpawnEnemy()
@@ -311,10 +305,21 @@ void ScenePlane::SpawnEnemy()
 	else
 	{
 		bool spawner = rand() % 2;
-		//GameObject* t = GOManager::GetInstance()->fetchGO();
-		//t->pos = (spawner? SpawnPos1 : SpawnPos2);
-		//TODO: TANK TARGET/MOVE CODE HERE
-		//HACK: DISABLED UNTIL WE HAVE MADE THE MOVE FUNCTIONS FOR SOME TANK CLASS
+		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
+		bool spawned = false;
+		for (unsigned int i = 0; i < enemyList.size(); ++i)
+		{
+			if (enemyList[i]->isDead)
+			{
+				delete enemyList[i];
+				enemyList[i] = new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth);
+				//enemyList[i] = new TankEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, plane->GOref, m_worldWidth);
+				spawned = true;
+				break;
+			}
+		}
+		if (!spawned)
+			enemyList.push_back(new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

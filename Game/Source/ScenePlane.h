@@ -4,8 +4,8 @@
 #include "Scene.h"
 #include "Terrain.h"
 //Include All planes here
-#include "Plane/A10.h"
-#include "Plane/Komet.h"
+
+#include "Enemy/Tank/TankEnemy.h"
 
 class ScenePlane : public Scene
 {
@@ -28,7 +28,6 @@ public:
 
 private:
 	Plane *plane;
-	Tank* player;
 	Terrain terr;
 
 	Camera camera;
@@ -48,7 +47,6 @@ private:
 
 	// Physics
 	float m_speed;
-	Vector3 m_gravity;
 
 	unsigned decal1;
 
@@ -58,6 +56,8 @@ private:
 	float tankSpeed;
 	double bulletCooldown;
 	bool tUpgrade;
+
+	std::vector<TankEnemy*> enemyList;
 };
 
 #endif

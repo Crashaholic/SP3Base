@@ -43,14 +43,8 @@ private:
 
 	// Physics
 	float m_speed;
-	Vector3 m_gravity;
 
-	PlaneEnemy e1;
-	//PlaneEnemy e2;
-	//PlaneEnemy e3;
-	//PlaneEnemy e4;
-	//PlaneEnemy e5;
-	//PlaneEnemy e6;
+	std::vector<PlaneEnemy*> enemyList;
 
 };
 

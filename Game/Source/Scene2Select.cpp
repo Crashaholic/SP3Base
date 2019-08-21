@@ -25,12 +25,12 @@ void Scene2Select::Init()
 	Scene::Init();
 	glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2 - 20.0f, 0.0f);
-	for (int i = 0; i < NUM_PBUTTON; ++i)
+	for (int i = 0; i < NUM_2PBUTTON; ++i)
 	{
 		bPArray[i] = new Button;
 		addButton(bPArray[i]);
 	}
-	for (int i = 0; i < NUM_TBUTTON; ++i)
+	for (int i = 0; i < NUM_2TBUTTON; ++i)
 	{
 		bTArray[i] = new Button;
 		addButton(bTArray[i]);
@@ -56,12 +56,12 @@ void Scene2Select::Init()
 	bTArray[4]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bTArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); // keep
 
-	for (int i = 0; i < NUM_PSLIDER; ++i)
+	for (int i = 0; i < NUM_2PSLIDER; ++i)
 	{
 		slPArray[i] = new Button;
 		addButton(slPArray[i]);
 	}
-	for (int i = 0; i < NUM_TSLIDER; ++i)
+	for (int i = 0; i < NUM_2TSLIDER; ++i)
 	{
 		slTArray[i] = new Button;
 		addButton(slTArray[i]);
@@ -140,48 +140,48 @@ void Scene2Select::Update(double dt)
 	static bool bLButtonState = false;
 	if (Application::IsMousePressed(0))
 	{
-		switch (choice1 - NUM_PBUTTON)
+		switch (choice1 - NUM_2PBUTTON)
 		{
 		case 0:
-			planeColor[0].r = slPArray[choice1 - NUM_PBUTTON]->checkMouseLR();
+			planeColor[0].r = slPArray[choice1 - NUM_2PBUTTON]->checkMouseLR();
 			break;
 		case 1:
-			planeColor[0].g = slPArray[choice1 - NUM_PBUTTON]->checkMouseLR();
+			planeColor[0].g = slPArray[choice1 - NUM_2PBUTTON]->checkMouseLR();
 			break;
 		case 2:
-			planeColor[0].b = slPArray[choice1 - NUM_PBUTTON]->checkMouseLR();
+			planeColor[0].b = slPArray[choice1 - NUM_2PBUTTON]->checkMouseLR();
 			break;
 		case 3:
-			planeColor[1].r = slPArray[choice1 - NUM_PBUTTON]->checkMouseLR();
+			planeColor[1].r = slPArray[choice1 - NUM_2PBUTTON]->checkMouseLR();
 			break;
 		case 4:
-			planeColor[1].g = slPArray[choice1 - NUM_PBUTTON]->checkMouseLR();
+			planeColor[1].g = slPArray[choice1 - NUM_2PBUTTON]->checkMouseLR();
 			break;
 		case 5:
-			planeColor[1].b = slPArray[choice1 - NUM_PBUTTON]->checkMouseLR();
+			planeColor[1].b = slPArray[choice1 - NUM_2PBUTTON]->checkMouseLR();
 			break;
 		default:
 			break;
 		}
-		switch (choice2 - NUM_TBUTTON)
+		switch (choice2 - NUM_2TBUTTON)
 		{
 		case 0:
-			tankColor[0].r = slTArray[choice2 - NUM_TBUTTON]->checkMouseLR();
+			tankColor[0].r = slTArray[choice2 - NUM_2TBUTTON]->checkMouseLR();
 			break;
 		case 1:
-			tankColor[0].g = slTArray[choice2 - NUM_TBUTTON]->checkMouseLR();
+			tankColor[0].g = slTArray[choice2 - NUM_2TBUTTON]->checkMouseLR();
 			break;
 		case 2:
-			tankColor[0].b = slTArray[choice2 - NUM_TBUTTON]->checkMouseLR();
+			tankColor[0].b = slTArray[choice2 - NUM_2TBUTTON]->checkMouseLR();
 			break;
 		case 3:
-			tankColor[1].r = slTArray[choice2 - NUM_TBUTTON]->checkMouseLR();
+			tankColor[1].r = slTArray[choice2 - NUM_2TBUTTON]->checkMouseLR();
 			break;
 		case 4:
-			tankColor[1].g = slTArray[choice2 - NUM_TBUTTON]->checkMouseLR();
+			tankColor[1].g = slTArray[choice2 - NUM_2TBUTTON]->checkMouseLR();
 			break;
 		case 5:
-			tankColor[1].b = slTArray[choice2 - NUM_TBUTTON]->checkMouseLR();
+			tankColor[1].b = slTArray[choice2 - NUM_2TBUTTON]->checkMouseLR();
 			break;
 		default:
 			break;
@@ -218,7 +218,7 @@ void Scene2Select::Update(double dt)
 			SceneManager::planeColor[0] = planeColor[0];
 			SceneManager::planeColor[1] = planeColor[1];
 			meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal1];
-			SceneManager::getSceneManager().switchToScene("Plane", this);
+			SceneManager::getSceneManager().switchToScene("2P", this);
 			break;
 		case 1:
 			--currentPlane;
@@ -256,7 +256,7 @@ void Scene2Select::Update(double dt)
 			SceneManager::tankColor[0] = tankColor[0];
 			SceneManager::tankColor[1] = tankColor[1];
 			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal2];
-			SceneManager::getSceneManager().switchToScene("Plane", this);
+			SceneManager::getSceneManager().switchToScene("2P", this);
 			break;
 		case 1:
 			--currentTank;
@@ -316,9 +316,9 @@ void Scene2Select::Update(double dt)
 	}
 
 	int inactive = 0;
-	for (int i = 0; i < NUM_PBUTTON + NUM_PSLIDER; ++i)
+	for (int i = 0; i < NUM_2PBUTTON + NUM_2PSLIDER; ++i)
 	{
-		if (i < NUM_PBUTTON)
+		if (i < NUM_2PBUTTON)
 		{
 			if (bPArray[i]->checkMouse())
 			{
@@ -331,7 +331,7 @@ void Scene2Select::Update(double dt)
 		}
 		else
 		{
-			if (slPArray[i - NUM_PBUTTON]->checkMouse())
+			if (slPArray[i - NUM_2PBUTTON]->checkMouse())
 			{
 				choice1 = i;
 			}
@@ -340,16 +340,16 @@ void Scene2Select::Update(double dt)
 				++inactive;
 			}
 		}
-		if (inactive == NUM_PBUTTON + NUM_PSLIDER)
+		if (inactive == NUM_2PBUTTON + NUM_2PSLIDER)
 		{
 			choice1 = -1;
 		}
 	}
 
 	int inactive2 = 0;
-	for (int i = 0; i < NUM_TBUTTON + NUM_TSLIDER; ++i)
+	for (int i = 0; i < NUM_2TBUTTON + NUM_2TSLIDER; ++i)
 	{
-		if (i < NUM_TBUTTON)
+		if (i < NUM_2TBUTTON)
 		{
 			if (bTArray[i]->checkMouse())
 			{
@@ -362,7 +362,7 @@ void Scene2Select::Update(double dt)
 		}
 		else
 		{
-			if (slTArray[i - NUM_TBUTTON]->checkMouse())
+			if (slTArray[i - NUM_2TBUTTON]->checkMouse())
 			{
 				choice2 = i;
 			}
@@ -371,7 +371,7 @@ void Scene2Select::Update(double dt)
 				++inactive2;
 			}
 		}
-		if (inactive2 == NUM_TBUTTON + NUM_TSLIDER)
+		if (inactive2 == NUM_2TBUTTON + NUM_2TSLIDER)
 		{
 			choice2 = -1;
 		}
@@ -407,11 +407,11 @@ void Scene2Select::Render()
 	ss.precision(5);
 	ss << "FPS: " << fps;
 
-	for (int i = 0; i < NUM_PBUTTON; ++i)
+	for (int i = 0; i < NUM_2PBUTTON; ++i)
 	{
 		RGButtonRender(bPArray[i], sPArray[i]);
 	}
-	for (int i = 0; i < NUM_PSLIDER; ++i)
+	for (int i = 0; i < NUM_2PSLIDER; ++i)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(slPArray[i]->getPos().x, slPArray[i]->getPos().y, slPArray[i]->getPos().z);
@@ -441,11 +441,11 @@ void Scene2Select::Render()
 
 	}
 
-	for (int i = 0; i < NUM_TBUTTON; ++i)
+	for (int i = 0; i < NUM_2TBUTTON; ++i)
 	{
 		RGButtonRender(bTArray[i], sTArray[i]);
 	}
-	for (int i = 0; i < NUM_TSLIDER; ++i)
+	for (int i = 0; i < NUM_2TSLIDER; ++i)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(slTArray[i]->getPos().x, slTArray[i]->getPos().y, slTArray[i]->getPos().z);
