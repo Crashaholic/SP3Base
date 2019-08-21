@@ -449,7 +449,6 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
-		toExplosion(go1);
 		CSoundEngine::GetInstance()->PlayASound("HitEnemy");
 		toExplosion(go1, false);
 	}
@@ -548,7 +547,6 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with terrain");
-		toExplosion(go);
 		CSoundEngine::GetInstance()->PlayASound("HitTerr");
 		toExplosion(go, false);
 	}
