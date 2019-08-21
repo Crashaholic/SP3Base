@@ -64,14 +64,14 @@ public:
 	// No. of times the player has fired a weapon (bursts count as one)
 	int attackCount;
 
-	int planeKills;
-	int tankKills;
+	unsigned int planeKills;
+	unsigned int tankKills;
 	unsigned int totalShots;
 	unsigned int totalHits;
 	float planeAccuracy;
 	float tankAccuracy;
-	int planeHighscore;
-	int tankHighscore;
+	unsigned int planeHighscore;
+	unsigned int tankHighscore;
 
 	bool wind;								// activates wind
 	double windBT;							// bouncetime to regulate time between direction randomisations (WIND_TIMER)

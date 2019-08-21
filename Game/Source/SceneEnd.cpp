@@ -10,6 +10,7 @@
 #include "Logging.h"
 
 #include "SceneManager.h"
+#include "HighscoreSystem.h"
 
 SceneEnd::SceneEnd()
 {
@@ -38,7 +39,7 @@ void SceneEnd::Init()
 	bBack->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	sBack = "Back";
 	onButton = false;
-
+	HighScoreSystem::GetInstance()->SubmitHighscore(GOManager::GetInstance()->planeHighscore, "AAA");
 	// TODO: Yan Quan pls add codes to audit the highscore as this scene inits
 	// Yeepity Boopity Doopity
 }
