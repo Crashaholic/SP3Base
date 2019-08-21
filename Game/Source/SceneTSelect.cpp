@@ -179,6 +179,16 @@ void SceneTSelect::Update(double dt)
 		default:
 			break;
 		}
+		switch (choice)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			GOManager::GetInstance()->playSound("Select");
+		}
 	}
 	currentTank = Math::Wrap(currentTank, 0, MAX_TANKS - 1);
 	currentDecal = Math::Wrap(currentDecal, 0, MAX_TDECALS);

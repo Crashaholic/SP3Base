@@ -42,6 +42,25 @@ void SceneEnd::Init()
 	HighScoreSystem::GetInstance()->SubmitHighscore(GOManager::GetInstance()->planeHighscore, "AAA");
 	// TODO: Yan Quan pls add codes to audit the highscore as this scene inits
 	// Yeepity Boopity Doopity
+
+	// Add high score to money
+	switch (GOManager::GetInstance()->sceneID)
+	{
+	case GOManager::STYPE::FROM_PLANE:
+	{
+		SceneManager::getSceneManager().money += GOManager::GetInstance()->planeHighscore;
+		break;
+	}
+	case GOManager::STYPE::FROM_TANK:
+	{
+		SceneManager::getSceneManager().money += GOManager::GetInstance()->tankHighscore;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
 }
 
 void SceneEnd::Update(double dt)
@@ -145,7 +164,7 @@ void SceneEnd::Render()
 	{
 		s1 << "Kills    : ";
 		s2 << "Accuracy : ";
-		s3 << "Score    : ";
+		s3 << "Credit   : ";
 		s1 << GOManager::GetInstance()->planeKills;
 		s2 << static_cast<int>(GOManager::GetInstance()->planeAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->planeHighscore;
@@ -155,7 +174,7 @@ void SceneEnd::Render()
 	{
 		s1 << "Kills    : ";
 		s2 << "Accuracy : ";
-		s3 << "Score    : ";
+		s3 << "Credit   : ";
 		s1 << GOManager::GetInstance()->tankKills;
 		s2 << static_cast<int>(GOManager::GetInstance()->tankAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->tankHighscore;
@@ -181,6 +200,9 @@ void SceneEnd::Render()
 
 void SceneEnd::Exit()
 {
+	// As we exit the scene, write the new data to the txt file
+	SceneManager::getSceneManager().writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
+
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{

@@ -7,7 +7,6 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-
 void Scene::Init()
 {	
 	glEnable(GL_DEPTH_TEST);

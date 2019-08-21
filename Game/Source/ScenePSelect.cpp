@@ -10,8 +10,6 @@
 
 #include "SceneManager.h"
 
-#include "Logging.h"
-
 ScenePSelect::ScenePSelect()
 {
 }
@@ -191,10 +189,21 @@ void ScenePSelect::Update(double dt)
 		default:
 			break;
 		}
+		switch (choice)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			GOManager::GetInstance()->playSound("Select");
+		}
 	}
 	currentPlane = Math::Wrap(currentPlane, 0, MAX_PLANES-1);
 	currentDecal = Math::Wrap(currentDecal, 0, MAX_PDECALS);
 	meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal];
+
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
