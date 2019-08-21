@@ -193,11 +193,6 @@ void SceneTSelect::Update(double dt)
 	currentTank = Math::Wrap(currentTank, 0, MAX_TANKS - 1);
 	currentDecal = Math::Wrap(currentDecal, 0, MAX_TDECALS);
 
-	//if (menu.sound == true)
-	//	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
-	//if (menu.sound == false)
-	//	CSoundEngine::GetInstance()->Destroy();
-
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{

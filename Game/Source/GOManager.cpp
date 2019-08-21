@@ -7,6 +7,14 @@
 
 GOManager::GOManager()
 {
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("HitEnemy", "Audio//Hit enemy.mp3");
+	CSoundEngine::GetInstance()->AddSound("HitTerr", "Audio//Hit terrain.wav");
+	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
+	playSound("HitEnemy");
+
 	sceneID = NONE;
 	planeLives = 2;
 	tankLives = 2;
@@ -41,13 +49,6 @@ GOManager::~GOManager()
 
 void GOManager::init()
 {
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("HitEnemy", "Audio//Hit enemy.mp3");
-	CSoundEngine::GetInstance()->AddSound("HitTerr", "Audio//Hit terrain.wav");
-	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
-	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
-	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
-
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
