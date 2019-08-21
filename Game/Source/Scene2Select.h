@@ -11,6 +11,7 @@
 #define MAX_TANKS 1
 
 #include "Scene.h"
+#include "SceneMenu.h"
 
 class Scene2Select : public Scene
 {
@@ -52,6 +53,8 @@ private:
 	unsigned int decals[3][MAX_PDECALS + 1];
 	int planes[MAX_PLANES];
 	int tanks[MAX_TANKS];
+
+	SceneMenu menu;
 };
 
 #endif

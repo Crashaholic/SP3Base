@@ -10,6 +10,7 @@
 
 #include "SceneManager.h"
 #include "Logging.h"
+#include "../../Game/SoundEngine/SoundEngine.h"
 
 Scene2Select::Scene2Select()
 {
@@ -115,6 +116,9 @@ void Scene2Select::Init()
 	Math::InitRNG();
 	currentDecal1 = 0;
 	currentPlane = 0;
+
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
 }
 
 void Scene2Select::Update(double dt)
@@ -183,6 +187,11 @@ void Scene2Select::Update(double dt)
 			break;
 		}
 	}
+
+	//if (menu.sound == true)
+	//	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	//if (menu.sound == false)
+	//	CSoundEngine::GetInstance()->Destroy();
 
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -266,6 +275,26 @@ void Scene2Select::Update(double dt)
 			break;
 		default:
 			break;
+		}
+		switch (choice1)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			CSoundEngine::GetInstance()->PlayASound("Select");
+		}
+		switch (choice2)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			CSoundEngine::GetInstance()->PlayASound("Select");
 		}
 	}
 	currentPlane = Math::Wrap(currentPlane, 0, MAX_PLANES - 1);

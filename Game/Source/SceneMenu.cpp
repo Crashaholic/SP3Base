@@ -9,7 +9,7 @@
 #include <sstream>
 
 #include "SceneManager.h"
-
+#include "../../Game/SoundEngine/SoundEngine.h"
 SceneMenu::SceneMenu()
 {
 }
@@ -56,7 +56,11 @@ void SceneMenu::Init()
 	sArray[3] = "Highscores";
 	sArray[4] = "Mute";
 	muted = false;
+	sound = true;
 	choice = 0;
+
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
 }
 
 void SceneMenu::Update(double dt)
@@ -98,7 +102,6 @@ void SceneMenu::Update(double dt)
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
-
 		switch (choice)
 		{
 		case 0:
@@ -112,6 +115,7 @@ void SceneMenu::Update(double dt)
 			break;
 		case 3:
 			SceneManager::getSceneManager().switchToScene("Score", this);
+			CSoundEngine::GetInstance()->PlayASound("Select");
 			break;
 		case 4:
 			if (muted == false)
@@ -121,6 +125,16 @@ void SceneMenu::Update(double dt)
 			break;
 		default:
 			break;
+		}
+		switch (choice)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			CSoundEngine::GetInstance()->PlayASound("Select");
 		}
 	}
 	static bool bRButtonState = false;
@@ -135,9 +149,21 @@ void SceneMenu::Update(double dt)
 
 	// Button checks
 	if (muted == false)
-		sArray[4] = "Unmute";
-	else
+	{
 		sArray[4] = "Mute";
+		CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+		sound = true;
+	}
+	if (muted == true)
+	{
+		sArray[4] = "Unmute";
+		CSoundEngine::GetInstance()->Destroy();
+		sound = false;
+	}
+	if (Application::IsKeyPressed('O'))
+	{
+		std::cout << sound << std::endl;
+	}
 
 	int inactive = 0;
 	for (int i = 0; i < 5; ++i)

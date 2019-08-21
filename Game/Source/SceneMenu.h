@@ -18,6 +18,7 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	bool sound;
 private:
 	Camera camera;
 	float fps;

@@ -1,6 +1,6 @@
 #include "PlayerTank.h"
 #include "../Application.h"
-
+#include "../../Game/SoundEngine/SoundEngine.h"
 
 PlayerTank::PlayerTank()
 {
@@ -32,6 +32,9 @@ void PlayerTank::Init()
 
 	GOref->pos.y = GOManager::GetInstance()->terreference->GetHeight(GOref->pos).y;
 	GOref->defaultPos = GOref->pos;
+
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
 }
 
 void PlayerTank::Update(double dt)

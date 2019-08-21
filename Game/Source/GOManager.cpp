@@ -4,6 +4,7 @@
 #include "GOManager.h"
 #include "SceneManager.h"
 #include "Logging.h"
+#include "../../Game/SoundEngine/SoundEngine.h"
 
 GOManager::GOManager()
 {
@@ -39,6 +40,11 @@ GOManager::~GOManager()
 
 void GOManager::init()
 {
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("HitEnemy", "Audio//Hit enemy.mp3");
+	CSoundEngine::GetInstance()->AddSound("HitTerr", "Audio//Hit terrain.wav");
+	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
+
 	for (unsigned int i = 0; i < 10; ++i)
 	{
 		m_goList.push_back(new GameObject(GameObject::GO_NONE));
@@ -364,6 +370,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			LOG_TRACE("Player picked up UPGRADE_1");
 			++upgrade_1;
+			CSoundEngine::GetInstance()->PlayASound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -371,6 +378,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			LOG_TRACE("Player picked up UPGRADE_2");
 			++upgrade_2;
+			CSoundEngine::GetInstance()->PlayASound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -379,6 +387,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 			LOG_TRACE("Player picked up UPGRADE_3");
 			++planeLives;
 			++tankLives;
+			CSoundEngine::GetInstance()->PlayASound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -429,6 +438,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
 		toExplosion(go1);
+		CSoundEngine::GetInstance()->PlayASound("HitEnemy");
 	}
 }
 
@@ -524,6 +534,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with terrain");
 		toExplosion(go);
+		CSoundEngine::GetInstance()->PlayASound("HitTerr");
 	}
 }
 

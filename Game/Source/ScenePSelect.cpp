@@ -11,7 +11,7 @@
 #include "SceneManager.h"
 
 #include "Logging.h"
-
+#include "../../Game/SoundEngine/SoundEngine.h"
 ScenePSelect::ScenePSelect()
 {
 }
@@ -78,6 +78,10 @@ void ScenePSelect::Init()
 	Math::InitRNG();
 	currentDecal = 0;
 	currentPlane = 0;
+
+	menu = new SceneMenu;
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
 }
 
 void ScenePSelect::Update(double dt)
@@ -170,10 +174,30 @@ void ScenePSelect::Update(double dt)
 		default:
 			break;
 		}
+		switch (choice)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			CSoundEngine::GetInstance()->PlayASound("Select");
+		}
 	}
 	currentPlane = Math::Wrap(currentPlane, 0, MAX_PLANES-1);
 	currentDecal = Math::Wrap(currentDecal, 0, MAX_PDECALS);
 	meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal];
+
+	//if (menu->sound)
+	//	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	//if (menu->sound == false)
+	//	CSoundEngine::GetInstance()->Destroy();
+	if (Application::IsKeyPressed('O'))
+	{
+		std::cout << menu->sound << std::endl;
+	}
+
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
 	{
