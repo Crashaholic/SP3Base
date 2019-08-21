@@ -41,19 +41,17 @@ void Scene2Select::Init()
 	tankColor[0].Set(1, 1, 1);
 	tankColor[1].Set(1, 1, 1);
 
-	bPArray[0]->init(Vector3(center.x, center.y + 60.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); // keep
+	bPArray[0]->init(Vector3(center.x, center.y + 60.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bPArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); //plane selection
 	bPArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bPArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bPArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bPArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); // keep
+	bPArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
-	bTArray[0]->init(Vector3(center.x, center.y + 60.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); // keep
-	bTArray[1]->init(Vector3(center.x + 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); //tank selection
-	bTArray[2]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bTArray[3]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bTArray[4]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bTArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); // keep
+	bTArray[0]->init(Vector3(center.x + 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); //tank selection
+	bTArray[1]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bTArray[2]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bTArray[3]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
 	for (int i = 0; i < NUM_2PSLIDER; ++i)
 	{
@@ -104,12 +102,10 @@ void Scene2Select::Init()
 	sPArray[4] = "Decal >";
 	sPArray[5] = "Back";
 
-	sTArray[0] = "Start";
-	sTArray[1] = "< Tank";
-	sTArray[2] = "Tank >";
-	sTArray[3] = "< Decal";
-	sTArray[4] = "Decal >";
-	sTArray[5] = "Back";
+	sTArray[0] = "< Tank";
+	sTArray[1] = "Tank >";
+	sTArray[2] = "< Decal";
+	sTArray[3] = "Decal >";
 
 	bLightEnabled = true;
 	Math::InitRNG();
@@ -184,11 +180,6 @@ void Scene2Select::Update(double dt)
 		}
 	}
 
-	//if (menu.sound == true)
-	//	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
-	//if (menu.sound == false)
-	//	CSoundEngine::GetInstance()->Destroy();
-
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
@@ -197,9 +188,11 @@ void Scene2Select::Update(double dt)
 	{
 		bLButtonState = false;
 		std::string planename = "";
+		std::string tankname = "";
 		switch (choice1)
 		{
 		case 0:
+			// Set plane vars
 			SceneManager::planeChoice = planes[currentPlane];
 			switch (currentPlane)
 			{
@@ -214,6 +207,22 @@ void Scene2Select::Update(double dt)
 			SceneManager::planeColor[0] = planeColor[0];
 			SceneManager::planeColor[1] = planeColor[1];
 			meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal1];
+			// Set tank vars
+			SceneManager::tankChoice = tanks[currentTank];
+			switch (currentTank)
+			{
+			case 0:
+				tankname = "";
+				break;
+			case 1:
+				tankname = "";
+				break;
+			}
+			SceneManager::tankDecalChoice = "Image//" + tankname + "decal" + std::to_string(currentDecal2) + ".tga";
+			SceneManager::tankColor[0] = tankColor[0];
+			SceneManager::tankColor[1] = tankColor[1];
+			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal2];
+			// Switch to scene
 			SceneManager::getSceneManager().switchToScene("2P", this);
 			break;
 		case 1:
@@ -234,40 +243,20 @@ void Scene2Select::Update(double dt)
 		default:
 			break;
 		}
-		std::string tankname = "";
+
 		switch (choice2)
 		{
 		case 0:
-			SceneManager::tankChoice = tanks[currentTank];
-			switch (currentTank)
-			{
-			case 0:
-				tankname = "";
-				break;
-			case 1:
-				tankname = "";
-				break;
-			}
-			SceneManager::tankDecalChoice = "Image//" + tankname + "decal" + std::to_string(currentDecal2) + ".tga";
-			SceneManager::tankColor[0] = tankColor[0];
-			SceneManager::tankColor[1] = tankColor[1];
-			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal2];
-			SceneManager::getSceneManager().switchToScene("2P", this);
-			break;
-		case 1:
 			--currentTank;
 			break;
-		case 2:
+		case 1:
 			++currentTank;
 			break;
-		case 3:
+		case 2:
 			--currentDecal2;
 			break;
-		case 4:
+		case 3:
 			++currentDecal2;
-			break;
-		case 5:
-			SceneManager::getSceneManager().switchToScene("Menu", this);
 			break;
 		default:
 			break;
@@ -288,16 +277,14 @@ void Scene2Select::Update(double dt)
 		case 1:
 		case 2:
 		case 3:
-		case 4:
-		case 5:
 			GOManager::GetInstance()->playSound("Select");
 		}
 	}
-	currentPlane = Math::Wrap(currentPlane, 0, MAX_PLANES - 1);
-	currentDecal1 = Math::Wrap(currentDecal1, 0, MAX_PDECALS);
+	currentPlane = Math::Wrap(currentPlane, 0, MAX_2PLANES - 1);
+	currentDecal1 = Math::Wrap(currentDecal1, 0, MAX_2PDECALS);
 
-	currentTank = Math::Wrap(currentTank, 0, MAX_TANKS - 1);
-	currentDecal2 = Math::Wrap(currentDecal2, 0, MAX_TDECALS);
+	currentTank = Math::Wrap(currentTank, 0, MAX_2TANKS - 1);
+	currentDecal2 = Math::Wrap(currentDecal2, 0, MAX_2TDECALS);
 
 	meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal1];
 

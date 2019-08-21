@@ -33,6 +33,11 @@ void Scene2P::Init()
 	//plane = dynamic_cast<Komet*>(new Plane);
 	plane = new Komet;
 	plane->Init();
+	plane->GOref->color[0].Set(SceneManager::planeColor[0].r, SceneManager::planeColor[0].g, SceneManager::planeColor[0].b);
+	plane->GOref->color[1].Set(SceneManager::planeColor[1].r, SceneManager::planeColor[1].g, SceneManager::planeColor[1].b);
+
+	meshList[SceneManager::planeChoice]->textureID[1] = LoadTGA(SceneManager::planeDecalChoice.c_str());
+
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	m_worldHeight = 100.f;
@@ -49,6 +54,10 @@ void Scene2P::Init()
 	GOManager::GetInstance()->terreference = &terr;
 	player = new PlayerTank;
 	player->Init();
+	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
+	player->GOref->color[1].Set(SceneManager::tankColor[1].r, SceneManager::tankColor[1].g, SceneManager::tankColor[1].b);
+
+	meshList[SceneManager::tankChoice]->textureID[1] = LoadTGA(SceneManager::tankDecalChoice.c_str());
 
 
 	decal1 = LoadTGA("Image//A10decal2.tga");

@@ -1,10 +1,10 @@
 #ifndef SCENE_2SELECT_H
 #define SCENE_2SELECT_H
 #define MAX_2PDECALS 2
-#define MAX_2PLANES 2
+#define MAX_2PLANES 1
 #define NUM_2PBUTTON 6
 #define NUM_2PSLIDER 6
-#define NUM_2TBUTTON 6
+#define NUM_2TBUTTON 4
 #define NUM_2TSLIDER 6
 #define MAX_2TDECALS 0
 #define MAX_2TANKS 1

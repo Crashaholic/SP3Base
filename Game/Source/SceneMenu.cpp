@@ -148,20 +148,11 @@ void SceneMenu::Update(double dt)
 	if (GOManager::GetInstance()->muted == false)
 	{
 		sArray[4] = "Mute";
-		//CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
-		//sound = true;
 	}
 	if (GOManager::GetInstance()->muted == true)
 	{
 		sArray[4] = "Unmute";
-		//CSoundEngine::GetInstance()->Destroy();
-		//sound = false;
 	}
-	if (Application::IsKeyPressed('O'))
-	{
-		LOG_NONE("Muted: %", GOManager::GetInstance()->muted);
-	}
-
 	int inactive = 0;
 	for (int i = 0; i < 5; ++i)
 	{
