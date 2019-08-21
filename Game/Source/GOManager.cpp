@@ -830,19 +830,18 @@ void GOManager::enemyDeath(GameObject * go)
 			switch (sceneID)
 			{
 			case STYPE::FROM_PLANE:
-				up->vel.y = 3.0f;
+				up->vel.y = 10.0f;
 				break;
 			case STYPE::FROM_TANK:
-				up->vel.y = -5.0f;
+				up->vel.y = -10.0f;
 				break;
 			default:
 				LOG_ERROR("Tried to spawn upgrade outside of appropriate scene!");
 				break;
 			}
-
-			up->pos = go->pos;
 			up->hasLifeTime = true;
-			up->lifeTime = 10.0;
+			up->lifeTime = 15.0;
+			up->pos = go->pos;
 			up->norm.Set(1, 0, 0);
 		}
 		go->active = false;
