@@ -29,6 +29,16 @@ private:
 	Button* bBack;
 	std::string sBack;
 	bool onButton;
+
+	char Letter1;
+	char Letter2;
+	char Letter3;
+	unsigned short whichChar;
+	Button bArr[6];
+	Button bSubmitScore;
+	std::string sArrow[2];
+	int choice;
+	bool SubmittedScore;
 };
 
 #endif

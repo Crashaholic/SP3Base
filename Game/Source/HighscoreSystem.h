@@ -52,7 +52,8 @@ public:
 	HighScoreSystem();
 	~HighScoreSystem();
 
-	void SubmitHighscore(unsigned int score, std::string name);
+	void SubmitHighscoreP(unsigned int score, std::string name);
+	void SubmitHighscoreT(unsigned int score, std::string name);
 
 };
 
