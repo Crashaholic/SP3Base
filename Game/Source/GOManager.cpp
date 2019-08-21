@@ -7,6 +7,14 @@
 
 GOManager::GOManager()
 {
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("HitEnemy", "Audio//Hit enemy.mp3");
+	CSoundEngine::GetInstance()->AddSound("HitTerr", "Audio//Hit terrain.wav");
+	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
+	playSound("HitEnemy");
+
 	sceneID = NONE;
 	planeLives = 2;
 	tankLives = 2;
@@ -26,6 +34,7 @@ GOManager::GOManager()
 	windBT = WIND_TIMER;
 	rain = false;
 	wind = true;
+	muted = false;
 }
 
 GOManager::~GOManager()
@@ -376,6 +385,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			LOG_TRACE("Player picked up UPGRADE_1");
 			++upgrade_1;
+			playSound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -383,6 +393,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 		{
 			LOG_TRACE("Player picked up UPGRADE_2");
 			++upgrade_2;
+			playSound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -391,6 +402,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 			LOG_TRACE("Player picked up UPGRADE_3");
 			++planeLives;
 			++tankLives;
+			playSound("Upgrade");
 			go2->active = false;
 			break;
 		}
@@ -440,6 +452,7 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
+		playSound("HitEnemy");
 		toExplosion(go1, false);
 	}
 }
@@ -537,6 +550,7 @@ void GOManager::terrainResponse(GameObject * go)
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
 		LOG_NONE("Projectile collided with terrain");
+		playSound("HitTerr");
 		toExplosion(go, false);
 	}
 }
@@ -816,19 +830,18 @@ void GOManager::enemyDeath(GameObject * go)
 			switch (sceneID)
 			{
 			case STYPE::FROM_PLANE:
-				up->vel.y = 3.0f;
+				up->vel.y = 10.0f;
 				break;
 			case STYPE::FROM_TANK:
-				up->vel.y = -5.0f;
+				up->vel.y = -10.0f;
 				break;
 			default:
 				LOG_ERROR("Tried to spawn upgrade outside of appropriate scene!");
 				break;
 			}
-
-			up->pos = go->pos;
 			up->hasLifeTime = true;
-			up->lifeTime = 10.0;
+			up->lifeTime = 15.0;
+			up->pos = go->pos;
 			up->norm.Set(1, 0, 0);
 		}
 		go->active = false;
@@ -838,5 +851,13 @@ void GOManager::enemyDeath(GameObject * go)
 	{
 		break;
 	}
+	}
+}
+
+void GOManager::playSound(std::string name)
+{
+	if (muted == false)
+	{
+		CSoundEngine::GetInstance()->PlayASound(name);
 	}
 }

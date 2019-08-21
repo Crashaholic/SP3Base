@@ -1,7 +1,6 @@
 #include "PlayerTank.h"
 #include "../Application.h"
 
-
 PlayerTank::PlayerTank()
 {
 }

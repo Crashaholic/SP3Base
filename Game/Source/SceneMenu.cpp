@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "SceneManager.h"
+#include "Logging.h"
 
 SceneMenu::SceneMenu()
 {
@@ -55,7 +56,8 @@ void SceneMenu::Init()
 	sArray[2] = "2 Player";
 	sArray[3] = "Highscores";
 	sArray[4] = "Mute";
-	muted = false;
+
+	//sound = true;
 	choice = 0;
 }
 
@@ -98,7 +100,6 @@ void SceneMenu::Update(double dt)
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
-
 		switch (choice)
 		{
 		case 0:
@@ -114,13 +115,23 @@ void SceneMenu::Update(double dt)
 			SceneManager::getSceneManager().switchToScene("Score", this);
 			break;
 		case 4:
-			if (muted == false)
-				muted = true;
+			if (GOManager::GetInstance()->muted == false)
+				GOManager::GetInstance()->muted = true;
 			else
-				muted = false;
+				GOManager::GetInstance()->muted = false;
 			break;
 		default:
 			break;
+		}
+		switch (choice)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			GOManager::GetInstance()->playSound("Select");
 		}
 	}
 	static bool bRButtonState = false;
@@ -134,11 +145,14 @@ void SceneMenu::Update(double dt)
 	}
 
 	// Button checks
-	if (muted == false)
-		sArray[4] = "Unmute";
-	else
+	if (GOManager::GetInstance()->muted == false)
+	{
 		sArray[4] = "Mute";
-
+	}
+	if (GOManager::GetInstance()->muted == true)
+	{
+		sArray[4] = "Unmute";
+	}
 	int inactive = 0;
 	for (int i = 0; i < 5; ++i)
 	{

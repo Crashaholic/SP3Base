@@ -4,7 +4,9 @@
 #include "SingletonTemplate.h"
 #include "Vector3.h"
 #include "GameObject.h"
+#include "../../Game/SoundEngine/SoundEngine.h"
 #include <vector>
+#include <string>
 
 class GOManager:public Singleton<GOManager>
 {
@@ -64,14 +66,14 @@ public:
 	// No. of times the player has fired a weapon (bursts count as one)
 	int attackCount;
 
-	int planeKills;
-	int tankKills;
+	unsigned int planeKills;
+	unsigned int tankKills;
 	unsigned int totalShots;
 	unsigned int totalHits;
 	float planeAccuracy;
 	float tankAccuracy;
-	int planeHighscore;
-	int tankHighscore;
+	unsigned int planeHighscore;
+	unsigned int tankHighscore;
 
 	bool wind;								// activates wind
 	double windBT;							// bouncetime to regulate time between direction randomisations (WIND_TIMER)
@@ -101,6 +103,9 @@ public:
 	Terrain* terreference;
 
 	const Vector3 gravity = Vector3(0.0f, -9.8f, 0.0f);
+
+	bool muted;
+	void playSound(std::string name);
 };
 
 #endif

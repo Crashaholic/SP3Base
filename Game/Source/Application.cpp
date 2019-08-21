@@ -178,6 +178,7 @@ void Application::Run()
 		delete x.second;
 	}
 	manager->getList().clear();
+	CSoundEngine::Destroy();
 }
 
 void Application::Exit()

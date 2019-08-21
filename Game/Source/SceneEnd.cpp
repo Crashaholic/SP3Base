@@ -10,6 +10,7 @@
 #include "Logging.h"
 
 #include "SceneManager.h"
+#include "HighscoreSystem.h"
 
 SceneEnd::SceneEnd()
 {
@@ -32,6 +33,8 @@ void SceneEnd::Init()
 	m_ghost = new GameObject(GameObject::GO_BALL);
 	m_ghost->active = true;
 
+	SubmittedScore = false;
+
 	Vector3 center(m_worldWidth / 2, m_worldHeight / 2 - 20.0f, 0.0f);
 	bBack = new Button;
 	addButton(bBack);
@@ -39,8 +42,40 @@ void SceneEnd::Init()
 	sBack = "Back";
 	onButton = false;
 
-	// TODO: Yan Quan pls add codes to audit the highscore as this scene inits
-	// Yeepity Boopity Doopity
+	// Add high score to money
+	switch (GOManager::GetInstance()->sceneID)
+	{
+	case GOManager::STYPE::FROM_PLANE:
+	{
+		SceneManager::getSceneManager().money += GOManager::GetInstance()->planeHighscore;
+		break;
+	}
+	case GOManager::STYPE::FROM_TANK:
+	{
+		SceneManager::getSceneManager().money += GOManager::GetInstance()->tankHighscore;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+
+	Letter1 = 'A';
+	Letter2 = 'A';
+	Letter3 = 'A';
+	whichChar = 0;
+
+	bSubmitScore.init(vec3(m_worldWidth / 2.f, m_worldHeight / 2.f - 20), vec3(13.5f, 3.5f, 1.0f));
+
+	bArr[0].init(vec3(m_worldWidth / 2.f - 10, m_worldHeight / 2.f - 10), vec3(3.5f, 3.5f, 1.0f));
+	bArr[1].init(vec3(m_worldWidth / 2.f +  0, m_worldHeight / 2.f - 10), vec3(3.5f, 3.5f, 1.0f));
+	bArr[2].init(vec3(m_worldWidth / 2.f + 10, m_worldHeight / 2.f - 10), vec3(3.5f, 3.5f, 1.0f));
+	bArr[3].init(vec3(m_worldWidth / 2.f - 10, m_worldHeight / 2.f + 10), vec3(3.5f, 3.5f, 1.0f));
+	bArr[4].init(vec3(m_worldWidth / 2.f +  0, m_worldHeight / 2.f + 10), vec3(3.5f, 3.5f, 1.0f));
+	bArr[5].init(vec3(m_worldWidth / 2.f + 10, m_worldHeight / 2.f + 10), vec3(3.5f, 3.5f, 1.0f));
+	sArrow[1] = "/\\";
+	sArrow[0] = "\\/";
 }
 
 void SceneEnd::Update(double dt)
@@ -74,11 +109,6 @@ void SceneEnd::Update(double dt)
 	// Switch scene
 	checkSwitch();
 
-	if (bBack->checkMouse())
-		onButton = true;
-	else
-		onButton = false;
-
 	// Mouse Section
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -89,8 +119,68 @@ void SceneEnd::Update(double dt)
 	{
 		bLButtonState = false;
 
-		if (onButton)
+		if (bBack->checkMouse())
 			SceneManager::getSceneManager().switchToScene("Menu", this);
+		switch (choice)
+		{
+		case 0:
+			Letter1 = Math::Wrap((char)(Letter1 + 1), 'A', 'Z');
+			break;
+		case 1:
+			Letter2 = Math::Wrap((char)(Letter2 + 1), 'A', 'Z');
+			break;
+		case 2:
+			Letter3 = Math::Wrap((char)(Letter3 + 1), 'A', 'Z');
+			break;
+		case 3:
+			Letter1 = Math::Wrap((char)(Letter1 - 1), 'A', 'Z');
+			break;
+		case 4:
+			Letter2 = Math::Wrap((char)(Letter2 - 1), 'A', 'Z');
+			break;
+		case 5:
+			Letter3 = Math::Wrap((char)(Letter3 - 1), 'A', 'Z');
+			break;
+		default:
+			break;
+		}
+		switch (choice)
+		{
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			GOManager::GetInstance()->playSound("Select");
+		}
+
+		if (bSubmitScore.checkMouse())
+		{
+			if (!SubmittedScore)
+			{
+				switch (GOManager::GetInstance()->sceneID)
+				{
+				case GOManager::STYPE::FROM_PLANE:
+				{
+					HighScoreSystem::GetInstance()->SubmitHighscoreP(GOManager::GetInstance()->planeHighscore, std::string { Letter1, Letter2, Letter3 });
+					break;
+				}
+				case GOManager::STYPE::FROM_TANK:
+				{
+					HighScoreSystem::GetInstance()->SubmitHighscoreT(GOManager::GetInstance()->tankHighscore, std::string { Letter1, Letter2, Letter3 });
+					break;
+				}
+				default:
+				{
+					std::string a = std::string{ Letter1, Letter2, Letter3 };
+					break;
+				}
+				}
+				SubmittedScore = true;
+				GOManager::GetInstance()->playSound("Select");
+			}
+		}
 	}
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -104,6 +194,114 @@ void SceneEnd::Update(double dt)
 
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
+
+	static bool UpPressed = false;
+	static bool DnPressed = false;
+	static bool LtPressed = false;
+	static bool RtPressed = false;
+
+	if (Application::IsKeyPressed(VK_UP))
+	{
+		if (!UpPressed)
+		{
+			if (whichChar == 0)
+				Letter1 = Math::Wrap((char)(Letter1 + 1), 'A', 'Z');
+			else if (whichChar == 1)
+				Letter2 = Math::Wrap((char)(Letter2 + 1), 'A', 'Z');
+			else if (whichChar == 2)
+				Letter3 = Math::Wrap((char)(Letter3 + 1), 'A', 'Z');
+			UpPressed = true;
+		}
+
+	}
+	else if (UpPressed)
+	{
+		UpPressed = false;
+	}
+
+	if (Application::IsKeyPressed(VK_DOWN))
+	{
+		if (!DnPressed)
+		{
+			if (whichChar == 0)
+				Letter1 = Math::Wrap((char)(Letter1 - 1), 'A', 'Z');
+			else if (whichChar == 1)
+				Letter2 = Math::Wrap((char)(Letter2 - 1), 'A', 'Z');
+			else if (whichChar == 2)
+				Letter3 = Math::Wrap((char)(Letter3 - 1), 'A', 'Z');
+
+			DnPressed = true;
+		}
+	}
+	else if (DnPressed)
+	{
+		DnPressed = false;
+	}
+
+	if (Application::IsKeyPressed(VK_LEFT))
+	{
+		if (!LtPressed)
+		{
+			whichChar = Math::Wrap(short(whichChar - 1), (short)0, (short)2);
+			LtPressed = true;
+		}
+	}
+	else if (LtPressed)
+	{
+		LtPressed = false;
+	}
+
+	if (Application::IsKeyPressed(VK_RIGHT))
+	{
+		if (!RtPressed)
+		{
+			whichChar = Math::Wrap(short(whichChar + 1), (short)0, (short)2);
+			RtPressed = true;
+		}
+	}
+	else if (RtPressed)
+	{
+		RtPressed = false;
+	}
+
+	if (Application::IsKeyPressed(VK_RETURN))
+	{
+		if (!SubmittedScore)
+		{
+			switch (GOManager::GetInstance()->sceneID)
+			{
+			case GOManager::STYPE::FROM_PLANE:
+			{
+				HighScoreSystem::GetInstance()->SubmitHighscoreP(GOManager::GetInstance()->planeHighscore, std::string { Letter1, Letter2, Letter3 });
+				break;
+			}
+			case GOManager::STYPE::FROM_TANK:
+			{
+				HighScoreSystem::GetInstance()->SubmitHighscoreT(GOManager::GetInstance()->tankHighscore, std::string { Letter1, Letter2, Letter3 });
+				break;
+			}
+			default:
+			{
+				std::string a = std::string{ Letter1, Letter2, Letter3 };
+				break;
+			}
+			}
+			SubmittedScore = true;
+		}
+	}
+
+	int inactive = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		if (bArr[i].checkMouse())
+			choice = i;
+		else
+			++inactive;
+
+		if (inactive == 6)
+			choice = -1;
+	}
+
 }
 
 void SceneEnd::Render()
@@ -137,6 +335,27 @@ void SceneEnd::Render()
 	std::ostringstream s2;
 	s2.precision(3);
 	std::ostringstream s3;
+	modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2.f - 10, m_worldHeight / 2.f, 0);
+		modelStack.Scale(5.f, 5.f, 5.f);
+		std::string s;
+		s += Letter1;
+		RenderText(meshList[GEO_TEXT], s, (whichChar == 0 ? Color{1, 1, 0} : Color{1, 1, 1}));
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2.f, m_worldHeight / 2.f, 0);
+		modelStack.Scale(5.f, 5.f, 5.f);
+		s.clear();
+		s += Letter2;
+		RenderText(meshList[GEO_TEXT], s, (whichChar == 1 ? Color{ 1, 1, 0 } : Color{ 1, 1, 1 }));
+	modelStack.PopMatrix();
+	modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2.f + 10, m_worldHeight / 2.f, 0);
+		modelStack.Scale(5.f, 5.f, 5.f);
+		s.clear();
+		s += Letter3;
+		RenderText(meshList[GEO_TEXT], s, (whichChar == 2 ? Color{ 1, 1, 0 } : Color{ 1, 1, 1 }));
+	modelStack.PopMatrix();
 
 	switch (GOManager::GetInstance()->sceneID)
 	{
@@ -144,7 +363,7 @@ void SceneEnd::Render()
 	{
 		s1 << "Kills    : ";
 		s2 << "Accuracy : ";
-		s3 << "Score    : ";
+		s3 << "Credit   : ";
 		s1 << GOManager::GetInstance()->planeKills;
 		s2 << static_cast<int>(GOManager::GetInstance()->planeAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->planeHighscore;
@@ -154,7 +373,7 @@ void SceneEnd::Render()
 	{
 		s1 << "Kills    : ";
 		s2 << "Accuracy : ";
-		s3 << "Score    : ";
+		s3 << "Credit   : ";
 		s1 << GOManager::GetInstance()->tankKills;
 		s2 << static_cast<int>(GOManager::GetInstance()->tankAccuracy * 100) << "%";
 		s3 << GOManager::GetInstance()->tankHighscore;
@@ -176,10 +395,19 @@ void SceneEnd::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], s3.str(), Color(1, 1, 1), 3, 0, 6);
 
 	RGButtonRender(bBack, sBack);
+	RGButtonRender(&bSubmitScore, "Submit score");
+
+	for (int i = 0; i < 6; i++)
+	{
+		RGButtonRender(&bArr[i], sArrow[i / 3]);
+	}
 }
 
 void SceneEnd::Exit()
 {
+	// As we exit the scene, write the new data to the txt file
+	SceneManager::getSceneManager().writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
+
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{

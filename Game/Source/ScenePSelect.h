@@ -42,7 +42,6 @@ private:
 
 	unsigned int decals[MAX_PLANES][MAX_PDECALS + 1];
 	int planes[MAX_PLANES];
-
 };
 
 #endif
