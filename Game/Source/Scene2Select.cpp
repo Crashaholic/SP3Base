@@ -87,10 +87,6 @@ void Scene2Select::Init()
 	decals[0][1] = LoadTGA("Image//Kometdecal1.tga");
 	decals[0][2] = LoadTGA("Image//Kometdecal2.tga");
 
-	planes[1] = GEO_PLAYER_PLANE_A10;
-	decals[1][0] = 0;
-	decals[1][1] = LoadTGA("Image//A10decal1.tga");
-	decals[1][2] = LoadTGA("Image//A10decal2.tga");
 
 	tanks[0] = GEO_PLAYER_TANK;
 	decals[2][0] = 0;//Decals option 0 is... No decals
