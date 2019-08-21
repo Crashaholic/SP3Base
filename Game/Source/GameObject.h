@@ -53,6 +53,7 @@ struct GameObject
 		SW_WRAP,
 		SW_HYBRID,
 		SW_BOUNCE,
+		SW_CLAMP,
 		SW_NONE
 	};
 	GAMEOBJECT_TYPE type;

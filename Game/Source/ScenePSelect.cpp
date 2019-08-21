@@ -151,6 +151,9 @@ void ScenePSelect::Update(double dt)
 			case 1:
 				planename = "A10";
 				break;
+			case 2:
+				planename = "Harrier";
+				break;
 			}
 			SceneManager::planeDecalChoice = "Image//" + planename + "decal" + std::to_string(currentDecal) + ".tga";
 			SceneManager::planeColor[0] = planeColor[0];

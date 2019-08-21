@@ -36,7 +36,7 @@ private:
 	unsigned int enemyCount;
 	unsigned int startCount;
 	void EndWave();
-	void SpawnEnemy();
+	bool SpawnEnemy();
 	vec3 SpawnPos1;
 	vec3 SpawnPos2;
 	double spawnTimer;

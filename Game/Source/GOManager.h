@@ -106,6 +106,8 @@ public:
 
 	bool muted;
 	void playSound(std::string name);
+
+	bool checkForEnemy();
 };
 
 #endif

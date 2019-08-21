@@ -77,6 +77,7 @@ void TankEnemy::Fire()
 {
 	if (bulletCooldown <= 0.0)
 	{
+		GOManager::GetInstance()->playSound("TShoot");
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
 		object->wrapMode = GameObject::SW_CLEAR;
@@ -100,7 +101,7 @@ void TankEnemy::Update(double dt)
 		FireAt(playerGO->pos);
 		//MoveTo(playerGO->pos);
 		GOref->dir = (playerGO->pos - GOref->pos).Normalized();
-		//if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
+		if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
 		Fire();
 		
 			switch (Stage)

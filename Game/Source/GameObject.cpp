@@ -102,6 +102,22 @@ void GameObject::Update(double dt)
 			scale += defaultScale * 0.7f * static_cast<float>(dt);
 		}
 		break;
+	case GameObject::UPGRADE_1:
+	case GameObject::UPGRADE_2:
+	case GameObject::UPGRADE_3:
+		if (vel.y >= 0 && hasGravity)
+		{
+			Terrain* terreference = GOManager::GetInstance()->terreference;
+			Vector3 frontCheck =pos + Vector3(scale.x / 2, 0, 0);
+			Vector3 rearCheck = pos - Vector3(scale.x / 2, 0, 0);
+			angle = atan2(terreference->GetHeight(frontCheck).y - terreference->GetHeight(rearCheck).y, scale.x);
+			norm.Set(cos(angle), sin(angle), 0);
+			dir.Set(-norm.y, norm.x);
+			pos.y = (terreference->GetHeight(frontCheck).y + terreference->GetHeight(rearCheck).y) / 2 + scale.y;
+			pos.x = Math::Clamp(pos.x, 4.f, 173.f);
+
+			//pos.y = terreference->GetHeight(pos).y;
+		}
 	}
 }
 

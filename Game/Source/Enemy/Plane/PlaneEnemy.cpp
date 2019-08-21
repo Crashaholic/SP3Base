@@ -25,7 +25,15 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	this->SetGORef(GOManager::GetInstance()->fetchGO());
 	GOref->type = (Math::RandIntMinMax(0, 1) ? GameObject::ENEMY_PLANE_PASSIVE : GameObject::ENEMY_PLANE_AGGRESSIVE);
 	GOref->pos = pos;
-	GOref->scale.Set(4.4f, 1.8f, 1.0f);
+	switch (GOref->type)
+	{
+	case GameObject::ENEMY_PLANE_PASSIVE:
+		GOref->scale = Vector3(6.0f, 1.9f, 1.0f)* 3.0f;
+		break;
+	case GameObject::ENEMY_PLANE_AGGRESSIVE:
+		GOref->scale.Set(4.4f, 1.8f, 1.0f);
+		break;
+	}
 	GOref->angle -= Math::DegreeToRadian(0);
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f); 
 	GOref->norm = GOref->dir;
@@ -35,13 +43,16 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	GOref->active = true;
 	GOref->hasGravity = false;
 	GOref->vel.Set(1, 0, 0);
+	GOref->color[0].Set(0.6f, 0.4f, 0.2f);
+	GOref->color[1].Set(0.5f, 0.3f, 0.1f);
 	this->m_worldWidth = m_worldWidth;
 	topSpeed = 20;
 	priAmmo = 0;
-	cooldownLimit = 3;
+	cooldownLimit = 0.3f;
 	cooldown = cooldownLimit;
 	originalHeight = pos.y;
-	AddPri(10);
+	AddPri(2);
+	//priProjectiles = { NULL };
 }
 
 float GetAngle(vec3 a, vec3 b)
@@ -75,18 +86,22 @@ void PlaneEnemy::Update(double dt)
 
 		if (GOref->dir.x < 0)
 		{
-			GOref->scale.y = -1.8f;
+			if(GOref->scale.y>0)
+				GOref->scale.y = -GOref->scale.y;
 		}
 		else
 		{
-			GOref->scale.y = 1.8f;
+			if (GOref->scale.y <0)
+				GOref->scale.y = -GOref->scale.y;
 		}
 
 		if (GOref->type == GameObject::ENEMY_PLANE_AGGRESSIVE)
 		{
 			cooldown = Math::Max(cooldown - 1.f * (float)dt, 0.f);
-
-			if (abs(GOref->pos.x - playerGO->pos.x) < 30.0f && cooldown <= 0.f)
+			Vector3 windSpeed = GOManager::GetInstance()->windVector;
+			float heightDifference = GOref->pos.y - playerGO->pos.y;
+			double timeToHit = fabs(Math::Max(-sqrt(2 * abs(GOManager::GetInstance()->gravity.y + windSpeed.y)*heightDifference), sqrt(2 * abs(GOManager::GetInstance()->gravity.y + windSpeed.y)*heightDifference)) / GOManager::GetInstance()->gravity.y);
+			if (abs(GOref->pos.x - playerGO->pos.x) < abs(GOref->vel.x) * (float)timeToHit - windSpeed.x * (float)timeToHit  && cooldown <= 0.f)
 			{
 				Primary();
 				cooldown = cooldownLimit;

@@ -38,8 +38,7 @@ void PlayerTank::Update(double dt)
 	if (GOref->active)
 	{
 		// Tank Movement
-		tankSpeed = Math::Max(20.f + (GOManager::GetInstance()->upgrade_2 * 5.f), 20.f);
-
+		tankSpeed = Math::Max(20.f + (GOManager::GetInstance()->upgrade_2 * 1.f), 20.f);
 		Terrain* terreference = GOManager::GetInstance()->terreference;
 		Vector3 frontCheck = GOref->pos + Vector3(GOref->scale.x / 2, 0, 0);
 		Vector3 rearCheck = GOref->pos - Vector3(GOref->scale.x / 2, 0, 0);
@@ -48,10 +47,7 @@ void PlayerTank::Update(double dt)
 		//vec3 n = terreference->GetNormal(this->GOref->pos);
 		GOref->norm.Set(cos(GOref->angle), sin(GOref->angle), 0);
 		GOref->dir.Set(-GOref->norm.y, GOref->norm.x);
-		//GOref->norm.Set(n.y, -n.x);
-		//GOref->norm.Set(Math::DegreeToRadian(cos(GOref->angle)), Math::DegreeToRadian(sin(GOref->angle)));
 		GOref->pos.y = (terreference->GetHeight(frontCheck).y + terreference->GetHeight(rearCheck).y) / 2 + heightOffset;
-		//GOref->pos.y = terreference->GetHeight(GOref->pos).y+ heightOffset;
 		GOref->pos.x = Math::Clamp(GOref->pos.x, 4.f, 173.f);
 		//Tank barrel control
 		turretAngle = Math::Clamp(turretAngle, Math::DegreeToRadian(30.f), Math::DegreeToRadian(150.f));

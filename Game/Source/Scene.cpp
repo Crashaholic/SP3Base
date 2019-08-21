@@ -94,6 +94,8 @@ void Scene::Init()
 	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
 	meshList[GEO_ENEMY_BUILDING] = MeshBuilder::GenerateQuad("ENEMY_BUILDING", Color(1.f, 0.f, 0.f), 2.0f);
 	meshList[GEO_ENEMY_BUILDING]->textureID[0] = LoadTGA("Image//Enemybuilding1.tga");
+	meshList[GEO_ENEMY_PLANE_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_PLANE_PASSIVE", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_ENEMY_PLANE_PASSIVE]->textureID[0] = LoadTGA("Image//Antonov.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
 
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
@@ -328,6 +330,9 @@ void Scene::RenderGO(GameObject *go)
 			RenderMesh(meshList[GEO_PLAYER_PLANE_A10], false);
 			break;
 		case GameObject::ENEMY_PLANE_PASSIVE:
+			RenderMesh(meshList[GEO_ENEMY_PLANE_PASSIVE], false);
+			break;
+		case GameObject::ENEMY_PLANE_AGGRESSIVE:
 		case GameObject::PLAYER_PLANE_KOMET:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
 			break;
@@ -359,6 +364,7 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::PLAYER_PROJECTILE_MACHINE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
 			break;
+		case GameObject::ENEMY_PROJECTILE_BOMB:
 		case GameObject::PLAYER_PROJECTILE_BOMB:
 		case GameObject::PLAYER_PROJECTILE_NUKE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_BOMB], false);
@@ -590,7 +596,7 @@ void Scene::RGButtonRender(Button * b, std::string s)
 		modelStack.PopMatrix();
 
 	modelStack.Scale(4, 4, 4);
-	modelStack.Translate(-(float)s.length() / 4, 0, 0);
+	modelStack.Translate((-(float)s.length() / 4) + 0.5f, 0, 0);
 	RenderText(meshList[GEO_TEXT], s, Color(1, 1, 1));
 	modelStack.PopMatrix();
 }
@@ -633,6 +639,11 @@ void Scene::goWrap()
 				if (go->pos.x > m_worldWidth + 5.0f
 					|| go->pos.x < -5.0f || go->pos.y < -5.0f)
 					go->active = false;
+				hit = true;
+				break;
+			case GameObject::SW_CLAMP:
+				go->pos.x = Math::Clamp(go->pos.x, go->scale.x, m_worldWidth - go->scale.x);
+				go->pos.y = Math::Clamp(go->pos.y, go->scale.y, m_worldHeight - go->scale.y);
 				hit = true;
 				break;
 			case GameObject::SW_CLEAR:

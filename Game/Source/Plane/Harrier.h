@@ -7,9 +7,9 @@ class Harrier : public Plane
 {
 protected:
 	bool VTOLmode;
-	const double reloadSpeed = 0.025;
+	const double reloadSpeed = 0.05;
 	const double sprayRecoverTime = 1.0;
-	const float inaccuracy = 5.0f;
+	const float inaccuracy = 0.5f;
 	float VTOLTopSpeed = 9.8f;
 	bool fire;
 	int currentSpray;

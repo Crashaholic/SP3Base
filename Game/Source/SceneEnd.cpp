@@ -301,7 +301,8 @@ void SceneEnd::Update(double dt)
 		if (inactive == 6)
 			choice = -1;
 	}
-
+	if(SubmittedScore)
+		SceneManager::getSceneManager().switchToScene("Menu", this);
 }
 
 void SceneEnd::Render()

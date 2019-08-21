@@ -29,11 +29,14 @@ void ScenePlane::Init()
 	//plane = dynamic_cast<Komet*>(new Plane);
 	switch (SceneManager::planeChoice)
 	{
+	default:
 	case GEO_PLAYER_PLANE_KOMET:
 		plane = new Komet;
 		break;
 	case GEO_PLAYER_PLANE_A10:
-	default:
+		plane = new A10;
+		break;
+	case GEO_PLAYER_PLANE_HARRIER:
 		plane = new Harrier;
 		break;
 	}
@@ -97,39 +100,33 @@ void ScenePlane::Update(double dt)
 		enemyList[i]->Update(dt);
 	}
 	// Keyboard Section
-	if(Application::IsKeyPressed('1'))
+	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('2'))
+	if (Application::IsKeyPressed('2'))
 		glDisable(GL_CULL_FACE);
-	if(Application::IsKeyPressed('3'))
+	if (Application::IsKeyPressed('3'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(Application::IsKeyPressed('4'))
+	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	if(Application::IsKeyPressed('+'))
+	if (Application::IsKeyPressed('+'))
 	{
 	}
-	if(Application::IsKeyPressed('-'))
+	if (Application::IsKeyPressed('-'))
 	{
 	}
 	static bool lol = false;
-	if(Application::IsKeyPressed('C'))
+	if (Application::IsKeyPressed('C'))
 	{
 		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = decal1;
 	}
 
-	if(Application::IsKeyPressed('V'))
+	if (Application::IsKeyPressed('V'))
 	{
 		plane->GOref->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
 		plane->GOref->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
 	}
 
-	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
-
-	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
-	{
-		SpawnEnemy();
-	}
 
 	static bool hPressed = false;
 	if (Application::IsKeyPressed('H'))
@@ -151,39 +148,39 @@ void ScenePlane::Update(double dt)
 
 	// Mouse Section
 	static bool bLButtonState = false;
-	if(!bLButtonState && Application::IsMousePressed(0))
+	if (!bLButtonState && Application::IsMousePressed(0))
 	{
 		bLButtonState = true;
-		
+
 		double x, y;
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
-		
+
 		/*
 		vec3 n = terr.GetNormal(Vector3(
-			static_cast<float>(x / w * m_worldWidth), 
-			static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
+			static_cast<float>(x / w * m_worldWidth),
+			static_cast<float>(m_worldHeight - y / h * m_worldHeight),
 			static_cast<float>(0.0f))
 		);
 		LOG_NONE("Terrain Normal: % (% rads) (% deg)", n, atan2(n.y, n.x), Math::RadianToDegree(atan2(n.y, n.x)) - 90.f); //Commented out because we don't always need the information
 		*/
 	}
-	else if(bLButtonState && !Application::IsMousePressed(0))
+	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
 	}
-	
+
 	static bool bRButtonState = false;
-	if(!bRButtonState && Application::IsMousePressed(1))
+	if (!bRButtonState && Application::IsMousePressed(1))
 	{
 		bRButtonState = true;
 	}
-	else if(bRButtonState && !Application::IsMousePressed(1))
+	else if (bRButtonState && !Application::IsMousePressed(1))
 	{
 		bRButtonState = false;
 	}
-	
+
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
 	m_goList = GOManager::GetInstance()->getlist();
@@ -194,6 +191,16 @@ void ScenePlane::Update(double dt)
 	if (GOManager::GetInstance()->planeLives <= 0)
 	{
 		SceneManager::getSceneManager().switchToScene("End", this);
+	}
+	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
+
+	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
+	{
+		if (!SpawnEnemy())
+			if (!GOManager::GetInstance()->checkForEnemy() && plane->GOref->pos.y > m_worldHeight / 2)
+			{
+				EndWave();
+			}
 	}
 }
 
@@ -295,12 +302,12 @@ void ScenePlane::EndWave()
 	}
 }
 
-void ScenePlane::SpawnEnemy()
+bool ScenePlane::SpawnEnemy()
 {
 	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
-		return;
+		return false;
 	}
 	else
 	{
@@ -324,4 +331,5 @@ void ScenePlane::SpawnEnemy()
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;
 	}
+	return true;
 }

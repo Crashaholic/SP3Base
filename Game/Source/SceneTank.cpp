@@ -96,13 +96,6 @@ void SceneTank::Update(double dt)
 	{
 	}
 
-	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
-
-	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
-	{
-		SpawnEnemy();
-	}
-
 	static bool hPressed = false;
 	if (Application::IsKeyPressed('H'))
 	{
@@ -151,6 +144,16 @@ void SceneTank::Update(double dt)
 	if (GOManager::GetInstance()->tankLives <= 0)
 	{
 		SceneManager::getSceneManager().switchToScene("End", this);
+	}
+	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
+
+	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
+	{
+		if (!SpawnEnemy())
+			if (!GOManager::GetInstance()->checkForEnemy())
+			{
+				EndWave();
+			}
 	}
 }
 
@@ -216,6 +219,7 @@ void SceneTank::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+	delete player;
 }
 
 void SceneTank::EndWave()
@@ -228,12 +232,12 @@ void SceneTank::EndWave()
 	terr.GenerateTerrainMesh();
 }
 
-void SceneTank::SpawnEnemy()
+bool SceneTank::SpawnEnemy()
 {
 	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
-		return;
+		return false;
 	}
 	else
 	{
@@ -244,4 +248,5 @@ void SceneTank::SpawnEnemy()
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;
 	}
+	return true;
 }

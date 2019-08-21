@@ -24,24 +24,27 @@ void Harrier::Secondary()
 {
 	if (secAmmo > 0)
 	{
-		GameObject* missile = GOManager::GetInstance()->fetchGO();
-		missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
-		if (GOref->dir.x >= 0)
-			missile->vel = Vector3(GOref->dir.y, -GOref->dir.x);
-		else
-			missile->vel = Vector3(-GOref->dir.y, GOref->dir.x);
-		missile->vel += GOref->vel;
-		missile->dir = GOref->dir;
-		missile->pos = GOref->pos;
-		missile->scale.Set(1, 2, 1);
-		missile->hasGravity = true;
-		missile->wrapMode = GameObject::SW_CLEAR;
-		for (int i = 0; i < MAX_TEXTURES; ++i)
-			missile->color[i] = GOref->color[i];
-		--secAmmo;
-		--GOManager::GetInstance()->upgrade_2;
+		for (int i = 0; i < 10; ++i)
+		{
+			GameObject* missile = GOManager::GetInstance()->fetchGO();
+			missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
+			if (GOref->dir.x >= 0)
+				missile->vel = Vector3(GOref->dir.y, -GOref->dir.x);
+			else
+				missile->vel = Vector3(-GOref->dir.y, GOref->dir.x);
+			missile->vel += GOref->vel;
+			missile->dir = GOref->dir;
+			missile->pos = GOref->pos;
+			missile->scale.Set(1, 2, 1);
+			missile->hasGravity = true;
+			missile->wrapMode = GameObject::SW_CLEAR;
+			for (int i = 0; i < MAX_TEXTURES; ++i)
+				missile->color[i] = GOref->color[i];
+			--secAmmo;
+			--GOManager::GetInstance()->upgrade_2;
 
-		GOManager::GetInstance()->totalShots += 1;
+			GOManager::GetInstance()->totalShots += 1;
+		}
 	}
 }
 
@@ -154,6 +157,7 @@ void Harrier::Update(double dt)
 		{
 			if (reload <= 0.0)
 			{
+				GOManager::GetInstance()->playSound("PShoot");
 				reload = reloadSpeed;
 				--currentSpray;
 				GameObject* bullet = GOManager::GetInstance()->fetchGO();
@@ -178,6 +182,7 @@ void Harrier::Update(double dt)
 			}
 		}
 		//GOManager::GetInstance()->upgrade_2 = secAmmo;
+		secAmmo = GOManager::GetInstance()->upgrade_2;
 
 
 	}

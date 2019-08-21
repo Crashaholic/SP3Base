@@ -11,8 +11,10 @@ GOManager::GOManager()
 	CSoundEngine::GetInstance()->AddSound("HitEnemy", "Audio//Hit enemy.mp3");
 	CSoundEngine::GetInstance()->AddSound("HitTerr", "Audio//Hit terrain.wav");
 	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
-	CSoundEngine::GetInstance()->AddSound("Select", "Audio//Selection.wav");
+	CSoundEngine::GetInstance()->AddSound("Select", "Audio//click.ogg");
 	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
+	CSoundEngine::GetInstance()->AddSound("PShoot", "Audio//click.ogg");
+	CSoundEngine::GetInstance()->AddSound("PShootMissile", "Audio//launch1.ogg");
 	playSound("HitEnemy");
 
 	sceneID = NONE;
@@ -508,7 +510,8 @@ void GOManager::terrainResponse(GameObject * go)
 		LOG_TRACE("UPGRADE collided with terrain");
 		if (go->vel.y < 0.0f)
 		{
-			go->vel.y = 0.0f;
+			go->vel.SetZero();
+			//go->hasGravity = false;
 		}
 		break;
 	}
@@ -826,14 +829,16 @@ void GOManager::enemyDeath(GameObject * go)
 			}
 			up->active = true;
 			up->scale.Set(3.f, 3.f, 1.f);
-
+			up->wrapMode = up->SW_CLAMP;
 			switch (sceneID)
 			{
 			case STYPE::FROM_PLANE:
 				up->vel.y = 10.0f;
+				up->hasGravity = false;
 				break;
 			case STYPE::FROM_TANK:
 				up->vel.y = -10.0f;
+				up->hasGravity = true;
 				break;
 			default:
 				LOG_ERROR("Tried to spawn upgrade outside of appropriate scene!");
@@ -860,4 +865,26 @@ void GOManager::playSound(std::string name)
 	{
 		CSoundEngine::GetInstance()->PlayASound(name);
 	}
+}
+
+bool GOManager::checkForEnemy()
+{
+	for (unsigned int i = 0; i < m_goList.size(); ++i)
+	{
+		if (m_goList[i]->active)
+		{
+			switch (m_goList[i]->type)
+			{
+			case GameObject::ENEMY_BUILDING:
+			case GameObject::ENEMY_PLANE_AGGRESSIVE:
+			case GameObject::ENEMY_PLANE_PASSIVE:
+			case GameObject::ENEMY_TANK_AGGRESSIVE:
+			case GameObject::ENEMY_TANK_PASSIVE:
+			case GameObject::ENEMY_PROJECTILE_BOMB:
+				return true;
+			}
+		}
+	}
+	return false;
+
 }

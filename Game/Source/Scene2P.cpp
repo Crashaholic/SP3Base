@@ -193,7 +193,7 @@ void Scene2P::Update(double dt)
 	if ((GOManager::GetInstance()->planeLives <= 0) ||
 		(GOManager::GetInstance()->tankLives <= 0))
 	{
-		SceneManager::getSceneManager().switchToScene("End", this);
+		SceneManager::getSceneManager().switchToScene("2PEnd", this);
 	}
 }
 

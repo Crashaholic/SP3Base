@@ -24,6 +24,7 @@ void A10::Secondary()
 {
 	if (secAmmo > 0)
 	{
+		GOManager::GetInstance()->playSound("PShootMissile");
 		GameObject* missile = GOManager::GetInstance()->fetchGO();
 		missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
 		if(GOref->dir.x>=0)
@@ -56,6 +57,7 @@ void A10::Update(double dt)
 		{
 			if (reload <= 0.0)
 			{
+				GOManager::GetInstance()->playSound("PShoot");
 				reload = reloadSpeed;
 				--currentSpray;
 				GameObject* bullet = GOManager::GetInstance()->fetchGO();

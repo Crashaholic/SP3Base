@@ -127,6 +127,7 @@ void Application::Init()
 	Scene *sc7 = new SceneEnd();
 	Scene *sc8 = new Scene2Select();
 	Scene *sc9 = new Scene2P();
+	Scene *sc10 = new Scene2PEnd();
 	manager = &SceneManager::getSceneManager();
 	manager->addScene("Menu", sc1);
 	manager->addScene("Plane", sc2);
@@ -137,6 +138,7 @@ void Application::Init()
 	manager->addScene("End", sc7);
 	manager->addScene("2Select", sc8);
 	manager->addScene("2P", sc9);
+	manager->addScene("2PEnd", sc10);
 	manager->firstScene("Menu");
 	manager->readMonies();
 }
