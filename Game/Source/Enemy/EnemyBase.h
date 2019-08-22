@@ -1,4 +1,5 @@
 #pragma once
+#include "../zcustompch.h"
 #include <Vector3.h>
 
 struct GameObject;

@@ -1,7 +1,4 @@
-
-#include "Mesh.h"
-#include "GL\glew.h"
-#include "Vertex.h"
+#include "zcustompch.h"
 
 Mesh::Mesh(const std::string &meshName)
 	: name(meshName)

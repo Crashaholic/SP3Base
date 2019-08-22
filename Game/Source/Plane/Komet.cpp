@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Komet.h"
 
 Komet::Komet()

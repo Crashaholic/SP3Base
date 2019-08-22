@@ -1,9 +1,7 @@
+#include "zcustompch.h"
 
-#include "GameObject.h"
-#include "Mtx44.h"
 #include "GOManager.h"
 #include "SceneManager.h"
-#include "Logging.h"
 
 GOManager::GOManager()
 {

@@ -1,15 +1,8 @@
+#include "zcustompch.h"
 #include "SceneMenu.h"
-#include "GL\glew.h"
-
-#include "shader.hpp"
-#include "MeshBuilder.h"
 #include "Application.h"
-#include "Utility.h"
-#include "LoadTGA.h"
-#include <sstream>
 
 #include "SceneManager.h"
-#include "Logging.h"
 
 SceneMenu::SceneMenu()
 {

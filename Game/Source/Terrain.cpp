@@ -1,7 +1,5 @@
+#include "zcustompch.h"
 #include "Terrain.h"
-#include "MyMath.h"
-#include "Logging.h"
-#include <GL\glew.h>
 
 Terrain::Terrain()
 	: tMesh(nullptr)

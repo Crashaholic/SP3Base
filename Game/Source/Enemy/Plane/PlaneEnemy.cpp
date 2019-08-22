@@ -1,7 +1,10 @@
+#include "zcustompch.h"
 #include "PlaneEnemy.h"
 #include "../../GOManager.h"
 
 #include "Logging.h"
+
+
 PlaneEnemy::PlaneEnemy()
 {
 }

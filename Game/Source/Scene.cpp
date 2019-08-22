@@ -1,11 +1,8 @@
+#include "zcustompch.h"
 #include "Scene.h"
 
-#include "shader.hpp"
-#include "MeshBuilder.h"
 #include "Application.h"
-#include "Utility.h"
-#include "LoadTGA.h"
-#include <sstream>
+
 
 void Scene::Init()
 {	

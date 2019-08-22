@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Scene2Select.h"
 #include "GL\glew.h"
 
@@ -10,6 +11,7 @@
 
 #include "SceneManager.h"
 #include "Logging.h"
+
 
 Scene2Select::Scene2Select()
 {
