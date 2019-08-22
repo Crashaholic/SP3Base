@@ -17,7 +17,7 @@ public:
 
 private:
 	//Mesh* meshList[NUM_GEOMETRY];
-	std::string fps;
+	float fps;
 
 	Camera camera;
 

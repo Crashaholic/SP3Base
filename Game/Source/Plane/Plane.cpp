@@ -65,7 +65,14 @@ void Plane::Update(double dt)
 	{
 		ReadInput(dt, 'A', 'D', 'Q', 'E');
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
-		GOref->vel = GOref->dir * topSpeed;
+
+		// GOref->vel = GOref->dir * topSpeed;
+		GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 4.0f;
+		if (GOref->vel.Length() >= topSpeed)
+		{
+			GOref->vel = GOref->vel.Normalized() * topSpeed;
+		}
+
 		GOref->pos += GOref->vel * (float)dt;
 		GOref->norm = GOref->dir;
 		if (GOref->dir.x < 0)
