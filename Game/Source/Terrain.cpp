@@ -75,6 +75,33 @@ Vector3 Terrain::GetNormal(Vector3 Position)
 	return vec3(v.y, -v.x, 0);
 }
 
+void Terrain::Update(double dt)
+{
+	float transitionSpeed = 10.0f;
+	bool terrainDifference = false;
+	for (unsigned int i = 0; i < TERRAIN_SIZE;++i)
+	{
+		Points[i].x = NewPoints[i].x;
+		if (Points[i].y != NewPoints[i].y)
+		{
+			if (fabs(NewPoints[i].y - Points[i].y) <= transitionSpeed * static_cast<float>(dt))
+			{
+				Points[i].y = NewPoints[i].y;
+			}
+			else
+			{
+				if (Points[i].y < NewPoints[i].y)
+					Points[i].y += transitionSpeed * static_cast<float>(dt);
+				else
+					Points[i].y -= transitionSpeed * static_cast<float>(dt);
+			}
+			terrainDifference = true;
+		}
+	}
+	if (terrainDifference)
+		GenerateTerrainMesh();
+}
+
 void Terrain::GenerateRandomHeight(float worldWidth)
 {
 	float lastY = 0;
@@ -83,29 +110,31 @@ void Terrain::GenerateRandomHeight(float worldWidth)
 
 		if (i == 0)
 		{
-			Points[i].y = Math::RandFloatMinMax(10.f, 20.f);
-			lastY = Points[i].y;
-			Points[i].x = 0;
+			NewPoints[i].y = Math::RandFloatMinMax(10.f, 20.f);
+			lastY = NewPoints[i].y;
+			NewPoints[i].x = 0;
 			Bottom[i].x = 0;
 		}
 		else if (i == TERRAIN_SIZE - 1)
 		{
-			Points[i].x = static_cast<float>(worldWidth);
+			NewPoints[i].x = static_cast<float>(worldWidth);
 			Bottom[i].x = static_cast<float>(worldWidth);
-			Points[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
+			NewPoints[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
 		}
 		else
 		{
-			Points[i].x = i * ((float)worldWidth / ((float)TERRAIN_SIZE - 1.f));
+			NewPoints[i].x = i * ((float)worldWidth / ((float)TERRAIN_SIZE - 1.f));
 			Bottom[i].x = i * ((float)worldWidth / ((float)TERRAIN_SIZE - 1.f));
-			Points[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
-			if (Points[i].y < 0)
+			NewPoints[i].y = lastY + Math::RandFloatMinMax((float)TERRAIN_DN, (float)TERRAIN_UP);
+			if (NewPoints[i].y < 0)
 			{
 				lastY = 3;
-				Points[i].y = 3;
+				NewPoints[i].y = 3;
 			}
-			lastY = Points[i].y;
+			lastY = NewPoints[i].y;
 		}
+		Points[i].x = NewPoints[i].x;
+
 		//LOG_NONE("Points[%]: %", i, Points[i]);
 	}
 
@@ -159,6 +188,8 @@ void Terrain::DeformTerrain(Vector3 ExplosionPosition, float ExplosionRadius)
 	{
 		if ((Points[i] - ExplosionPosition).Length() > ExplosionRadius*2.0f)
 			continue;
+		NewPoints[i].y -= ExplosionRadius / Math::Max(1.0f,(Points[i] - ExplosionPosition).Length());
+		NewPoints[i].y = Math::Max(NewPoints[i].y, 1.0f);
 		Points[i].y -= ExplosionRadius / Math::Max(1.0f,(Points[i] - ExplosionPosition).Length());
 		Points[i].y = Math::Max(Points[i].y, 1.0f);
 	}

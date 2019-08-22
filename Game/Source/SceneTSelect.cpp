@@ -58,8 +58,8 @@ void SceneTSelect::Init()
 
 	tanks[0] = GEO_PLAYER_TANK;
 	decals[0][0] = 0;//Decals option 0 is... No decals
-	//decals[0][1] = LoadTGA("Image//Kometdecal1.tga");
-	//decals[0][2] = LoadTGA("Image//Kometdecal2.tga");
+	decals[0][1] = LoadTGA("Image//Turrettankdecal1.tga");
+	decals[0][2] = LoadTGA("Image//Turrettankdecal2.tga");
 
 
 	sArray[0] = "Start";
@@ -149,7 +149,7 @@ void SceneTSelect::Update(double dt)
 			switch (currentTank)
 			{
 			case 0:
-				tankname = "";
+				tankname = "Turrettank";
 				break;
 			case 1:
 				tankname = "";
@@ -192,6 +192,7 @@ void SceneTSelect::Update(double dt)
 	}
 	currentTank = Math::Wrap(currentTank, 0, MAX_TANKS - 1);
 	currentDecal = Math::Wrap(currentDecal, 0, MAX_TDECALS);
+	meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal];
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))

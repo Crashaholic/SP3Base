@@ -59,6 +59,7 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
+	terreference->Update(dt);
 	// Wind logic
 	if (windBT > 0.0)
 	{
@@ -560,6 +561,7 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
+	playSound("HitEnemy");
 	LOG_ERROR("Player plane exploded");
 	--planeLives;
 	++tankKills;
@@ -585,6 +587,7 @@ void GOManager::planeDeath(GameObject * go)
 
 void GOManager::tankDeath(GameObject* go)
 {
+	playSound("HitEnemy");
 	LOG_ERROR("Player tank exploded");
 	--tankLives;
 	++planeKills;

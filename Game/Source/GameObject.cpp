@@ -54,6 +54,9 @@ void GameObject::Update(double dt)
 	}
 	switch (type)
 	{
+	case ENEMY_BUILDING:
+		pos = GOManager::GetInstance()->terreference->GetHeight(pos);
+		break;
 	case PLAYER_PROJECTILE_MACHINE:
 		try
 		{

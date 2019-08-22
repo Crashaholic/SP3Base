@@ -3,7 +3,7 @@
 #define SCENE_TSELECT_H
 #define NUM_TBUTTON 6
 #define NUM_TSLIDER 6
-#define MAX_TDECALS 0
+#define MAX_TDECALS 2
 #define MAX_TANKS 1
 
 #include "Scene.h"
