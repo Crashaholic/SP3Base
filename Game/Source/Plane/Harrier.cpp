@@ -24,7 +24,7 @@ void Harrier::Secondary()
 {
 	if (secAmmo > 0)
 	{
-		GOManager::GetInstance()->playSound("PShootMissile");
+		GOManager::GetInstance()->playSound("PBomb");
 		float deviation = 0.1f;
 		int numBombs = 5;
 		for (int i = 0; i < numBombs; ++i)

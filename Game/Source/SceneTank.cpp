@@ -50,8 +50,8 @@ void SceneTank::Init()
 	// Set terrain reference in GOManager
 	GOManager::GetInstance()->terreference = &terr;
 
-	SpawnPos1 = vec3(-4.9999f, 0, 0);
-	SpawnPos2 = vec3(m_worldWidth + 4.9999f, 0, 0);
+	SpawnPos1 = vec3(-300.f, 0, 0);
+	SpawnPos2 = vec3(m_worldWidth + 300.f, 0, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
@@ -243,7 +243,7 @@ bool SceneTank::SpawnEnemy()
 	{
 		bool spawner = rand() % 2;
 		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
-		enemyList.push_back(new PlaneEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, player->GOref, m_worldWidth));
+		enemyList.push_back(new PlaneEnemy({ temp.x, Math::RandFloatMinMax(m_worldHeight/2, m_worldHeight), temp.z }, player->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;
