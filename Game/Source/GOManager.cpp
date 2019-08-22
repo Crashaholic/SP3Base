@@ -13,9 +13,13 @@ GOManager::GOManager()
 	CSoundEngine::GetInstance()->AddSound("Upgrade", "Audio//Upgrade.wav");
 	CSoundEngine::GetInstance()->AddSound("Select", "Audio//click.ogg");
 	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
-	CSoundEngine::GetInstance()->AddSound("PShoot", "Audio//click.ogg");
+	//CSoundEngine::GetInstance()->AddSound("PShoot", "Audio//click.ogg");
+	CSoundEngine::GetInstance()->AddSound("PShoot", "Audio//PShoot.mp3");
+	CSoundEngine::GetInstance()->AddSound("PBomb", "Audio//Bombdrop1.wav");
+	CSoundEngine::GetInstance()->AddSound("PBombFall", "Audio//Bombfall1.mp3");
 	CSoundEngine::GetInstance()->AddSound("PShootMissile", "Audio//launch1.ogg");
-	playSound("HitEnemy");
+	CSoundEngine::GetInstance()->AddSound("Silence", "Audio//Silence.mp3");
+	playSound("Silence");
 
 	sceneID = NONE;
 	planeLives = 2;

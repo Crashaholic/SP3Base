@@ -39,6 +39,7 @@
     <ClCompile Include="Source\Plane\Harrier.cpp" />
     <ClCompile Include="SoundEngine\SoundEngine.cpp" />
     <ClCompile Include="Source\Scene2PEnd.cpp" />
+    <ClCompile Include="Source\zcustompch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tank\PlayerTank.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="Source\Plane\Harrier.h" />
     <ClInclude Include="SoundEngine\SoundEngine.h" />
     <ClInclude Include="Source\Scene2PEnd.h" />
+    <ClInclude Include="Source\zcustompch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\comg.frag" />

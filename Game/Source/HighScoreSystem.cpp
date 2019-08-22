@@ -91,3 +91,37 @@ void HighScoreSystem::SubmitHighscoreT(unsigned int score, std::string name)
 	fileobj.close();
 }
 
+std::string HighScoreSystem::GetHighscoreP()
+{
+	std::fstream fileobj;
+	std::vector<Score> currentHighscores;
+
+	fileobj.open("SaveData/highscoresP.txt");
+	std::string temp;
+	unsigned short counter = 0;
+	std::string total;
+	while (std::getline(fileobj, temp))
+	{
+		total += temp + '\n';
+	}
+	fileobj.close();
+	return total;
+}
+
+std::string HighScoreSystem::GetHighscoreT()
+{
+	std::fstream fileobj;
+	std::vector<Score> currentHighscores;
+
+	fileobj.open("SaveData/highscoresT.txt");
+	std::string temp;
+	unsigned short counter = 0;
+	std::string total;
+	while (std::getline(fileobj, temp))
+	{
+		total += temp + '\n';
+	}
+	fileobj.close();
+	return total;
+}
+

@@ -7,6 +7,7 @@ void Plane::Primary()
 	{
 		if (!priProjectiles[i])
 		{
+			GOManager::GetInstance()->playSound("PBomb");
 			GameObject* bomb = GOManager::GetInstance()->fetchGO();
 			bomb->type = GameObject::PLAYER_PROJECTILE_BOMB;
 			bomb->vel = GOref->vel;
@@ -18,6 +19,10 @@ void Plane::Primary()
 				bomb->color[i] = GOref->color[i];
 			priProjectiles[i] = bomb;
 			GOManager::GetInstance()->totalShots += 1;
+			if (bomb->pos.y > GOManager::GetInstance()->terreference->GetHeight(bomb->pos).y+25)
+			{
+				GOManager::GetInstance()->playSound("PBombFall");
+			}
 			break;
 		}
 	}
@@ -27,6 +32,7 @@ void Plane::Secondary()
 {
 	if (secAmmo > 0)
 	{
+		GOManager::GetInstance()->playSound("PBomb");
 		GOManager::GetInstance()->totalShots += 1;
 		GameObject* bomb = GOManager::GetInstance()->fetchGO();
 		bomb->type = GameObject::PLAYER_PROJECTILE_NUKE;
@@ -39,6 +45,10 @@ void Plane::Secondary()
 			bomb->color[i].Set(1, 0, 0);
 		--secAmmo;
 		--GOManager::GetInstance()->upgrade_2;
+		if (bomb->pos.y > GOManager::GetInstance()->terreference->GetHeight(bomb->pos).y + 25)
+		{
+			GOManager::GetInstance()->playSound("PBombFall");
+		}
 	}
 	//bomb = dynamic_cast<GameObject*>(bomb);
 }

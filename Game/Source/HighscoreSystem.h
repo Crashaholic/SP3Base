@@ -55,6 +55,9 @@ public:
 	void SubmitHighscoreP(unsigned int score, std::string name);
 	void SubmitHighscoreT(unsigned int score, std::string name);
 
+	std::string GetHighscoreP();
+	std::string GetHighscoreT();
+
 };
 
 #endif
