@@ -44,12 +44,12 @@ void Scene2PEnd::Init()
 	{
 	case GOManager::STYPE::FROM_PLANE:
 	{
-		SceneManager::getSceneManager().money += GOManager::GetInstance()->planeHighscore;
+		SceneManager::getSceneManager()->money += GOManager::GetInstance()->planeHighscore;
 		break;
 	}
 	case GOManager::STYPE::FROM_TANK:
 	{
-		SceneManager::getSceneManager().money += GOManager::GetInstance()->tankHighscore;
+		SceneManager::getSceneManager()->money += GOManager::GetInstance()->tankHighscore;
 		break;
 	}
 	default:
@@ -102,7 +102,7 @@ void Scene2PEnd::Update(double dt)
 		bLButtonState = false;
 
 		if (bBack->checkMouse())
-			SceneManager::getSceneManager().switchToScene("Menu", this);
+			SceneManager::getSceneManager()->switchToScene("Menu", this);
 	}
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -166,7 +166,7 @@ void Scene2PEnd::Render()
 void Scene2PEnd::Exit()
 {
 	// As we exit the scene, write the new data to the txt file
-	SceneManager::getSceneManager().writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
+	SceneManager::getSceneManager()->writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
 
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)

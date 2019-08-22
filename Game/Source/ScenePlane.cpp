@@ -183,7 +183,7 @@ void ScenePlane::Update(double dt)
 	// After GOManager has updated, check for 0 lives
 	if (GOManager::GetInstance()->planeLives <= 0)
 	{
-		SceneManager::getSceneManager().switchToScene("End", this);
+		SceneManager::getSceneManager()->switchToScene("End", this);
 	}
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
 

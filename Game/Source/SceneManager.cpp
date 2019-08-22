@@ -1,5 +1,6 @@
 #include "zcustompch.h"
 #include "SceneManager.h"
+SceneManager* (*SceneManager::getSceneManager)(void) = SceneManager::GetInstance;
 
 int			SceneManager::planeChoice;
 std::string	SceneManager::planeDecalChoice;
@@ -34,12 +35,6 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-	// Legacy
-	/*
-	unordered_map<string, Scene*> empty;
-	using std::swap;
-	swap(sceneList, empty);
-	*/
 }
 
 void SceneManager::firstScene(string name)
@@ -60,12 +55,6 @@ void SceneManager::addScene(string name, Scene * scene)
 		return;
 	}
 	this->sceneList[name] = scene;
-}
-
-SceneManager & SceneManager::getSceneManager()
-{
-	static SceneManager manager;
-	return manager;
 }
 
 Scene * SceneManager::getActiveScene()

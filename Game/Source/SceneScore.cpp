@@ -59,7 +59,7 @@ void SceneScore::Update(double dt)
 		bLButtonState = false;
 		if (backButt.checkMouse())
 		{
-			SceneManager::getSceneManager().switchToScene("Menu", this);
+			SceneManager::getSceneManager()->switchToScene("Menu", this);
 			GOManager::GetInstance()->playSound("Select");
 		}
 	}

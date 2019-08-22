@@ -408,39 +408,39 @@ void Scene::checkSwitch()
 {
 	if (Application::IsKeyPressed('5'))
 	{
-		SceneManager::getSceneManager().switchToScene("Menu", this);
+		SceneManager::getSceneManager()->switchToScene("Menu", this);
 	}
 	if (Application::IsKeyPressed('6'))
 	{
-		SceneManager::getSceneManager().switchToScene("Plane", this);
+		SceneManager::getSceneManager()->switchToScene("Plane", this);
 	}
 	if (Application::IsKeyPressed('7'))
 	{
-		SceneManager::getSceneManager().switchToScene("Tank", this);
+		SceneManager::getSceneManager()->switchToScene("Tank", this);
 	}
 	if (Application::IsKeyPressed('8'))
 	{
-		SceneManager::getSceneManager().switchToScene("PSelect", this);
+		SceneManager::getSceneManager()->switchToScene("PSelect", this);
 	}
 	if (Application::IsKeyPressed('9'))
 	{
-		SceneManager::getSceneManager().switchToScene("TSelect", this);
+		SceneManager::getSceneManager()->switchToScene("TSelect", this);
 	}
 	if (Application::IsKeyPressed('0'))
 	{
-		SceneManager::getSceneManager().switchToScene("Score", this);
+		SceneManager::getSceneManager()->switchToScene("Score", this);
 	}
 	if (Application::IsKeyPressed(VK_OEM_MINUS))
 	{
-		SceneManager::getSceneManager().switchToScene("End", this);
+		SceneManager::getSceneManager()->switchToScene("End", this);
 	}
 	if (Application::IsKeyPressed(VK_OEM_4))
 	{
-		SceneManager::getSceneManager().switchToScene("2Select", this);
+		SceneManager::getSceneManager()->switchToScene("2Select", this);
 	}
 	if (Application::IsKeyPressed(VK_OEM_6))
 	{
-		SceneManager::getSceneManager().switchToScene("2P", this);
+		SceneManager::getSceneManager()->switchToScene("2P", this);
 	}
 }
 

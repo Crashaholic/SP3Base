@@ -152,7 +152,7 @@ void SceneTSelect::Update(double dt)
 			SceneManager::tankColor[0] = tankColor[0];
 			SceneManager::tankColor[1] = tankColor[1];
 			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal];
-			SceneManager::getSceneManager().switchToScene("Tank", this);
+			SceneManager::getSceneManager()->switchToScene("Tank", this);
 			break;
 		case 1:
 			--currentTank;
@@ -167,7 +167,7 @@ void SceneTSelect::Update(double dt)
 			++currentDecal;
 			break;
 		case 5:
-			SceneManager::getSceneManager().switchToScene("Menu", this);
+			SceneManager::getSceneManager()->switchToScene("Menu", this);
 			break;
 		default:
 			break;

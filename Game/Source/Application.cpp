@@ -129,7 +129,7 @@ void Application::Init()
 	Scene *sc8 = new Scene2Select();
 	Scene *sc9 = new Scene2P();
 	Scene *sc10 = new Scene2PEnd();
-	manager = &SceneManager::getSceneManager();
+	manager = SceneManager::getSceneManager();
 	manager->addScene("Menu", sc1);
 	manager->addScene("Plane", sc2);
 	manager->addScene("Tank", sc3);
@@ -182,6 +182,7 @@ void Application::Run()
 		delete x.second;
 	}
 	manager->getList().clear();
+	manager->Destroy();
 	CSoundEngine::Destroy();
 }
 
@@ -189,4 +190,5 @@ void Application::Exit()
 {
 	glfwDestroyWindow(m_window);	//Close OpenGL window and terminate GLFW
 	glfwTerminate();				//Finalize and clean up GLFW
+	delete this;
 }

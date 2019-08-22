@@ -96,16 +96,16 @@ void SceneMenu::Update(double dt)
 		switch (choice)
 		{
 		case 0:
-			SceneManager::getSceneManager().switchToScene("PSelect", this);
+			SceneManager::getSceneManager()->switchToScene("PSelect", this);
 			break;
 		case 1:
-			SceneManager::getSceneManager().switchToScene("TSelect", this);
+			SceneManager::getSceneManager()->switchToScene("TSelect", this);
 			break;
 		case 2:
-			SceneManager::getSceneManager().switchToScene("2Select", this);
+			SceneManager::getSceneManager()->switchToScene("2Select", this);
 			break;
 		case 3:
-			SceneManager::getSceneManager().switchToScene("Score", this);
+			SceneManager::getSceneManager()->switchToScene("Score", this);
 			break;
 		case 4:
 			if (GOManager::GetInstance()->muted == false)

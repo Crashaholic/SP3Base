@@ -43,12 +43,12 @@ void SceneEnd::Init()
 	{
 	case GOManager::STYPE::FROM_PLANE:
 	{
-		SceneManager::getSceneManager().money += GOManager::GetInstance()->planeHighscore;
+		SceneManager::getSceneManager()->money += GOManager::GetInstance()->planeHighscore;
 		break;
 	}
 	case GOManager::STYPE::FROM_TANK:
 	{
-		SceneManager::getSceneManager().money += GOManager::GetInstance()->tankHighscore;
+		SceneManager::getSceneManager()->money += GOManager::GetInstance()->tankHighscore;
 		break;
 	}
 	default:
@@ -117,7 +117,7 @@ void SceneEnd::Update(double dt)
 
 		if (bBack->checkMouse())
 		{
-			SceneManager::getSceneManager().switchToScene("Menu", this);
+			SceneManager::getSceneManager()->switchToScene("Menu", this);
 			GOManager::GetInstance()->playSound("Select");
 		}
 		if (GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_PLANE && HighScoreSystem::GetInstance()->GetEligible(0, GOManager::GetInstance()->planeHighscore) ||
@@ -310,7 +310,7 @@ void SceneEnd::Update(double dt)
 
 	}
 	if(SubmittedScore)
-		SceneManager::getSceneManager().switchToScene("Menu", this);
+		SceneManager::getSceneManager()->switchToScene("Menu", this);
 }
 
 void SceneEnd::Render()
@@ -420,7 +420,7 @@ void SceneEnd::Render()
 void SceneEnd::Exit()
 {
 	// As we exit the scene, write the new data to the txt file
-	SceneManager::getSceneManager().writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
+	SceneManager::getSceneManager()->writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
 
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
