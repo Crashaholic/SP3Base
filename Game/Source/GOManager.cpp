@@ -154,8 +154,8 @@ void GOManager::update(double dt)
 	}
 	else
 	{
-		planeAccuracy	= Math::Min(1.0f, (float)planeKills / (float)totalShots);
-		tankAccuracy	= Math::Min(1.0f, (float)tankKills / (float)totalShots);
+		planeAccuracy = Math::Min(1.0f, (float)planeKills / (float)totalShots);
+		tankAccuracy = Math::Min(1.0f, (float)tankKills / (float)totalShots);
 	}
 }
 
