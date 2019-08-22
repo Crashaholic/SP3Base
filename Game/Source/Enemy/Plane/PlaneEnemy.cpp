@@ -1,7 +1,10 @@
+#include "zcustompch.h"
 #include "PlaneEnemy.h"
 #include "../../GOManager.h"
 
 #include "Logging.h"
+
+
 PlaneEnemy::PlaneEnemy()
 {
 }
@@ -128,6 +131,7 @@ void PlaneEnemy::Primary()
 	{
 		if (!priProjectiles[i])
 		{
+			GOManager::GetInstance()->playSound("PBomb");
 			GameObject* bomb = GOManager::GetInstance()->fetchGO();
 			bomb->type = GameObject::ENEMY_PROJECTILE_BOMB;
 			bomb->vel = GOref->vel;

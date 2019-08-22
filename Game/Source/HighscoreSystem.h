@@ -1,7 +1,6 @@
+#include "zcustompch.h"
 #ifndef HIGHSCORE_SYSTEM
 #define HIGHSCORE_SYSTEM
-#include <SingletonTemplate.h>
-#include <string>
 
 struct Score
 {

@@ -1,11 +1,8 @@
+#include "zcustompch.h"
 #include "Scene.h"
 
-#include "shader.hpp"
-#include "MeshBuilder.h"
 #include "Application.h"
-#include "Utility.h"
-#include "LoadTGA.h"
-#include <sstream>
+
 
 void Scene::Init()
 {	
@@ -77,7 +74,9 @@ void Scene::Init()
 	meshList[GEO_PLAYER_PLANE_HARRIER] = MeshBuilder::GenerateQuad("PLAYER_PLANE_HARRIER", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PLANE_HARRIER]->textureID[0] = LoadTGA("Image//Harrier.tga");
 	meshList[GEO_PLAYER_PROJECTILE_MACHINE] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_MACHINE", Color(1.0f, 1.0f, 1.0f), 2.0f);
-	meshList[GEO_PLAYER_PROJECTILE_MACHINE]->textureID[0] = LoadTGA("Image//Bomb1.tga");
+	meshList[GEO_PLAYER_PROJECTILE_MACHINE]->textureID[0] = LoadTGA("Image//Bullet.tga");
+	meshList[GEO_PLAYER_PROJECTILE_MISSILE] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_MISSILE", Color(1.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_PLAYER_PROJECTILE_MISSILE]->textureID[0] = LoadTGA("Image//Playermissile.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[1] = LoadTGA("Image//Bomb1decal.tga");
@@ -362,15 +361,14 @@ void Scene::RenderGO(GameObject *go)
 			RenderMesh(meshList[GEO_PLAYER_TANKGUN], false);
 			break;
 		case GameObject::PLAYER_PROJECTILE_MACHINE:
+		case GameObject::PLAYER_PROJECTILE_SHELL:
+		case GameObject::ENEMY_PROJECTILE_MACHINE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MACHINE], false);
 			break;
 		case GameObject::ENEMY_PROJECTILE_BOMB:
 		case GameObject::PLAYER_PROJECTILE_BOMB:
 		case GameObject::PLAYER_PROJECTILE_NUKE:
 			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_BOMB], false);
-			break;
-		case GameObject::PLAYER_PROJECTILE_SHELL:
-			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_SHELL], false);
 			break;
 		case GameObject::EXPLOSION:
 			RenderMesh(meshList[GEO_EXPLOSION], false);
@@ -384,6 +382,9 @@ void Scene::RenderGO(GameObject *go)
 		case GameObject::UPGRADE_3:
 			RenderMesh(meshList[GEO_UPGRADE_3], false);
 			break;
+		case GameObject::PLAYER_PROJECTILE_MISSILE:
+			RenderMesh(meshList[GEO_PLAYER_PROJECTILE_MISSILE], false);
+			break;
 		case GameObject::GO_RAIN:
 			RenderMesh(meshList[GEO_RAIN], false);
 			break;
@@ -391,7 +392,7 @@ void Scene::RenderGO(GameObject *go)
 		modelStack.PopMatrix();
 	}
 	
-	if (go->hasCollider())
+	if (go->hasCollider() && false)
 		debugBalls(go);
 
 	glEnable(GL_CULL_FACE);

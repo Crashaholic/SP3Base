@@ -1,7 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <map>
-
+#include "zcustompch.h"
 #include "LoadOBJ.h"
 
 bool LoadOBJ(

@@ -1,16 +1,12 @@
+#include "zcustompch.h"
 #include "SceneEnd.h"
-#include "GL\glew.h"
-
-#include "shader.hpp"
-#include "MeshBuilder.h"
 #include "Application.h"
-#include "Utility.h"
-#include "LoadTGA.h"
 #include <sstream>
-#include "Logging.h"
 
 #include "SceneManager.h"
 #include "HighscoreSystem.h"
+
+
 
 SceneEnd::SceneEnd()
 {

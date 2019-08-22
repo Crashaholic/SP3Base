@@ -1,12 +1,7 @@
+#include "zcustompch.h"
 #include "SceneScore.h"
-#include "GL\glew.h"
 
-#include "shader.hpp"
-#include "MeshBuilder.h"
 #include "Application.h"
-#include "Utility.h"
-#include "LoadTGA.h"
-#include <sstream>
 
 #include "SceneManager.h"
 
@@ -30,7 +25,7 @@ void SceneScore::Init()
 
 	bLightEnabled = true;
 	Math::InitRNG();
-	
+
 	std::string results = HighScoreSystem::GetInstance()->GetHighscoreP();
 	size_t lastpos = 0;
 	for (size_t i = 0; i < results.size(); ++i)
@@ -193,6 +188,14 @@ void SceneScore::Render()
 
 void SceneScore::Exit()
 {
+	for (size_t i = scoresPlane.size(); i > 0; --i)
+	{
+		scoresPlane.pop_back();
+	}
+	for (size_t i = scoresTank.size(); i > 0; --i)
+	{
+		scoresTank.pop_back();
+	}
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{

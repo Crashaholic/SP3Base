@@ -1,9 +1,7 @@
+#include "zcustompch.h"
 
-#include "GameObject.h"
-#include "Mtx44.h"
 #include "GOManager.h"
 #include "SceneManager.h"
-#include "Logging.h"
 
 GOManager::GOManager()
 {
@@ -15,7 +13,7 @@ GOManager::GOManager()
 	CSoundEngine::GetInstance()->AddSound("TShoot", "Audio//Tank shoot.wav");
 	//CSoundEngine::GetInstance()->AddSound("PShoot", "Audio//click.ogg");
 	CSoundEngine::GetInstance()->AddSound("PShoot", "Audio//PShoot.mp3");
-	CSoundEngine::GetInstance()->AddSound("PBomb", "Audio//Bombdrop1.wav");
+	CSoundEngine::GetInstance()->AddSound("PBomb", "Audio//Bombdrop2.wav");
 	CSoundEngine::GetInstance()->AddSound("PBombFall", "Audio//Bombfall1.mp3");
 	CSoundEngine::GetInstance()->AddSound("PShootMissile", "Audio//launch1.ogg");
 	CSoundEngine::GetInstance()->AddSound("Silence", "Audio//Silence.mp3");
@@ -63,6 +61,7 @@ void GOManager::init()
 
 void GOManager::update(double dt)
 {
+	terreference->Update(dt);
 	// Wind logic
 	if (windBT > 0.0)
 	{
@@ -575,6 +574,7 @@ void GOManager::terrainResponse(GameObject * go)
 
 void GOManager::planeDeath(GameObject * go)
 {
+	playSound("HitEnemy");
 	LOG_ERROR("Player plane exploded");
 	--planeLives;
 	++tankKills;
@@ -600,6 +600,7 @@ void GOManager::planeDeath(GameObject * go)
 
 void GOManager::tankDeath(GameObject* go)
 {
+	playSound("HitEnemy");
 	LOG_ERROR("Player tank exploded");
 	--tankLives;
 	++planeKills;

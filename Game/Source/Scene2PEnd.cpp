@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Scene2PEnd.h"
 #include "GL\glew.h"
 
@@ -11,6 +12,7 @@
 
 #include "SceneManager.h"
 #include "HighscoreSystem.h"
+
 
 Scene2PEnd::Scene2PEnd()
 {

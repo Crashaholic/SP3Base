@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Harrier.h"
 #include "../Application.h"
 
@@ -24,15 +25,18 @@ void Harrier::Secondary()
 {
 	if (secAmmo > 0)
 	{
-		for (int i = 0; i < 10; ++i)
+		GOManager::GetInstance()->playSound("PShootMissile");
+		float deviation = 0.1f;
+		int numBombs = 5;
+		for (int i = 0; i < numBombs; ++i)
 		{
 			GameObject* missile = GOManager::GetInstance()->fetchGO();
-			missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
+			missile->type = GameObject::PLAYER_PROJECTILE_NUKE;
 			if (GOref->dir.x >= 0)
 				missile->vel = Vector3(GOref->dir.y, -GOref->dir.x);
 			else
 				missile->vel = Vector3(-GOref->dir.y, GOref->dir.x);
-			missile->vel += GOref->vel;
+			missile->vel += GOref->vel * ((float)i - (float)numBombs/2.f) *(deviation);
 			missile->dir = GOref->dir;
 			missile->pos = GOref->pos;
 			missile->scale.Set(1, 2, 1);
@@ -125,20 +129,20 @@ void Harrier::Update(double dt)
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		if (GOref->dir.x < 0)
 		{
-			GOref->scale.y = -1.4f;
+			GOref->scale.y = -2.0f;
 			up.Set(-(GOref->dir.y), (GOref->dir.x), 0);
 			up *= -1;
 		}
 		else
 		{
-			GOref->scale.y = 1.4f;
+			GOref->scale.y = 2.0f;
 			up.Set(-(GOref->dir.y), (GOref->dir.x), 0);
 		}
 		GOref->norm = GOref->dir;
 		if(!VTOLmode)
 		{
 			// GOref->vel = GOref->dir * topSpeed;
-			GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 2.0f;
+			GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 5.0f;
 			if (GOref->vel.Length() >= topSpeed)
 			{
 				GOref->vel = GOref->vel.Normalized() * topSpeed;
@@ -171,7 +175,9 @@ void Harrier::Update(double dt)
 				bulletangle += Math::RandFloatMinMax(-Math::DegreeToRadian(inaccuracy), Math::DegreeToRadian(inaccuracy));
 				bullet->vel = Vector3(cos(bulletangle), sin(bulletangle), 0) * 100;
 				bullet->pos = GOref->pos;
-				bullet->scale.Set(1, 2, 1);
+				bullet->scale.Set(0.3f, 0.3f, 1);
+				bullet->color[0] = GOref->color[0];
+				//bullet->scale.Set(0.1f, 0.1f, 1);
 				bullet->hasGravity = true;
 				bullet->wrapMode = GameObject::SW_CLEAR;
 				for (int i = 0; i < MAX_TEXTURES; ++i)

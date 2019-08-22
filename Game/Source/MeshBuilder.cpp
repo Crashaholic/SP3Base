@@ -1,9 +1,5 @@
-#include "MeshBuilder.h"
-#include <GL\glew.h>
-#include <vector>
-#include "Vertex.h"
-#include "MyMath.h"
-#include "LoadOBJ.h"
+#include "zcustompch.h"
+
 /******************************************************************************/
 /*!
 \brief

@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Plane.h"
 #include "../Application.h"
 
@@ -21,7 +22,7 @@ void Plane::Primary()
 			GOManager::GetInstance()->totalShots += 1;
 			if (bomb->pos.y > GOManager::GetInstance()->terreference->GetHeight(bomb->pos).y+25)
 			{
-				GOManager::GetInstance()->playSound("PBombFall");
+				//GOManager::GetInstance()->playSound("PBombFall");
 			}
 			break;
 		}
@@ -47,7 +48,7 @@ void Plane::Secondary()
 		--GOManager::GetInstance()->upgrade_2;
 		if (bomb->pos.y > GOManager::GetInstance()->terreference->GetHeight(bomb->pos).y + 25)
 		{
-			GOManager::GetInstance()->playSound("PBombFall");
+			//GOManager::GetInstance()->playSound("PBombFall");
 		}
 	}
 	//bomb = dynamic_cast<GameObject*>(bomb);
@@ -67,7 +68,7 @@ void Plane::Update(double dt)
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 
 		// GOref->vel = GOref->dir * topSpeed;
-		GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 4.0f;
+		GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 10.0f;
 		if (GOref->vel.Length() >= topSpeed)
 		{
 			GOref->vel = GOref->vel.Normalized() * topSpeed;
@@ -97,7 +98,7 @@ void Plane::Update(double dt)
 			else
 				++totalremaining;
 		}
-		priAmmo = GOManager::GetInstance()->upgrade_1 + 1;
+		priAmmo = GOManager::GetInstance()->upgrade_1 + 100;
 		if (priProjectiles.size() < (unsigned int)priAmmo)
 		{
 			AddPri(priAmmo - (int)priProjectiles.size());
