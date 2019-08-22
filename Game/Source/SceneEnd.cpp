@@ -120,64 +120,68 @@ void SceneEnd::Update(double dt)
 			SceneManager::getSceneManager().switchToScene("Menu", this);
 			GOManager::GetInstance()->playSound("Select");
 		}
-		switch (choice)
+		if (GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_PLANE && HighScoreSystem::GetInstance()->GetEligible(0, GOManager::GetInstance()->planeHighscore) ||
+			GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_TANK && HighScoreSystem::GetInstance()->GetEligible(1, GOManager::GetInstance()->tankHighscore))
 		{
-		case 0:
-			Letter1 = Math::Wrap((char)(Letter1 + 1), 'A', 'Z');
-			break;
-		case 1:
-			Letter2 = Math::Wrap((char)(Letter2 + 1), 'A', 'Z');
-			break;
-		case 2:
-			Letter3 = Math::Wrap((char)(Letter3 + 1), 'A', 'Z');
-			break;
-		case 3:
-			Letter1 = Math::Wrap((char)(Letter1 - 1), 'A', 'Z');
-			break;
-		case 4:
-			Letter2 = Math::Wrap((char)(Letter2 - 1), 'A', 'Z');
-			break;
-		case 5:
-			Letter3 = Math::Wrap((char)(Letter3 - 1), 'A', 'Z');
-			break;
-		default:
-			break;
-		}
-		switch (choice)
-		{
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-			GOManager::GetInstance()->playSound("Select");
-		}
-
-		if (bSubmitScore.checkMouse())
-		{
-			if (!SubmittedScore)
+			switch (choice)
 			{
-				switch (GOManager::GetInstance()->sceneID)
-				{
-				case GOManager::STYPE::FROM_PLANE:
-				{
-					HighScoreSystem::GetInstance()->SubmitHighscoreP(GOManager::GetInstance()->planeHighscore, std::string { Letter1, Letter2, Letter3 });
-					break;
-				}
-				case GOManager::STYPE::FROM_TANK:
-				{
-					HighScoreSystem::GetInstance()->SubmitHighscoreT(GOManager::GetInstance()->tankHighscore, std::string { Letter1, Letter2, Letter3 });
-					break;
-				}
-				default:
-				{
-					std::string a = std::string{ Letter1, Letter2, Letter3 };
-					break;
-				}
-				}
-				SubmittedScore = true;
+			case 0:
+				Letter1 = Math::Wrap((char)(Letter1 + 1), 'A', 'Z');
+				break;
+			case 1:
+				Letter2 = Math::Wrap((char)(Letter2 + 1), 'A', 'Z');
+				break;
+			case 2:
+				Letter3 = Math::Wrap((char)(Letter3 + 1), 'A', 'Z');
+				break;
+			case 3:
+				Letter1 = Math::Wrap((char)(Letter1 - 1), 'A', 'Z');
+				break;
+			case 4:
+				Letter2 = Math::Wrap((char)(Letter2 - 1), 'A', 'Z');
+				break;
+			case 5:
+				Letter3 = Math::Wrap((char)(Letter3 - 1), 'A', 'Z');
+				break;
+			default:
+				break;
+			}
+			switch (choice)
+			{
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
 				GOManager::GetInstance()->playSound("Select");
+			}
+
+			if (bSubmitScore.checkMouse())
+			{
+				if (!SubmittedScore)
+				{
+					switch (GOManager::GetInstance()->sceneID)
+					{
+					case GOManager::STYPE::FROM_PLANE:
+					{
+						HighScoreSystem::GetInstance()->SubmitHighscore(0, GOManager::GetInstance()->planeHighscore, std::string { Letter1, Letter2, Letter3 });
+						break;
+					}
+					case GOManager::STYPE::FROM_TANK:
+					{
+						HighScoreSystem::GetInstance()->SubmitHighscore(1, GOManager::GetInstance()->tankHighscore, std::string { Letter1, Letter2, Letter3 });
+						break;
+					}
+					default:
+					{
+						std::string a = std::string{ Letter1, Letter2, Letter3 };
+						break;
+					}
+					}
+					SubmittedScore = true;
+					GOManager::GetInstance()->playSound("Select");
+				}
 			}
 		}
 	}
@@ -193,113 +197,117 @@ void SceneEnd::Update(double dt)
 
 	// Physics Simulation Section
 	fps = (float)(1.f / dt);
-
-	static bool UpPressed = false;
-	static bool DnPressed = false;
-	static bool LtPressed = false;
-	static bool RtPressed = false;
-
-	if (Application::IsKeyPressed(VK_UP))
+	if (GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_PLANE && HighScoreSystem::GetInstance()->GetEligible(0, GOManager::GetInstance()->planeHighscore) ||
+		GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_TANK && HighScoreSystem::GetInstance()->GetEligible(1, GOManager::GetInstance()->tankHighscore))
 	{
-		if (!UpPressed)
+		static bool UpPressed = false;
+		static bool DnPressed = false;
+		static bool LtPressed = false;
+		static bool RtPressed = false;
+
+		if (Application::IsKeyPressed(VK_UP))
 		{
-			if (whichChar == 0)
-				Letter1 = Math::Wrap((char)(Letter1 + 1), 'A', 'Z');
-			else if (whichChar == 1)
-				Letter2 = Math::Wrap((char)(Letter2 + 1), 'A', 'Z');
-			else if (whichChar == 2)
-				Letter3 = Math::Wrap((char)(Letter3 + 1), 'A', 'Z');
-			UpPressed = true;
-		}
-
-	}
-	else if (UpPressed)
-	{
-		UpPressed = false;
-	}
-
-	if (Application::IsKeyPressed(VK_DOWN))
-	{
-		if (!DnPressed)
-		{
-			if (whichChar == 0)
-				Letter1 = Math::Wrap((char)(Letter1 - 1), 'A', 'Z');
-			else if (whichChar == 1)
-				Letter2 = Math::Wrap((char)(Letter2 - 1), 'A', 'Z');
-			else if (whichChar == 2)
-				Letter3 = Math::Wrap((char)(Letter3 - 1), 'A', 'Z');
-
-			DnPressed = true;
-		}
-	}
-	else if (DnPressed)
-	{
-		DnPressed = false;
-	}
-
-	if (Application::IsKeyPressed(VK_LEFT))
-	{
-		if (!LtPressed)
-		{
-			whichChar = Math::Wrap(short(whichChar - 1), (short)0, (short)2);
-			LtPressed = true;
-		}
-	}
-	else if (LtPressed)
-	{
-		LtPressed = false;
-	}
-
-	if (Application::IsKeyPressed(VK_RIGHT))
-	{
-		if (!RtPressed)
-		{
-			whichChar = Math::Wrap(short(whichChar + 1), (short)0, (short)2);
-			RtPressed = true;
-		}
-	}
-	else if (RtPressed)
-	{
-		RtPressed = false;
-	}
-
-	if (Application::IsKeyPressed(VK_RETURN))
-	{
-		if (!SubmittedScore)
-		{
-			switch (GOManager::GetInstance()->sceneID)
+			if (!UpPressed)
 			{
-			case GOManager::STYPE::FROM_PLANE:
-			{
-				HighScoreSystem::GetInstance()->SubmitHighscoreP(GOManager::GetInstance()->planeHighscore, std::string { Letter1, Letter2, Letter3 });
-				break;
+				if (whichChar == 0)
+					Letter1 = Math::Wrap((char)(Letter1 + 1), 'A', 'Z');
+				else if (whichChar == 1)
+					Letter2 = Math::Wrap((char)(Letter2 + 1), 'A', 'Z');
+				else if (whichChar == 2)
+					Letter3 = Math::Wrap((char)(Letter3 + 1), 'A', 'Z');
+				UpPressed = true;
 			}
-			case GOManager::STYPE::FROM_TANK:
-			{
-				HighScoreSystem::GetInstance()->SubmitHighscoreT(GOManager::GetInstance()->tankHighscore, std::string { Letter1, Letter2, Letter3 });
-				break;
-			}
-			default:
-			{
-				std::string a = std::string{ Letter1, Letter2, Letter3 };
-				break;
-			}
-			}
-			SubmittedScore = true;
-			GOManager::GetInstance()->playSound("Select");
+
 		}
-	}
+		else if (UpPressed)
+		{
+			UpPressed = false;
+		}
 
-	int inactive = 0;
-	for (int i = 0; i < 6; ++i)
-	{
-		if (bArr[i].checkMouse())
-			choice = i;
-		else
-			++inactive;
+		if (Application::IsKeyPressed(VK_DOWN))
+		{
+			if (!DnPressed)
+			{
+				if (whichChar == 0)
+					Letter1 = Math::Wrap((char)(Letter1 - 1), 'A', 'Z');
+				else if (whichChar == 1)
+					Letter2 = Math::Wrap((char)(Letter2 - 1), 'A', 'Z');
+				else if (whichChar == 2)
+					Letter3 = Math::Wrap((char)(Letter3 - 1), 'A', 'Z');
 
-		if (inactive == 6)
-			choice = -1;
+				DnPressed = true;
+			}
+		}
+		else if (DnPressed)
+		{
+			DnPressed = false;
+		}
+
+		if (Application::IsKeyPressed(VK_LEFT))
+		{
+			if (!LtPressed)
+			{
+				whichChar = Math::Wrap(short(whichChar - 1), (short)0, (short)2);
+				LtPressed = true;
+			}
+		}
+		else if (LtPressed)
+		{
+			LtPressed = false;
+		}
+
+		if (Application::IsKeyPressed(VK_RIGHT))
+		{
+			if (!RtPressed)
+			{
+				whichChar = Math::Wrap(short(whichChar + 1), (short)0, (short)2);
+				RtPressed = true;
+			}
+		}
+		else if (RtPressed)
+		{
+			RtPressed = false;
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN))
+		{
+			if (!SubmittedScore)
+			{
+				switch (GOManager::GetInstance()->sceneID)
+				{
+				case GOManager::STYPE::FROM_PLANE:
+				{
+					HighScoreSystem::GetInstance()->SubmitHighscore(0, GOManager::GetInstance()->planeHighscore, std::string { Letter1, Letter2, Letter3 });
+					break;
+				}
+				case GOManager::STYPE::FROM_TANK:
+				{
+					HighScoreSystem::GetInstance()->SubmitHighscore(1, GOManager::GetInstance()->tankHighscore, std::string { Letter1, Letter2, Letter3 });
+					break;
+				}
+				default:
+				{
+					std::string a = std::string{ Letter1, Letter2, Letter3 };
+					break;
+				}
+				}
+				SubmittedScore = true;
+				GOManager::GetInstance()->playSound("Select");
+			}
+		}
+
+		int inactive = 0;
+		for (int i = 0; i < 6; ++i)
+		{
+			if (bArr[i].checkMouse())
+				choice = i;
+			else
+				++inactive;
+
+			if (inactive == 6)
+				choice = -1;
+		}
+
 	}
 	if(SubmittedScore)
 		SceneManager::getSceneManager().switchToScene("Menu", this);
@@ -333,27 +341,31 @@ void SceneEnd::Render()
 	std::ostringstream s2;
 	s2.precision(3);
 	std::ostringstream s3;
-	modelStack.PushMatrix();
+	if (GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_PLANE && HighScoreSystem::GetInstance()->GetEligible(0, GOManager::GetInstance()->planeHighscore) ||
+		GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_TANK && HighScoreSystem::GetInstance()->GetEligible(1, GOManager::GetInstance()->tankHighscore))
+	{
+		modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2.f - 10, m_worldHeight / 2.f, 0);
 		modelStack.Scale(5.f, 5.f, 5.f);
 		std::string s;
 		s += Letter1;
-		RenderText(meshList[GEO_TEXT], s, (whichChar == 0 ? Color{1, 1, 0} : Color{1, 1, 1}));
-	modelStack.PopMatrix();
-	modelStack.PushMatrix();
+		RenderText(meshList[GEO_TEXT], s, (whichChar == 0 ? Color{ 1, 1, 0 } : Color{ 1, 1, 1 }));
+		modelStack.PopMatrix();
+		modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2.f, m_worldHeight / 2.f, 0);
 		modelStack.Scale(5.f, 5.f, 5.f);
 		s.clear();
 		s += Letter2;
 		RenderText(meshList[GEO_TEXT], s, (whichChar == 1 ? Color{ 1, 1, 0 } : Color{ 1, 1, 1 }));
-	modelStack.PopMatrix();
-	modelStack.PushMatrix();
+		modelStack.PopMatrix();
+		modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2.f + 10, m_worldHeight / 2.f, 0);
 		modelStack.Scale(5.f, 5.f, 5.f);
 		s.clear();
 		s += Letter3;
 		RenderText(meshList[GEO_TEXT], s, (whichChar == 2 ? Color{ 1, 1, 0 } : Color{ 1, 1, 1 }));
-	modelStack.PopMatrix();
+		modelStack.PopMatrix();
+	}
 
 	switch (GOManager::GetInstance()->sceneID)
 	{
@@ -393,12 +405,16 @@ void SceneEnd::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], s3.str(), Color(1, 1, 1), 3, 0, 6);
 
 	RGButtonRender(bBack, sBack);
-	RGButtonRender(&bSubmitScore, "Submit score");
-
-	for (int i = 0; i < 6; i++)
+	if (GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_PLANE && HighScoreSystem::GetInstance()->GetEligible(0, GOManager::GetInstance()->planeHighscore) ||
+		GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_TANK && HighScoreSystem::GetInstance()->GetEligible(1, GOManager::GetInstance()->tankHighscore))
 	{
-		RGButtonRender(&bArr[i], sArrow[i / 3]);
+		RGButtonRender(&bSubmitScore, "Submit score");
+		for (int i = 0; i < 6; i++)
+		{
+			RGButtonRender(&bArr[i], sArrow[i / 3]);
+		}
 	}
+
 }
 
 void SceneEnd::Exit()

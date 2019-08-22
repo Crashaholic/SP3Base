@@ -26,43 +26,8 @@ void SceneScore::Init()
 	bLightEnabled = true;
 	Math::InitRNG();
 
-	std::string results = HighScoreSystem::GetInstance()->GetHighscoreP();
-	size_t lastpos = 0;
-	for (size_t i = 0; i < results.size(); ++i)
-	{
-		if (results[i] == '\n')
-		{
-			std::string temp;
-			temp = results.substr(lastpos, i - lastpos);
-			{
-				size_t seperator = temp.find(",");
-				Score currentLine;
-				currentLine.score = std::stoul(temp.substr(0, seperator));
-				currentLine.name = temp.substr(seperator + 1);
-				scoresPlane.push_back(currentLine);
-			}
-			lastpos = i + 1;
-		}
-	}
-	
-	results = HighScoreSystem::GetInstance()->GetHighscoreT();
-	lastpos = 0;
-	for (size_t i = 0; i < results.size(); ++i)
-	{
-		if (results[i] == '\n')
-		{
-			std::string temp;
-			temp = results.substr(lastpos, i - lastpos);
-			{
-				size_t seperator = temp.find(",");
-				Score currentLine;
-				currentLine.score = std::stoul(temp.substr(0, seperator));
-				currentLine.name = temp.substr(seperator + 1);
-				scoresTank.push_back(currentLine);
-			}
-			lastpos = i + 1;
-		}
-	}
+	HighScoreSystem::GetInstance()->ParseFile(0, &scoresPlane);
+	HighScoreSystem::GetInstance()->ParseFile(1, &scoresTank);
 }
 
 void SceneScore::Update(double dt)

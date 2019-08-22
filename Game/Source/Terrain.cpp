@@ -206,9 +206,9 @@ void Terrain::Smooth(unsigned short steps)
 		{
 			float firstY = NewPoints[i].y;
 			float lastY = NewPoints[i + Distance - 1].y;
-			for (int j = 0; j < Distance; ++j)
+			for (unsigned int j = 0; j < Distance; ++j)
 			{
-				NewPoints[i + j].y = lerp(firstY, lastY, 1.0 / Distance);
+				NewPoints[i + j].y = lerp(firstY, lastY, 1.0f / (float)Distance);
 			}
 			i += Distance - 1;
 		}
@@ -217,9 +217,9 @@ void Terrain::Smooth(unsigned short steps)
 			unsigned int Remainder = TERRAIN_SIZE - i;
 			float firstY = NewPoints[i].y;
 			float lastY = NewPoints[i + Remainder - 1].y;
-			for (int j = 0; j < Remainder; ++j)
+			for (unsigned int j = 0; j < Remainder; ++j)
 			{
-				NewPoints[i + j].y = lerp(firstY, lastY, 1.0 / Remainder);
+				NewPoints[i + j].y = lerp(firstY, lastY, 1.0f / (float)Remainder);
 			}
 			i = TERRAIN_SIZE;
 		}
