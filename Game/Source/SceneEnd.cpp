@@ -120,7 +120,10 @@ void SceneEnd::Update(double dt)
 		bLButtonState = false;
 
 		if (bBack->checkMouse())
+		{
 			SceneManager::getSceneManager().switchToScene("Menu", this);
+			GOManager::GetInstance()->playSound("Select");
+		}
 		switch (choice)
 		{
 		case 0:
