@@ -40,11 +40,11 @@ void Harrier::Secondary()
 			missile->wrapMode = GameObject::SW_CLEAR;
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 				missile->color[i] = GOref->color[i];
+		}
 			--secAmmo;
 			--GOManager::GetInstance()->upgrade_2;
 
 			GOManager::GetInstance()->totalShots += 1;
-		}
 	}
 }
 
