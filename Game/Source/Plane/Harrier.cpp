@@ -22,17 +22,20 @@ void Harrier::Primary()
 
 void Harrier::Secondary()
 {
-	//if (secAmmo > 0)
+	if (secAmmo > 0)
 	{
-		for (int i = 0; i < 10; ++i)
+		GOManager::GetInstance()->playSound("PShootMissile");
+		float deviation = 0.1f;
+		int numBombs = 5;
+		for (int i = 0; i < numBombs; ++i)
 		{
 			GameObject* missile = GOManager::GetInstance()->fetchGO();
-			missile->type = GameObject::PLAYER_PROJECTILE_MISSILE;
+			missile->type = GameObject::PLAYER_PROJECTILE_NUKE;
 			if (GOref->dir.x >= 0)
 				missile->vel = Vector3(GOref->dir.y, -GOref->dir.x);
 			else
 				missile->vel = Vector3(-GOref->dir.y, GOref->dir.x);
-			missile->vel += GOref->vel;
+			missile->vel += GOref->vel * ((float)i - (float)numBombs/2.f) *(deviation);
 			missile->dir = GOref->dir;
 			missile->pos = GOref->pos;
 			missile->scale.Set(1, 2, 1);
@@ -125,13 +128,13 @@ void Harrier::Update(double dt)
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		if (GOref->dir.x < 0)
 		{
-			GOref->scale.y = -1.4f;
+			GOref->scale.y = -2.0f;
 			up.Set(-(GOref->dir.y), (GOref->dir.x), 0);
 			up *= -1;
 		}
 		else
 		{
-			GOref->scale.y = 1.4f;
+			GOref->scale.y = 2.0f;
 			up.Set(-(GOref->dir.y), (GOref->dir.x), 0);
 		}
 		GOref->norm = GOref->dir;
