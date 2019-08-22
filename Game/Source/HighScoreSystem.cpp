@@ -37,7 +37,7 @@ void HighScoreSystem::SubmitHighscoreP(unsigned int score, std::string name)
 
 	if (current < currentHighscores.back())
 	{
-		throw "Git gud";
+		//throw "Git gud";
 		return;
 	}
 

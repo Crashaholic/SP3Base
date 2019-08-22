@@ -86,7 +86,7 @@ void TankEnemy::Fire()
 		object->pos = GOref->pos;
 		object->vel = GOref->dir * 60.0f;
 		object->hasGravity = false;
-		bulletCooldown = (double)Math::RandFloatMinMax(1.0f,0.5f);
+		bulletCooldown = (double)Math::RandFloatMinMax(1.0f, 5.0f);
 	}
 }
 
@@ -100,7 +100,14 @@ void TankEnemy::Update(double dt)
 		bulletCooldown -= dt;
 		FireAt(playerGO->pos);
 		//MoveTo(playerGO->pos);
-		GOref->dir = (playerGO->pos - GOref->pos).Normalized();
+		try
+		{
+			GOref->dir = (playerGO->pos - GOref->pos).Normalized();
+		}
+		catch (DivideByZero)
+		{
+			GOref->dir.Set(1, 0, 0);
+		}
 		if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
 		Fire();
 		

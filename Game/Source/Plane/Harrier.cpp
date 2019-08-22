@@ -40,11 +40,11 @@ void Harrier::Secondary()
 			missile->wrapMode = GameObject::SW_CLEAR;
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 				missile->color[i] = GOref->color[i];
+		}
 			--secAmmo;
 			--GOManager::GetInstance()->upgrade_2;
 
 			GOManager::GetInstance()->totalShots += 1;
-		}
 	}
 }
 
@@ -137,11 +137,16 @@ void Harrier::Update(double dt)
 		GOref->norm = GOref->dir;
 		if(!VTOLmode)
 		{
-			GOref->vel = GOref->dir * topSpeed;
+			// GOref->vel = GOref->dir * topSpeed;
+			GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 2.0f;
+			if (GOref->vel.Length() >= topSpeed)
+			{
+				GOref->vel = GOref->vel.Normalized() * topSpeed;
+			}
 		}
 		else
 		{
-			GOref->vel += Vector3(0, -9.8f, 0)*(float)dt;
+			GOref->vel += GOManager::GetInstance()->gravity * (float)dt;
 			GOref->vel *= (1 - (float)(0.1 * dt));
 			Vector3 hovervel = this->up * (float)dt*VTOLTopSpeed;
 			//hovervel.y = Math::Min(hovervel.y, 9.8f*(float)dt);

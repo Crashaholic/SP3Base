@@ -111,6 +111,7 @@ void Scene2PEnd::Update(double dt)
 	{
 		bRButtonState = false;
 	}
+	fps = (float)(1.f / dt);
 }
 
 void Scene2PEnd::Render()

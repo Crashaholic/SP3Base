@@ -246,7 +246,7 @@ void ScenePlane::Render()
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
-	ss << "FPS: " << plane->GOref->angle;
+	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 0, 0);
 
 	// HUD
