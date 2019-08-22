@@ -1,10 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string.h>
-#include <GL/glew.h>
-#include "shader.hpp"
-#include "Logging.h"
+#include "zcustompch.h"
 
 void Shader::CheckStatus(short s, unsigned int ui)
 {

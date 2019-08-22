@@ -1,12 +1,8 @@
+#include "zcustompch.h"
 #ifndef GO_MANAGER_H
 #define GO_MANAGER_H
 
-#include "SingletonTemplate.h"
-#include "Vector3.h"
 #include "GameObject.h"
-#include "../../Game/SoundEngine/SoundEngine.h"
-#include <vector>
-#include <string>
 
 class GOManager:public Singleton<GOManager>
 {

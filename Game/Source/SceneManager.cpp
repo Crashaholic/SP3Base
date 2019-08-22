@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "SceneManager.h"
 
 int			SceneManager::planeChoice;

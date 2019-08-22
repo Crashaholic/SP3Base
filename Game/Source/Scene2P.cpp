@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Scene2P.h"
 #include "GL\glew.h"
 
@@ -89,7 +90,7 @@ void Scene2P::Init()
 	
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
-	GOManager::GetInstance()->upgrade_1 = 1;
+	GOManager::GetInstance()->upgrade_1 = 4;
 }
 
 void Scene2P::Update(double dt)
@@ -112,18 +113,6 @@ void Scene2P::Update(double dt)
 	if(Application::IsKeyPressed('-'))
 	{
 	}
-	static bool lol = false;
-	if(Application::IsKeyPressed('C'))
-	{
-		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = decal1;
-	}
-
-	if(Application::IsKeyPressed('V'))
-	{
-		plane->GOref->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-		plane->GOref->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-	}
-
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
 
 	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
@@ -159,7 +148,16 @@ void Scene2P::Update(double dt)
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
-		
+
+		//Exercise 10: spawn ghost ball
+		//m_ghost->active = true;
+
+		GameObject* go = GOManager::GetInstance()->fetchGO();
+		go->type = GameObject::ENEMY_PROJECTILE_MACHINE;
+		go->pos.Set(static_cast<float>(x / w * m_worldWidth), static_cast<float>(m_worldHeight - y / h * m_worldHeight), 0.0f);
+		go->vel.SetZero();
+		go->scale.Set(1, 1, 1);
+
 		/*
 		vec3 n = terr.GetNormal(Vector3(
 			static_cast<float>(x / w * m_worldWidth), 

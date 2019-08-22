@@ -29,10 +29,10 @@
     <ClCompile Include="Source\EntityBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collider.cpp">
+    <ClCompile Include="Source\EntityBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EntityBase.cpp">
+    <ClCompile Include="Source\Collider\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,13 +61,13 @@
     <ClInclude Include="Source\SingletonTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\EntityBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SingletonTemplate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

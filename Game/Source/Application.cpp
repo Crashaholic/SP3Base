@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "Application.h"
 
 GLFWwindow* m_window;

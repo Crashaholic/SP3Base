@@ -1,3 +1,4 @@
+#include "zcustompch.h"
 #include "TankEnemy.h"
 
 TankEnemy::TankEnemy()
@@ -25,12 +26,10 @@ void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth
 	if (GOref->type == GameObject::ENEMY_TANK_PASSIVE)
 	{
 		GOref->scale.Set(3.9f, 1.8f, 1.0f);
-
 	}
 	else
 	{
 		GOref->scale.Set(4.0f, 2.2f, 1.0f);
-
 	}
 	GOref->angle -= Math::DegreeToRadian(0);
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
@@ -116,39 +115,39 @@ void TankEnemy::Update(double dt)
 				Fire();
 		}
 		
-			switch (Stage)
+		switch (Stage)
+		{
+		case 1:
+		{
+			if (GOref->pos.x < targetMov.x)
 			{
-			case 1:
+				Move_LeftRight(dt, 0);
+			}
+			else
 			{
-				if (GOref->pos.x < targetMov.x)
-				{
-					Move_LeftRight(dt, 0);
-				}
-				else
-				{
-					GOref->pos.x = targetMov.x;
-					GOref->angle += Math::DegreeToRadian(180.0f);
-					targetMov.x = leftTarget;
-					Stage = 2;
-				}
+				GOref->pos.x = targetMov.x;
+				GOref->angle += Math::DegreeToRadian(180.0f);
+				targetMov.x = leftTarget;
+				Stage = 2;
 			}
-				break;
-			case 2:
+		}
+			break;
+		case 2:
+		{
+			if (GOref->pos.x > targetMov.x)
 			{
-				if (GOref->pos.x > targetMov.x)
-				{
-					Move_LeftRight(dt, 1);
-				}
-				else
-				{
-					GOref->pos.x = targetMov.x;
-					GOref->angle += Math::DegreeToRadian(180.0f);
-					targetMov.x = rightTarget;
-					Stage = 1;
-				}
+				Move_LeftRight(dt, 1);
 			}
-				break;
+			else
+			{
+				GOref->pos.x = targetMov.x;
+				GOref->angle += Math::DegreeToRadian(180.0f);
+				targetMov.x = rightTarget;
+				Stage = 1;
 			}
+		}
+			break;
+		}
 	}
 	else
 		isDead = true;

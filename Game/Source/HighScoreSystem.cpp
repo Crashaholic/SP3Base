@@ -1,7 +1,5 @@
+#include "zcustompch.h"
 #include "HighscoreSystem.h"
-#include <fstream>
-#include <vector>
-#include <algorithm>
 
 HighScoreSystem::HighScoreSystem()
 {
