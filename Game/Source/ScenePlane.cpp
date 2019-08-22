@@ -304,7 +304,7 @@ void ScenePlane::EndWave()
 
 bool ScenePlane::SpawnEnemy()
 {
-	unsigned int tempcount = startCount + 2 * waveNo;
+	unsigned int tempcount = startCount + 1 * waveNo;
 	if (enemyCount > tempcount)
 	{
 		return false;
