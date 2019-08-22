@@ -28,7 +28,7 @@ public:
 
 private:
 	Plane *plane;
-	Terrain terr;
+	Terrain *terr;
 
 	Camera camera;
 

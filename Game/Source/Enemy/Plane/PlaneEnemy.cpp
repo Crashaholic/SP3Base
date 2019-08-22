@@ -76,7 +76,7 @@ void PlaneEnemy::Update(double dt)
 			GOref->pos.x = leftTarget.x+1.0f;
 			//GOref->vel.x *= -1;
 			targetMov = rightTarget;
-			targetMov.y =originalHeight + Math::RandFloatMinMax((float)HEIGHT_RANGE,(float)HEIGHT_RANGE);
+			targetMov.y =originalHeight + Math::RandFloatMinMax(-(float)HEIGHT_RANGE,(float)HEIGHT_RANGE);
 		}
 		else if (GOref->pos.x > rightTarget.x)
 		{
@@ -84,8 +84,9 @@ void PlaneEnemy::Update(double dt)
 			GOref->pos.x = rightTarget.x;
 			//GOref->vel.x *= -1;
 			targetMov = leftTarget;
-			targetMov.y = originalHeight + Math::RandFloatMinMax((float)HEIGHT_RANGE, (float)HEIGHT_RANGE);
+			targetMov.y = originalHeight + Math::RandFloatMinMax(-(float)HEIGHT_RANGE, (float)HEIGHT_RANGE);
 		}
+		targetMov.y = Math::Min(targetMov.y, 100.0f);
 		GOref->dir = (targetMov - GOref->pos).Normalized();
 		//GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		GOref->norm = GOref->dir;

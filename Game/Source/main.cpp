@@ -10,4 +10,5 @@ int main( void )
 		app.Run();
 		app.Exit();
 	}
+	return 0;
 }

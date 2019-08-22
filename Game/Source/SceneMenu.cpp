@@ -214,6 +214,9 @@ void SceneMenu::Render()
 
 void SceneMenu::Exit()
 {
+	modelStack.Clear();
+	viewStack.Clear();
+	projectionStack.Clear();
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
@@ -221,4 +224,10 @@ void SceneMenu::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+	while (buttonList.size() > 0)
+	{
+		Button *butt = buttonList.back();//heheh #2
+		delete butt;
+		buttonList.pop_back();
+	}
 }

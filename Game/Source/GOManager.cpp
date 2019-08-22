@@ -49,6 +49,12 @@ GOManager::~GOManager()
 		delete go;
 		m_goList.pop_back();
 	}
+	//if (terreference)
+	//{
+	//	delete terreference;
+	//	terreference = nullptr;
+	//}
+
 }
 
 void GOManager::init()

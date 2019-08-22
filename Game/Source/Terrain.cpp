@@ -8,11 +8,6 @@ Terrain::Terrain()
 
 Terrain::~Terrain()
 {
-	if (tMesh)
-	{
-		delete tMesh;
-		tMesh = nullptr;
-	}
 }
 
 Vector3 Terrain::GetHeight(Vector3 Position)
