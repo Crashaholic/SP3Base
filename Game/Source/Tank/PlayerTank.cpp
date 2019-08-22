@@ -38,7 +38,7 @@ void PlayerTank::Update(double dt)
 	if (GOref->active)
 	{
 		// Tank Movement
-		tankSpeed = Math::Max(20.f + (GOManager::GetInstance()->upgrade_2 * 1.f), 20.f);
+		tankSpeed = Math::Max(15.f + (GOManager::GetInstance()->upgrade_2 * 1.f), 15.f);
 		Terrain* terreference = GOManager::GetInstance()->terreference;
 		Vector3 frontCheck = GOref->pos + Vector3(GOref->scale.x / 2, 0, 0);
 		Vector3 rearCheck = GOref->pos - Vector3(GOref->scale.x / 2, 0, 0);
@@ -57,7 +57,7 @@ void PlayerTank::Update(double dt)
 		{
 			bulletCooldown -= dt;
 		}
-		ReadInput(dt, 'K', 'I', 'J', 'L', VK_SPACE);
+		ReadInput(dt, 'K', 'I', 'J', 'L', 'N');
 	}
 }
 

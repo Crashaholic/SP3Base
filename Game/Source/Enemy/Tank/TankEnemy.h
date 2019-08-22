@@ -21,7 +21,6 @@ public:
 
 	unsigned int Range = 20;
 
-
 	//Stage 1 = Enter Scene
 	//Stage 2 = Find Player
 	//Stage 3 = Move Close To Player

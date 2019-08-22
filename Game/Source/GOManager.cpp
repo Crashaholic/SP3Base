@@ -456,6 +456,17 @@ void GOManager::collisionResponse(GameObject * go1, GameObject * go2)
 	case GameObject::PLAYER_PROJECTILE_NUKE:
 	case GameObject::PLAYER_PROJECTILE_MACHINE:
 	case GameObject::ENEMY_PROJECTILE_MACHINE:
+		// Fix for harrier corner being too far apart for smaller exRadius to register hits
+		switch (go2->type)
+		{
+			// collision gate filters out player projectile being able to hit self
+		case GameObject::PLAYER_PLANE_HARRIER:
+		case GameObject::PLAYER_PLANE_KOMET:
+		case GameObject::PLAYER_PLANE_A10:
+		{
+			planeDeath(go2);
+		}
+		}
 		LOG_NONE("Projectile collided with object");
 		enemyDeath(go2);
 		playSound("HitEnemy");
