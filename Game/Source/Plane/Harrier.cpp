@@ -137,11 +137,16 @@ void Harrier::Update(double dt)
 		GOref->norm = GOref->dir;
 		if(!VTOLmode)
 		{
-			GOref->vel = GOref->dir * topSpeed;
+			// GOref->vel = GOref->dir * topSpeed;
+			GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 2.0f;
+			if (GOref->vel.Length() >= topSpeed)
+			{
+				GOref->vel = GOref->vel.Normalized() * topSpeed;
+			}
 		}
 		else
 		{
-			GOref->vel += Vector3(0, -9.8f, 0)*(float)dt;
+			GOref->vel += GOManager::GetInstance()->gravity * (float)dt;
 			GOref->vel *= (1 - (float)(0.1 * dt));
 			Vector3 hovervel = this->up * (float)dt*VTOLTopSpeed;
 			//hovervel.y = Math::Min(hovervel.y, 9.8f*(float)dt);
