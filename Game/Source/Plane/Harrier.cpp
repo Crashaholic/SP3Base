@@ -138,7 +138,7 @@ void Harrier::Update(double dt)
 		if(!VTOLmode)
 		{
 			// GOref->vel = GOref->dir * topSpeed;
-			GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 0.7f;
+			GOref->vel += GOref->dir * topSpeed * static_cast<float>(dt) * 2.0f;
 			if (GOref->vel.Length() >= topSpeed)
 			{
 				GOref->vel = GOref->vel.Normalized() * topSpeed;
