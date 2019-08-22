@@ -102,6 +102,7 @@ void Terrain::Update(double dt)
 
 void Terrain::GenerateRandomHeight(float worldWidth)
 {
+	std::srand(80);
 	float lastY = 0;
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
@@ -132,9 +133,9 @@ void Terrain::GenerateRandomHeight(float worldWidth)
 			lastY = NewPoints[i].y;
 		}
 		Points[i].x = NewPoints[i].x;
-
 		//LOG_NONE("Points[%]: %", i, Points[i]);
 	}
+	//Smooth(80);
 
 }
 
@@ -192,4 +193,38 @@ void Terrain::DeformTerrain(Vector3 ExplosionPosition, float ExplosionRadius)
 		Points[i].y = Math::Max(Points[i].y, 1.0f);
 	}
 	GenerateTerrainMesh();
+}
+
+float lerp(float a, float b, float f)
+{
+	return (a * (1.f - f)) + (b * f);
+}
+
+void Terrain::Smooth(unsigned short steps)
+{
+	unsigned int Distance = TERRAIN_SIZE / steps;
+	for (size_t i = 0; i < TERRAIN_SIZE;)
+	{
+		if (i + Distance - 1 < TERRAIN_SIZE)
+		{
+			float firstY = NewPoints[i].y;
+			float lastY = NewPoints[i + Distance - 1].y;
+			for (int j = 0; j < Distance; ++j)
+			{
+				NewPoints[i + j].y = lerp(firstY, lastY, 1.0 / Distance);
+			}
+			i += Distance - 1;
+		}
+		else
+		{
+			unsigned int Remainder = TERRAIN_SIZE - i;
+			float firstY = NewPoints[i].y;
+			float lastY = NewPoints[i + Remainder - 1].y;
+			for (int j = 0; j < Remainder; ++j)
+			{
+				NewPoints[i + j].y = lerp(firstY, lastY, 1.0 / Remainder);
+			}
+			i = TERRAIN_SIZE;
+		}
+	}
 }

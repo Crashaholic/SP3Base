@@ -50,7 +50,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>Source;$(SolutionDir)Common\Source;$(SolutionDir)glfw\include;$(SolutionDir)glew\include;$(SolutionDir)/irrklang/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>zcustompch.h</PrecompiledHeaderFile>
     </ClCompile>
