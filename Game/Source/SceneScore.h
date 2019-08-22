@@ -3,6 +3,7 @@
 #define SCENE_SCORE_H
 
 #include "Scene.h"
+#include "HighscoreSystem.h"
 
 class SceneScore : public Scene
 {
@@ -16,15 +17,14 @@ public:
 	virtual void Exit();
 
 private:
-	//Mesh* meshList[NUM_GEOMETRY];
-
 	Camera camera;
-
 	float fps;
 
-	// Physics
-	float m_speed;
-	GameObject *m_ghost;
+	Button backButt; // heheh
+
+	std::vector<Score> scoresPlane;
+	std::vector<Score> scoresTank;
+
 };
 
 #endif

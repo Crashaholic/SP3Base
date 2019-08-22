@@ -26,17 +26,54 @@ void SceneScore::Init()
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-
+	backButt.init({ m_worldWidth / 2.f - 69.0f, m_worldHeight - 3.5f }, { 20.0f, 3.5f, 1.0f });
 
 	bLightEnabled = true;
-	m_speed = 1.f;
 	Math::InitRNG();
-	m_ghost = new GameObject(GameObject::GO_BALL);
-	m_ghost->active = true;
+	
+	std::string results = HighScoreSystem::GetInstance()->GetHighscoreP();
+	size_t lastpos = 0;
+	for (size_t i = 0; i < results.size(); ++i)
+	{
+		if (results[i] == '\n')
+		{
+			std::string temp;
+			temp = results.substr(lastpos, i - lastpos);
+			{
+				size_t seperator = temp.find(",");
+				Score currentLine;
+				currentLine.score = std::stoul(temp.substr(0, seperator));
+				currentLine.name = temp.substr(seperator + 1);
+				scoresPlane.push_back(currentLine);
+			}
+			lastpos = i + 1;
+		}
+	}
+	
+	results = HighScoreSystem::GetInstance()->GetHighscoreT();
+	lastpos = 0;
+	for (size_t i = 0; i < results.size(); ++i)
+	{
+		if (results[i] == '\n')
+		{
+			std::string temp;
+			temp = results.substr(lastpos, i - lastpos);
+			{
+				size_t seperator = temp.find(",");
+				Score currentLine;
+				currentLine.score = std::stoul(temp.substr(0, seperator));
+				currentLine.name = temp.substr(seperator + 1);
+				scoresTank.push_back(currentLine);
+			}
+			lastpos = i + 1;
+		}
+	}
 }
 
 void SceneScore::Update(double dt)
 {
+
+#ifdef _DEBUG
 	//Keyboard Section
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -46,22 +83,7 @@ void SceneScore::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	if (Application::IsKeyPressed('+'))
-	{
-	}
-	if (Application::IsKeyPressed('-'))
-	{
-	}
-	if (Application::IsKeyPressed('c'))
-	{
-	}
-	if (Application::IsKeyPressed(' '))
-	{
-	}
-	if (Application::IsKeyPressed('v'))
-	{
-	}
+#endif
 
 	// Switch scene
 	checkSwitch();
@@ -75,6 +97,11 @@ void SceneScore::Update(double dt)
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
+		if (backButt.checkMouse())
+		{
+			SceneManager::getSceneManager().switchToScene("Menu", this);
+			GOManager::GetInstance()->playSound("Select");
+		}
 	}
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -109,15 +136,59 @@ void SceneScore::Render()
 	);
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2.f - 47.f, m_worldHeight / 2.f + 20.f, 0);
+		modelStack.Scale(7, 7, 7);
+		RenderText(meshList[GEO_TEXT], "PLANE", { 1, 1, 1 });
+		modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	for (size_t i = 0; i < scoresPlane.size(); ++i)
+	{
+		modelStack.PushMatrix();
+			modelStack.Translate(m_worldWidth / 2.f - 50.f, m_worldHeight / 2.f - i * 5 + 10.f, 0);
+			modelStack.Scale(5, 5, 5);
+			RenderText(meshList[GEO_TEXT], scoresPlane[i].name, { 1, 1, 1 });
+		modelStack.PopMatrix();
+		modelStack.PushMatrix();
+			modelStack.Translate(m_worldWidth / 2.f - 40.f, m_worldHeight / 2.f - i * 5 + 10.f, 0);
+			modelStack.Scale(5, 5, 5);
+			std::string scoreamount = std::to_string(scoresPlane[i].score);
+			RenderText(meshList[GEO_TEXT], scoreamount, { 1, 1, 1 });
+		modelStack.PopMatrix();
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2.f + 47.f, m_worldHeight / 2.f + 20.f, 0);
+	modelStack.Scale(7, 7, 7);
+	RenderText(meshList[GEO_TEXT], "TANK", { 1, 1, 1 });
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	for (size_t i = 0; i < scoresTank.size(); ++i)
+	{
+		modelStack.PushMatrix();
+			modelStack.Translate(m_worldWidth / 2.f + 40.f, m_worldHeight / 2.f - i * 5 + 10.f, 0);
+			modelStack.Scale(5, 5, 5);
+			RenderText(meshList[GEO_TEXT], scoresTank[i].name, { 1, 1, 1 });
+		modelStack.PopMatrix();
+		modelStack.PushMatrix();
+			modelStack.Translate(m_worldWidth / 2.f + 50.f, m_worldHeight / 2.f - i * 5 + 10.f, 0);
+			modelStack.Scale(5, 5, 5);
+			std::string scoreamount = std::to_string(scoresTank[i].score);
+			RenderText(meshList[GEO_TEXT], scoreamount, { 1, 1, 1 });
+		modelStack.PopMatrix();
+	}
+	modelStack.PopMatrix();
+
+	RGButtonRender(&backButt, "Back");
 
 	//On screen text
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 3);
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 0);
 }
 
 void SceneScore::Exit()
@@ -130,9 +201,4 @@ void SceneScore::Exit()
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
-	if (m_ghost)
-	{
-		delete m_ghost;
-		m_ghost = NULL;
-	}
 }
