@@ -35,7 +35,7 @@ void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 	GOref->norm = GOref->dir;
 	GOref->defaultPos = GOref->pos;
-	GOref->wrapMode = GameObject::SW_OFFSCREENCLEAR;
+	GOref->wrapMode = GameObject::SW_NONE;
 	GOref->reserved = true;
 	GOref->active = true;
 	GOref->hasGravity = false;
@@ -79,12 +79,14 @@ void TankEnemy::Fire()
 		GOManager::GetInstance()->playSound("TShoot");
 		GameObject *object = GOManager::GetInstance()->fetchGO();
 		object->active = true;
-		object->wrapMode = GameObject::SW_CLEAR;
+		object->wrapMode = GameObject::SW_NONE;
 		object->type = GameObject::ENEMY_PROJECTILE_MACHINE;
 		object->scale.Set(0.4f, 0.4f, 0.4f);
 		object->pos = GOref->pos;
 		object->vel = GOref->dir * 60.0f;
 		object->hasGravity = false;
+		object->hasLifeTime = true;
+		object->lifeTime = 5.0;
 		bulletCooldown = (double)Math::RandFloatMinMax(1.0f, 5.0f);
 	}
 }
@@ -94,8 +96,8 @@ void TankEnemy::Update(double dt)
 	if (GOref->active)
 	{
 		float shootrange = 10.0f;
-		float leftTarget = GOref->scale.x;
-		float rightTarget = m_worldWidth - GOref->scale.x;
+		float leftTarget = -GOref->scale.x * 2;
+		float rightTarget = m_worldWidth + GOref->scale.x * 2;
 		bulletCooldown -= dt;
 		FireAt(playerGO->pos);
 		//MoveTo(playerGO->pos);
@@ -108,7 +110,10 @@ void TankEnemy::Update(double dt)
 			GOref->dir.Set(1, 0, 0);
 		}
 		if (GOref->type == GameObject::ENEMY_TANK_AGGRESSIVE)
-		Fire();
+		{
+			if(GOref->pos.x<m_worldWidth && GOref->pos.x>0)
+				Fire();
+		}
 		
 		switch (Stage)
 		{

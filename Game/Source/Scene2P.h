@@ -25,9 +25,9 @@ public:
 	virtual void Exit();
 
 private:
-	Plane *plane;
+	Plane* plane;
 	Tank* player;
-	Terrain terr;
+	Terrain* terr;
 
 	Camera camera;
 

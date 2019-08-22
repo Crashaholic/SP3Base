@@ -260,32 +260,26 @@ void SceneTSelect::Render()
 	for (int i = 0; i < NUM_TSLIDER; ++i)
 	{
 		modelStack.PushMatrix();
-
-		modelStack.Translate(slArray[i]->getPos().x, slArray[i]->getPos().y, slArray[i]->getPos().z);
-
-
+			modelStack.Translate(slArray[i]->getPos().x, slArray[i]->getPos().y, slArray[i]->getPos().z);
+			modelStack.PushMatrix();
+				modelStack.Scale(slArray[i]->getScale().x, slArray[i]->getScale().y, slArray[i]->getScale().z);
+				switch (i % 3)
+				{
+				case 0:
+					RenderMesh(meshList[GEO_GRADIENTR], false);
+					break;
+				case 1:
+					RenderMesh(meshList[GEO_GRADIENTG], false);
+					break;
+				case 2:
+					RenderMesh(meshList[GEO_GRADIENTB], false);
+					break;
+				}
+			modelStack.PopMatrix();
 		modelStack.PushMatrix();
-
-		modelStack.Scale(slArray[i]->getScale().x, slArray[i]->getScale().y, slArray[i]->getScale().z);
-		switch (i % 3)
-		{
-		case 0:
-			RenderMesh(meshList[GEO_GRADIENTR], false);
-			break;
-		case 1:
-			RenderMesh(meshList[GEO_GRADIENTG], false);
-			break;
-		case 2:
-			RenderMesh(meshList[GEO_GRADIENTB], false);
-			break;
-		}
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
-		modelStack.Translate((slArray[i]->getPreviousOutput()*slArray[i]->getScale().x * 2) - (slArray[i]->getScale().x), 0, 0);
-		modelStack.Scale(1.0f, slArray[i]->getScale().y, 1.0f);
-		RenderMesh(meshList[GEO_CUBE], false);
-
+			modelStack.Translate((slArray[i]->getPreviousOutput()*slArray[i]->getScale().x * 2) - (slArray[i]->getScale().x), 0, 0);
+			modelStack.Scale(1.0f, slArray[i]->getScale().y, 1.0f);
+			RenderMesh(meshList[GEO_CUBE], false);
 		modelStack.PopMatrix();
 		modelStack.PopMatrix();
 
@@ -321,5 +315,10 @@ void SceneTSelect::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-
+	while (buttonList.size() > 0)
+	{
+		Button *butt = buttonList.back();//heheh #2
+		delete butt;
+		buttonList.pop_back();
+	}
 }

@@ -47,9 +47,11 @@ void ScenePlane::Init()
 	tankSpeed = 5.f;
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
-	GOManager::GetInstance()->terreference = &terr;
+	terr = new Terrain();
+
+	terr->GenerateRandomHeight(m_worldWidth);
+	terr->GenerateTerrainMesh();
+	GOManager::GetInstance()->terreference = terr;
 
 	meshList[SceneManager::tankChoice]->textureID[1] = LoadTGA(SceneManager::tankDecalChoice.c_str());
 
@@ -72,8 +74,8 @@ void ScenePlane::Init()
 	g2->norm.Set(cos(Math::DegreeToRadian(g2->angle)), sin(Math::DegreeToRadian(g2->angle)), 0.0f);
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
 	*/
-	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
+	SpawnPos1 = vec3(-2, terr->GetHeight({-2, 0, 0}).y, 0);
+	SpawnPos2 = vec3(m_worldWidth + 2, terr->GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
@@ -149,7 +151,7 @@ void ScenePlane::Update(double dt)
 		int h = Application::GetWindowHeight();
 
 		/*
-		vec3 n = terr.GetNormal(Vector3(
+		vec3 n = terr->GetNormal(Vector3(
 			static_cast<float>(x / w * m_worldWidth),
 			static_cast<float>(m_worldHeight - y / h * m_worldHeight),
 			static_cast<float>(0.0f))
@@ -230,7 +232,7 @@ void ScenePlane::Render()
 	//RenderGO(tank2);
 
 	modelStack.PushMatrix();
-	RenderMesh(terr.tMesh, false);
+	RenderMesh(terr->tMesh, false);
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
@@ -260,6 +262,26 @@ void ScenePlane::Exit()
 	}
 	delete plane;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+	while (enemyList.size() > 0)
+	{
+		TankEnemy *tenk = enemyList.back();//heheh #3
+		delete tenk;
+		enemyList.pop_back();
+	}
+	while (buttonList.size() > 0)
+	{
+		Button *butt = buttonList.back();//heheh #2
+		delete butt;
+		buttonList.pop_back();
+	}
+	if (terr->tMesh != nullptr)
+	{
+		delete terr->tMesh;
+		terr->tMesh = nullptr;
+	}
+
+	delete terr;
+	terr = NULL;
 }
 
 void ScenePlane::EndWave()
@@ -278,14 +300,14 @@ void ScenePlane::EndWave()
 		}
 	}
 	//GOManager::GetInstance()->cleanList();
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
+	terr->GenerateRandomHeight(m_worldWidth);
+	terr->GenerateTerrainMesh();
 	for (int i = 0; i < 5; ++i)
 	{
 		GameObject* building = GOManager::GetInstance()->fetchGO();
 		building->type = GameObject::ENEMY_BUILDING;
 		building->pos.x = Math::RandFloatMinMax(m_worldWidth / 10, m_worldWidth / 10 * 9);
-		building->pos.y = terr.GetHeight(building->pos).y+3.0f;
+		building->pos.y = terr->GetHeight(building->pos).y+3.0f;
 		building->vel.SetZero();
 		building->hasGravity = false;
 		building->scale = Vector3(1, 1, 1)*10;
