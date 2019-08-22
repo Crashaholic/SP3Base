@@ -16,10 +16,13 @@ void SceneTank::Init()
 {
 	Scene::Init();
 	glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
+	m_worldHeight = 100.f;
+	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
-	GOManager::GetInstance()->terreference = &terr;
+	terr = new Terrain;
+	terr->GenerateRandomHeight(m_worldWidth);
+	terr->GenerateTerrainMesh();
+	GOManager::GetInstance()->terreference = terr;
 	player = new PlayerTank;
 	player->Init();
 	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
@@ -29,20 +32,14 @@ void SceneTank::Init()
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	m_worldHeight = 100.f;
-	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 
 	bLightEnabled = true;
 	m_speed = 1.f;
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
-	// Set terrain reference in GOManager
-	GOManager::GetInstance()->terreference = &terr;
 
-	SpawnPos1 = vec3(-4.9999f, 0, 0);
-	SpawnPos2 = vec3(m_worldWidth + 4.9999f, 0, 0);
+	SpawnPos1 = vec3(-300.f, 0, 0);
+	SpawnPos2 = vec3(m_worldWidth + 300.f, 0, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
@@ -180,7 +177,7 @@ void SceneTank::Render()
 	//RenderGO(tank2);
 
 	modelStack.PushMatrix();
-	RenderMesh(terr.tMesh, false);
+	RenderMesh(terr->tMesh, false);
 	modelStack.PopMatrix();
 
 	//On screen text
@@ -208,6 +205,19 @@ void SceneTank::Exit()
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	delete player;
+	while (enemyList.size() > 0)
+	{
+		PlaneEnemy *tenk = enemyList.back();//heheh #3
+		delete tenk;
+		enemyList.pop_back();
+	}
+	if (terr->tMesh != nullptr)
+	{
+		delete terr->tMesh;
+		terr->tMesh = nullptr;
+	}
+	delete terr;
+	terr = NULL;
 }
 
 void SceneTank::EndWave()
@@ -216,8 +226,8 @@ void SceneTank::EndWave()
 	spawnTimer = (float)SPAWNTIMER;
 	waveNo++;
 	LOG_WARN("LAST WAVE: %, NOW: %", waveNo - 1, waveNo);
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
+	terr->GenerateRandomHeight(m_worldWidth);
+	terr->GenerateTerrainMesh();
 }
 
 bool SceneTank::SpawnEnemy()
@@ -231,7 +241,7 @@ bool SceneTank::SpawnEnemy()
 	{
 		bool spawner = rand() % 2;
 		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
-		enemyList.push_back(new PlaneEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, player->GOref, m_worldWidth));
+		enemyList.push_back(new PlaneEnemy({ temp.x, Math::RandFloatMinMax(m_worldHeight/2, m_worldHeight), temp.z }, player->GOref, m_worldWidth));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

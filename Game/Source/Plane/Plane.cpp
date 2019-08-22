@@ -64,7 +64,7 @@ void Plane::Update(double dt)
 	//GameObject::Update(dt);
 	if (GOref->active)
 	{
-		ReadInput(dt, 'A', 'D', 'Q', 'E');
+		ReadInput(dt, 'A', 'D', 'C', 'V');
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 
 		// GOref->vel = GOref->dir * topSpeed;

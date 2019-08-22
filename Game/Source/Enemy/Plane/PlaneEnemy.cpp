@@ -41,10 +41,11 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f); 
 	GOref->norm = GOref->dir;
 	GOref->defaultPos = GOref->pos;
-	GOref->wrapMode = GameObject::SW_OFFSCREENCLEAR;
+	GOref->wrapMode = GameObject::SW_NONE;
 	GOref->reserved = true;
 	GOref->active = true;
 	GOref->hasGravity = false;
+	directionleft = false;
 	GOref->vel.Set(1, 0, 0);
 	GOref->color[0].Set(0.6f, 0.4f, 0.2f);
 	GOref->color[1].Set(0.5f, 0.3f, 0.1f);
@@ -65,27 +66,32 @@ float GetAngle(vec3 a, vec3 b)
 
 void PlaneEnemy::Update(double dt)
 {
+	Vector3 leftTarget(-GOref->scale.x * 2, GOref->pos.y, 0);
+	Vector3 rightTarget(m_worldWidth + GOref->scale.x*2, GOref->pos.y, 0);
 	if (GOref->active)
 	{
-		if (GOref->pos.x > m_worldWidth - 5)
+		if (GOref->pos.x < leftTarget.x)
 		{
-			directionleft = true;
-			GOref->pos.x = m_worldWidth - 5;
+			//directionleft = false;
+			GOref->pos.x = leftTarget.x+1.0f;
 			//GOref->vel.x *= -1;
-			targetMov.Set(0, originalHeight + Math::RandFloatMinMax((float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
+			targetMov = rightTarget;
+			targetMov.y =originalHeight + Math::RandFloatMinMax(-(float)HEIGHT_RANGE,(float)HEIGHT_RANGE);
 		}
-		else if (GOref->pos.x < 11)
+		else if (GOref->pos.x > rightTarget.x)
 		{
-			directionleft = false;
-			GOref->pos.x = 11;
+			//directionleft = true;
+			GOref->pos.x = rightTarget.x;
 			//GOref->vel.x *= -1;
-			targetMov.Set(m_worldWidth, originalHeight + Math::RandFloatMinMax(- (float)HEIGHT_RANGE,(float)HEIGHT_RANGE), GOref->pos.z);
+			targetMov = leftTarget;
+			targetMov.y = originalHeight + Math::RandFloatMinMax(-(float)HEIGHT_RANGE, (float)HEIGHT_RANGE);
 		}
+		targetMov.y = Math::Min(targetMov.y, 100.0f);
 		GOref->dir = (targetMov - GOref->pos).Normalized();
 		//GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		GOref->norm = GOref->dir;
-		GOref->vel = GOref->dir * (topSpeed * 0.5f);
-		GOref->pos += GOref->vel * (float)dt;
+		GOref->vel = GOref->dir * topSpeed;
+		//GOref->pos += GOref->vel * (float)dt;
 
 		if (GOref->dir.x < 0)
 		{

@@ -50,9 +50,10 @@ void Scene2P::Init()
 	tankSpeed = 5.f;
 	Math::InitRNG();
 
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
-	GOManager::GetInstance()->terreference = &terr;
+	terr = new Terrain;
+	terr->GenerateRandomHeight(m_worldWidth);
+	terr->GenerateTerrainMesh();
+	GOManager::GetInstance()->terreference = terr;
 	player = new PlayerTank;
 	player->Init();
 	player->GOref->color[0].Set(SceneManager::tankColor[0].r, SceneManager::tankColor[0].g, SceneManager::tankColor[0].b);
@@ -82,15 +83,15 @@ void Scene2P::Init()
 	g2->pos.Set(center.x, center.y + 40.0f, center.z);
 	*/
 
-	SpawnPos1 = vec3(-2, terr.GetHeight({-2, 0, 0}).y, 0);
-	SpawnPos2 = vec3(m_worldWidth + 2, terr.GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
+	SpawnPos1 = vec3(-2, terr->GetHeight({-2, 0, 0}).y, 0);
+	SpawnPos2 = vec3(m_worldWidth + 2, terr->GetHeight({ m_worldWidth + 2, 0, 0}).y, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
 	
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_2P;
-	GOManager::GetInstance()->upgrade_1 = 1;
+	GOManager::GetInstance()->upgrade_1 = 4;
 }
 
 void Scene2P::Update(double dt)
@@ -113,18 +114,6 @@ void Scene2P::Update(double dt)
 	if(Application::IsKeyPressed('-'))
 	{
 	}
-	static bool lol = false;
-	if(Application::IsKeyPressed('C'))
-	{
-		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = decal1;
-	}
-
-	if(Application::IsKeyPressed('V'))
-	{
-		plane->GOref->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-		plane->GOref->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-	}
-
 	spawnTimer = Math::Max(spawnTimer - dt, ((double)0.0f));
 
 	if (spawnTimer == 0 && Math::RandFloatMinMax((float)ENEMYSPAWNCHNCRANGE_MIN, (float)ENEMYSPAWNCHNCRANGE_MAX) > (float)ENEMYSPAWNCHNC)
@@ -160,9 +149,18 @@ void Scene2P::Update(double dt)
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
-		
+
+		//Exercise 10: spawn ghost ball
+		//m_ghost->active = true;
+
+		GameObject* go = GOManager::GetInstance()->fetchGO();
+		go->type = GameObject::ENEMY_PROJECTILE_MACHINE;
+		go->pos.Set(static_cast<float>(x / w * m_worldWidth), static_cast<float>(m_worldHeight - y / h * m_worldHeight), 0.0f);
+		go->vel.SetZero();
+		go->scale.Set(1, 1, 1);
+
 		/*
-		vec3 n = terr.GetNormal(Vector3(
+		vec3 n = terr->GetNormal(Vector3(
 			static_cast<float>(x / w * m_worldWidth), 
 			static_cast<float>(m_worldHeight - y / h * m_worldHeight), 
 			static_cast<float>(0.0f))
@@ -230,7 +228,7 @@ void Scene2P::Render()
 	//RenderGO(tank2);
 
 	modelStack.PushMatrix();
-	RenderMesh(terr.tMesh, false);
+	RenderMesh(terr->tMesh, false);
 	modelStack.PopMatrix();
 	GLenum err = glGetError();
 
@@ -255,8 +253,16 @@ void Scene2P::Exit()
 		if (meshList[i])
 			delete meshList[i];
 	}
-	delete player;
 	glDeleteVertexArrays(1, &m_vertexArrayID);
+	delete player;
+	delete plane;
+	if (terr->tMesh != nullptr)
+	{
+		delete terr->tMesh;
+		terr->tMesh = nullptr;
+	}
+	delete terr;
+	terr = NULL;
 }
 
 void Scene2P::EndWave()
@@ -275,14 +281,14 @@ void Scene2P::EndWave()
 		}
 	}
 	//GOManager::GetInstance()->cleanList();
-	terr.GenerateRandomHeight(m_worldWidth);
-	terr.GenerateTerrainMesh();
+	terr->GenerateRandomHeight(m_worldWidth);
+	terr->GenerateTerrainMesh();
 	for (int i = 0; i < 5; ++i)
 	{
 		GameObject* building = GOManager::GetInstance()->fetchGO();
 		building->type = GameObject::ENEMY_BUILDING;
 		building->pos.x = Math::RandFloatMinMax(m_worldWidth / 10, m_worldWidth / 10 * 9);
-		building->pos.y = terr.GetHeight(building->pos).y+3.0f;
+		building->pos.y = terr->GetHeight(building->pos).y+3.0f;
 		building->vel.SetZero();
 		building->hasGravity = false;
 		building->scale = Vector3(1, 1, 1)*10;
@@ -290,8 +296,8 @@ void Scene2P::EndWave()
 		//building->
 	}
 
-	//tank->pos = terr.GetHeight(tank->pos);
-	//tank2->pos = terr.GetHeight(tank->pos) + vec3{0, 2, 0};
+	//tank->pos = terr->GetHeight(tank->pos);
+	//tank2->pos = terr->GetHeight(tank->pos) + vec3{0, 2, 0};
 }
 
 void Scene2P::SpawnEnemy()

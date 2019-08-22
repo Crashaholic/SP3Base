@@ -8,11 +8,6 @@ Terrain::Terrain()
 
 Terrain::~Terrain()
 {
-	if (tMesh)
-	{
-		delete tMesh;
-		tMesh = nullptr;
-	}
 }
 
 Vector3 Terrain::GetHeight(Vector3 Position)
@@ -20,16 +15,18 @@ Vector3 Terrain::GetHeight(Vector3 Position)
 	if (Position.x > Points[TERRAIN_SIZE - 1].x) // checking for outside of screen on the right side
 	{
 		float newY;
-		newY = Points[TERRAIN_SIZE - 2].y +
-			(((Points[TERRAIN_SIZE - 1].x - 1.f / TERRAIN_SIZE) - Points[TERRAIN_SIZE - 2].x) /
-			(Points[TERRAIN_SIZE - 1].x - Points[TERRAIN_SIZE - 2].x)) 
-			* (Points[TERRAIN_SIZE - 1].y - Points[TERRAIN_SIZE - 2].y);
+		newY = Points[TERRAIN_SIZE - 1].y;
+		//newY = Points[TERRAIN_SIZE - 2].y +
+		//	(((Points[TERRAIN_SIZE - 1].x - 1.f / TERRAIN_SIZE) - Points[TERRAIN_SIZE - 2].x) /
+		//	(Points[TERRAIN_SIZE - 1].x - Points[TERRAIN_SIZE - 2].x)) 
+		//	* (Points[TERRAIN_SIZE - 1].y - Points[TERRAIN_SIZE - 2].y);
 		return vec3(Position.x, newY);
 	}
 	else if (Position.x < Points[0].x) // checking for outside of screen on the left side
 	{
 		float newY;
-		newY = Points[0].y + ((Position.x - Points[0].x) / (Points[1].x - Points[0].x)) * (Points[1].y - Points[0].y);
+		newY = Points[0].y;
+		//newY = Points[0].y + ((Position.x - Points[0].x) / (Points[1].x - Points[0].x)) * (Points[1].y - Points[0].y);
 		return vec3(Position.x, newY);
 	}
 	vec3 R, L;

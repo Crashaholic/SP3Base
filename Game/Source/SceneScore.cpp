@@ -200,5 +200,4 @@ void SceneScore::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-
 }

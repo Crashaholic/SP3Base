@@ -25,7 +25,7 @@ public:
 private:
 	//Mesh* meshList[NUM_GEOMETRY];
 	Tank* player;
-	Terrain terr;
+	Terrain* terr;
 
 	Camera camera;
 

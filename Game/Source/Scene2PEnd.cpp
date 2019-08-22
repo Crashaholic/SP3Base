@@ -175,5 +175,10 @@ void Scene2PEnd::Exit()
 			delete meshList[i];
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
-
+	while (buttonList.size() > 0)
+	{
+		Button *butt = buttonList.back();//heheh #2
+		delete butt;
+		buttonList.pop_back();
+	}
 }
