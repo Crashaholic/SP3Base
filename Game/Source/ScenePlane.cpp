@@ -16,6 +16,7 @@ void ScenePlane::Init()
 {
 	Scene::Init();
 	waveNo = 0;
+	enemyCount = 0;
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
 	//plane = dynamic_cast<Komet*>(new Plane);

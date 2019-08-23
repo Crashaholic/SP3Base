@@ -16,6 +16,7 @@ void SceneTank::Init()
 {
 	Scene::Init();
 	waveNo = 0;
+	enemyCount = 0;
 	glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
