@@ -1,5 +1,5 @@
-1082,LEL
-758,YAS
-350,BAA
-40,FAT
-3,ABA
+0,nul
+0,nul
+0,nul
+0,nul
+0,nul

@@ -31,7 +31,7 @@ void Harrier::Secondary()
 		for (int i = 0; i < numBombs; ++i)
 		{
 			GameObject* missile = GOManager::GetInstance()->fetchGO();
-			missile->type = GameObject::PLAYER_PROJECTILE_NUKE;
+			missile->type = GameObject::PLAYER_PROJECTILE_BOMB;
 			if (GOref->dir.x >= 0)
 				missile->vel = Vector3(GOref->dir.y, -GOref->dir.x);
 			else
@@ -125,7 +125,7 @@ void Harrier::Update(double dt)
 	if (GOref->active)
 	{
 		//GOref->hasGravity = VTOLmode;
-		ReadInput(dt, 'A', 'D', 'Q', 'E', 'W', 'S', 'R', 'T');
+		ReadInput(dt, 'A', 'D', 'C', 'V', 'W', 'S', 'R', 'T');
 		GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 		if (GOref->dir.x < 0)
 		{

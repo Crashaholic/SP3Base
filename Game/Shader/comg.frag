@@ -160,10 +160,10 @@ void main()
 					if(texture2D( colorTexture[i], texCoord ).a > 0.1)
 					{
 						color.rgb = texture2D( colorTexture[i], texCoord ).rgb*coloredTexture[i];
-						color.a = 1.0;
-						//color.a = texture2D( colorTexture[i], texCoord ).a;
+						//color.a = 1.0;
+						color.a = texture2D( colorTexture[i], texCoord ).a;
 					}
-					if(color.a<=0.9)
+					if(color.a<=0.99)
 						discard;
 					//else
 					//	color.rgb*=coloredTexture[i];

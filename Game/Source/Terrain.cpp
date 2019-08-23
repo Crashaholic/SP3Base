@@ -145,11 +145,19 @@ void Terrain::GenerateTerrainMesh()
 	std::vector<Vertex> vertex_buffer_data;
 	vertex_buffer_data.push_back(v);
 	index_buffer_data.push_back(0);
+	float texheight[TERRAIN_SIZE];
+	float maxheightdifference = 0.0f;
+	for (int i = 0; i < TERRAIN_SIZE; ++i)
+	{
+		maxheightdifference = Math::Max(maxheightdifference, NewPoints[i].y - Bottom[i].y);
+	}
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{
 		v.pos.Set(Points[i].x, Points[i].y, Points[i].z);
 		v.color.Set(0.3f, 0.3f, 0.3f);
 		v.normal.Set(0, 1, 0);
+		texheight[i] = NewPoints[i].y;
+		v.texCoord.Set(1.0f / (float)TERRAIN_SIZE * i, 1.0f );
 		vertex_buffer_data.push_back(v);
 	}
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
@@ -157,6 +165,7 @@ void Terrain::GenerateTerrainMesh()
 		v.pos.Set(Bottom[i].x, Bottom[i].y, Bottom[i].z);
 		v.color.Set(0.4f, 0.4f, 0.4f);
 		v.normal.Set(0, 1, 0);
+		v.texCoord.Set(1.0f / (float)TERRAIN_SIZE * i, 0.0f - 2.0f *(  texheight[i] / maxheightdifference) );
 		vertex_buffer_data.push_back(v);
 	}
 
@@ -169,13 +178,17 @@ void Terrain::GenerateTerrainMesh()
 	if (!tMesh) // Ensure we always have one mesh
 		tMesh = new Mesh("2DTerrain");
 	tMesh->mode = Mesh::DRAW_TRIANGLE_STRIP;
+	
+	tMesh->indexSize = index_buffer_data.size();
+	tMesh->textureID[0] = LoadTGA("Image//Grass.tga");
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glBindBuffer(GL_ARRAY_BUFFER, tMesh->vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertex_buffer_data.size() * sizeof(Vertex), &vertex_buffer_data[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tMesh->indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_data.size() * sizeof(GLuint), &index_buffer_data[0], GL_STATIC_DRAW);
 
-	tMesh->indexSize = index_buffer_data.size();
 }
 
 void Terrain::DeformTerrain(Vector3 ExplosionPosition, float ExplosionRadius)

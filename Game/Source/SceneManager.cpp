@@ -1,6 +1,5 @@
 #include "zcustompch.h"
 #include "SceneManager.h"
-SceneManager* (*SceneManager::getSceneManager)(void) = SceneManager::GetInstance;
 
 int			SceneManager::planeChoice;
 std::string	SceneManager::planeDecalChoice;
@@ -109,4 +108,9 @@ void SceneManager::writeMonies(int money, bool warthog, bool harrier)
 	fstream stream;
 	stream.open("SaveData/monies.txt", ofstream::out | ofstream::trunc);
 	stream << money << "," << warthog << "," << harrier;
+}
+
+SceneManager * SceneManager::getSceneManager()
+{
+	return GetInstance();
 }

@@ -36,6 +36,6 @@ public:
 	static int planeCost[3];
 	void readMonies();
 	void writeMonies(int money, bool warthog, bool harrier);
-	static SceneManager* (*getSceneManager)(void);
+	static SceneManager* getSceneManager();
 };
 

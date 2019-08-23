@@ -15,6 +15,7 @@ SceneTank::~SceneTank()
 void SceneTank::Init()
 {
 	Scene::Init();
+	waveNo = 0;
 	glClearColor(0.8f, 0.8f, 0.8f, 0.0f);
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
@@ -162,6 +163,12 @@ void SceneTank::Render()
 	modelStack.LoadIdentity();
 
 	RenderMesh(meshList[GEO_AXES], false);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
+	modelStack.Scale(m_worldWidth / 2, m_worldHeight / 2, 1.0f);
+	RenderMesh(meshList[GEO_SKYBG], false);
+	modelStack.PopMatrix();
 
 	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)

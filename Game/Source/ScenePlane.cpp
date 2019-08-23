@@ -15,6 +15,7 @@ ScenePlane::~ScenePlane()
 void ScenePlane::Init()
 {
 	Scene::Init();
+	waveNo = 0;
 	glClearColor(0.9f, 0.9f, 0.9f, 0.0f);
 	//plane = new Plane;
 	//plane = dynamic_cast<Komet*>(new Plane);
@@ -108,18 +109,6 @@ void ScenePlane::Update(double dt)
 	if (Application::IsKeyPressed('-'))
 	{
 	}
-	static bool lol = false;
-	if (Application::IsKeyPressed('C'))
-	{
-		meshList[GEO_PLAYER_PLANE_A10]->textureID[1] = decal1;
-	}
-
-	if (Application::IsKeyPressed('V'))
-	{
-		plane->GOref->color[0].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-		plane->GOref->color[1].Set(Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f), Math::RandFloatMinMax(0.f, 1.f));
-	}
-
 
 	static bool hPressed = false;
 	if (Application::IsKeyPressed('H'))
@@ -213,6 +202,12 @@ void ScenePlane::Render()
 					);
 	modelStack.LoadIdentity();
 	
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2,0.0f);
+	modelStack.Scale(m_worldWidth/2, m_worldHeight/2, 1.0f);
+	RenderMesh(meshList[GEO_SKYBG], false);
+	modelStack.PopMatrix();
+
 	RenderMesh(meshList[GEO_AXES], false);
 
 	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
@@ -227,6 +222,7 @@ void ScenePlane::Render()
 
 	//RenderGO(tank);
 	//RenderGO(tank2);
+
 
 	modelStack.PushMatrix();
 	RenderMesh(terr->tMesh, false);

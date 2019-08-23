@@ -822,9 +822,29 @@ void GOManager::updateCorn(GameObject * go)
 
 void GOManager::enemyDeath(GameObject * go)
 {
+	float deviation = 0.1f;
+	int numBombs = 5;
 	switch (go->type)
 	{
 	case GameObject::ENEMY_PLANE_PASSIVE:
+		playSound("PBomb");
+		for (int i = 0; i < numBombs; ++i)
+		{
+			GameObject* bomb = GOManager::GetInstance()->fetchGO();
+			bomb->type = GameObject::ENEMY_PROJECTILE_BOMB;
+			if (go->dir.x >= 0)
+				bomb->vel = Vector3(go->dir.y, -go->dir.x);
+			else
+				bomb->vel = Vector3(-go->dir.y, go->dir.x);
+			bomb->vel += go->vel * ((float)i - (float)numBombs / 2.f) *(deviation);
+			bomb->dir = go->dir;
+			bomb->pos = go->pos;
+			bomb->scale.Set(1, 2, 1);
+			bomb->hasGravity = true;
+			bomb->wrapMode = GameObject::SW_CLEAR;
+			for (int i = 0; i < MAX_TEXTURES; ++i)
+				bomb->color[i] = go->color[i];
+		}
 	case GameObject::ENEMY_PLANE_AGGRESSIVE:
 	case GameObject::ENEMY_TANK_PASSIVE:
 	case GameObject::ENEMY_TANK_AGGRESSIVE:

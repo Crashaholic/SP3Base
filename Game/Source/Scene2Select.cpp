@@ -378,6 +378,12 @@ void Scene2Select::Render()
 	);
 	modelStack.LoadIdentity();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0.0f);
+	modelStack.Scale(m_worldWidth / 2, m_worldHeight / 2, 1.0f);
+	RenderMesh(meshList[GEO_GARAGEBG], false);
+	modelStack.PopMatrix();
+
 	RenderMesh(meshList[GEO_AXES], false);
 
 	//On screen text
