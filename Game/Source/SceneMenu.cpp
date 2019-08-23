@@ -37,11 +37,11 @@ void SceneMenu::Init()
 	addButton(bArray[3]);
 	addButton(bArray[4]);
 
-	bArray[0]->init(Vector3(center.x - 69.0f, center.y, 1.0f),					Vector3(20.0f, 3.5f, 1.0f));
-	bArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f),			Vector3(20.0f, 3.5f, 1.0f));
-	bArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
-	bArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
-	bArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[0]->init(Vector3(center.x - 69.0f, center.y + 1.6f, 1.0f),						Vector3(20.0f, 3.5f, 1.0f));	
+	bArray[1]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f, 1.0f),			Vector3(20.0f, 3.5f, 1.0f));
+	bArray[2]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 2.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[3]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[4]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
 
 	// Text init
 	sArray[0] = "Play as Plane";
@@ -191,6 +191,8 @@ void SceneMenu::Render()
 
 	for (int i = 0; i < 5; ++i)
 	{
+		// Legacy
+		/*
 		modelStack.PushMatrix();
 		modelStack.Translate(bArray[i]->getPos().x, bArray[i]->getPos().y, bArray[i]->getPos().z);
 		modelStack.PushMatrix();
@@ -206,6 +208,9 @@ void SceneMenu::Render()
 		modelStack.Translate(-(float)sArray[i].length() / 4, 0, 0);
 		RenderText(meshList[GEO_TEXT], sArray[i], Color(1, 1, 1));
 		modelStack.PopMatrix();
+		*/
+
+		RGButtonRender(bArray[i], sArray[i]);
 	}
 }
 

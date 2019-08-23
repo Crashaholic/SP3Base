@@ -44,16 +44,22 @@ void Scene2Select::Init()
 	tankColor[1].Set(1, 1, 1);
 
 	bPArray[0]->init(Vector3(center.x, center.y + 60.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bPArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); //plane selection
-	bPArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bPArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bPArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bPArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bPArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bPArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bPArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bPArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
-	bTArray[0]->init(Vector3(center.x + 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f)); //tank selection
-	bTArray[1]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bTArray[2]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bTArray[3]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	// Plane selection
+	bPArray[1]->init(Vector3(center.x - 69.0f, center.y - 5.4f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bPArray[2]->init(Vector3(center.x - 69.0f, bPArray[1]->getPos().y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bPArray[3]->init(Vector3(center.x - 69.0f, bPArray[1]->getPos().y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bPArray[4]->init(Vector3(center.x - 69.0f, bPArray[1]->getPos().y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+
+	bTArray[0]->init(Vector3(center.x + 69.0f, center.y - 5.4f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bTArray[1]->init(Vector3(center.x + 69.0f, bPArray[1]->getPos().y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bTArray[2]->init(Vector3(center.x + 69.0f, bPArray[1]->getPos().y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bTArray[3]->init(Vector3(center.x + 69.0f, bPArray[1]->getPos().y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
 	for (int i = 0; i < NUM_2PSLIDER; ++i)
 	{
@@ -66,19 +72,28 @@ void Scene2Select::Init()
 		addButton(slTArray[i]);
 	}
 
-	slPArray[0]->init(Vector3(center.x - 29.f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slPArray[1]->init(Vector3(center.x - 29.f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slPArray[2]->init(Vector3(center.x - 29.f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slPArray[3]->init(Vector3(center.x - 29.0f, center.y + 14.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slPArray[4]->init(Vector3(center.x - 29.0f, center.y + 7.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slPArray[5]->init(Vector3(center.x - 29.0f, center.y + 0.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slPArray[0]->init(Vector3(center.x - 25.f,			center.y - 5.4f,						1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slPArray[1]->init(Vector3(slPArray[0]->getPos().x,	slPArray[0]->getPos().y - 7.0f,			1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slPArray[2]->init(Vector3(slPArray[0]->getPos().x,	slPArray[0]->getPos().y - 7.0f * 2.0f,	1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	
+	slPArray[5]->init(Vector3(slPArray[0]->getPos().x,	slPArray[0]->getPos().y + 8.0f,			1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slPArray[4]->init(Vector3(slPArray[0]->getPos().x,	slPArray[5]->getPos().y + 7.0f,			1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slPArray[3]->init(Vector3(slPArray[0]->getPos().x,	slPArray[5]->getPos().y + 7.0f * 2.0f,	1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
-	slTArray[0]->init(Vector3(center.x + 29.f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slTArray[1]->init(Vector3(center.x + 29.f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slTArray[2]->init(Vector3(center.x + 29.f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slTArray[3]->init(Vector3(center.x + 29.0f, center.y + 14.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slTArray[4]->init(Vector3(center.x + 29.0f, center.y + 7.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	slTArray[5]->init(Vector3(center.x + 29.0f, center.y + 0.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slTArray[0]->init(Vector3(center.x + 25.f, center.y - 5.4f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slTArray[1]->init(Vector3(slTArray[0]->getPos().x, slTArray[0]->getPos().y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slTArray[2]->init(Vector3(slTArray[0]->getPos().x, slTArray[0]->getPos().y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+
+	slTArray[5]->init(Vector3(slTArray[0]->getPos().x, slTArray[0]->getPos().y + 8.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slTArray[4]->init(Vector3(slTArray[0]->getPos().x, slTArray[5]->getPos().y + 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slTArray[3]->init(Vector3(slTArray[0]->getPos().x, slTArray[5]->getPos().y + 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+
+	//slTArray[0]->init(Vector3(center.x + 29.f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//slTArray[1]->init(Vector3(center.x + 29.f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//slTArray[2]->init(Vector3(center.x + 29.f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//slTArray[3]->init(Vector3(center.x + 29.0f, center.y + 14.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//slTArray[4]->init(Vector3(center.x + 29.0f, center.y + 7.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//slTArray[5]->init(Vector3(center.x + 29.0f, center.y + 0.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -495,7 +510,7 @@ void Scene2Select::Render()
 		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ 1.f,1.f,1.f });
 	}
 
-	renderButton();
+	//renderButton();
 }
 
 void Scene2Select::Exit()

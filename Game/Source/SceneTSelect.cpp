@@ -27,11 +27,16 @@ void SceneTSelect::Init()
 	tankColor[1].Set(1, 1, 1);
 
 	bArray[0]->init(Vector3(center.x, center.y + 60.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
-	bArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	//bArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	bArray[5]->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+
+	bArray[1]->init(Vector3(center.x - 69.0f, center.y - 5.4f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bArray[2]->init(Vector3(center.x - 69.0f, bArray[1]->getPos().y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bArray[3]->init(Vector3(center.x - 69.0f, bArray[1]->getPos().y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bArray[4]->init(Vector3(center.x - 69.0f, bArray[1]->getPos().y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
 	for (int i = 0; i < NUM_TSLIDER; ++i)
 	{
@@ -39,6 +44,8 @@ void SceneTSelect::Init()
 		addButton(slArray[i]);
 	}
 
+	// Legacy
+	/*
 	slArray[3]->init(Vector3(center.x + 69.0f, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	slArray[4]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	slArray[5]->init(Vector3(center.x + 69.0f, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
@@ -46,6 +53,15 @@ void SceneTSelect::Init()
 	slArray[0]->init(Vector3(center.x, center.y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	slArray[1]->init(Vector3(center.x, center.y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 	slArray[2]->init(Vector3(center.x, center.y - 7.0f * 3.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	*/
+
+	slArray[3]->init(Vector3(center.x + 65.0f, center.y - 5.4f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slArray[4]->init(Vector3(center.x + 65.0f, slArray[3]->getPos().y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slArray[5]->init(Vector3(center.x + 65.0f, slArray[3]->getPos().y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+
+	slArray[0]->init(Vector3(center.x, center.y - 5.4f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slArray[1]->init(Vector3(center.x, slArray[0]->getPos().y - 7.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	slArray[2]->init(Vector3(center.x, slArray[0]->getPos().y - 7.0f * 2.0f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
 
 	camera.Init(Vector3(0, 0, 1), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
