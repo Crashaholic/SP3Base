@@ -35,6 +35,7 @@ void SceneEnd::Init()
 	bBack = new Button;
 	addButton(bBack);
 	bBack->init(Vector3(center.x - 69.0f, m_worldHeight - 3.5f, 1.0f), Vector3(20.0f, 3.5f, 1.0f));
+	bPlayAgain.init(vec3(center.x - 69.0f, m_worldHeight - 10.5f), vec3(20.0f, 3.5f, 1.0f));
 	sBack = "Back";
 	onButton = false;
 
@@ -114,6 +115,23 @@ void SceneEnd::Update(double dt)
 	else if (bLButtonState && !Application::IsMousePressed(0))
 	{
 		bLButtonState = false;
+
+		if (bPlayAgain.checkMouse())
+		{
+			switch (GOManager::GetInstance()->sceneID)
+			{
+			case GOManager::STYPE::FROM_PLANE:
+			{
+				SceneManager::getSceneManager()->switchToScene("Plane", this);
+				break;
+			}
+			case GOManager::STYPE::FROM_TANK:
+			{
+				SceneManager::getSceneManager()->switchToScene("Tank", this);
+				break;
+			}
+			}
+		}
 
 		if (bBack->checkMouse())
 		{
@@ -309,7 +327,7 @@ void SceneEnd::Update(double dt)
 		}
 
 	}
-	if(SubmittedScore)
+	if (SubmittedScore)
 		SceneManager::getSceneManager()->switchToScene("Menu", this);
 }
 
@@ -404,6 +422,7 @@ void SceneEnd::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], s2.str(), Color(1, 1, 1), 3, 0, 9);
 	RenderTextOnScreen(meshList[GEO_TEXT], s3.str(), Color(1, 1, 1), 3, 0, 6);
 
+	RGButtonRender(&bPlayAgain, "Play Again");
 	RGButtonRender(bBack, sBack);
 	if (GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_PLANE && HighScoreSystem::GetInstance()->GetEligible(0, GOManager::GetInstance()->planeHighscore) ||
 		GOManager::GetInstance()->sceneID == GOManager::STYPE::FROM_TANK && HighScoreSystem::GetInstance()->GetEligible(1, GOManager::GetInstance()->tankHighscore))

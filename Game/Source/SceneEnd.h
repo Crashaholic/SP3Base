@@ -36,6 +36,7 @@ private:
 	unsigned short whichChar;
 	Button bArr[6];
 	Button bSubmitScore;
+	Button bPlayAgain;
 	std::string sArrow[2];
 	int choice;
 	bool SubmittedScore;
