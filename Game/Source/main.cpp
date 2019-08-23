@@ -5,10 +5,9 @@
 int main( void )
 {
 	{
-		Application &app = Application::GetInstance();
-		app.Init();
-		app.Run();
-		app.Exit();
+		Application::GetInstance()->Init();
+		Application::GetInstance()->Run();
+		Application::GetInstance()->Exit();
 	}
 	return 0;
 }

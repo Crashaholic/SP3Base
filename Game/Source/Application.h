@@ -19,14 +19,9 @@
 #include "Scene2P.h"
 #include "Scene2PEnd.h"
 
-class Application
+class Application : public Singleton<Application>
 {
 public:
-	static Application& GetInstance()
-	{
-		static Application app;
-		return app;
-	}
 	void Init();
 	void Run();
 	void Exit();
@@ -35,10 +30,10 @@ public:
 	static void GetCursorPos(double *xpos, double *ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
-
-private:
 	Application();
 	~Application();
+
+private:
 
 	//Declare a window object
 	StopWatch m_timer;

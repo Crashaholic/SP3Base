@@ -158,7 +158,7 @@ void ScenePSelect::Update(double dt)
 
 			if (SceneManager::planeUnlock[currentPlane] == true)
 			{
-				SceneManager::getSceneManager().switchToScene("Plane", this);
+				SceneManager::getSceneManager()->switchToScene("Plane", this);
 			}
 			
 			break;
@@ -175,7 +175,7 @@ void ScenePSelect::Update(double dt)
 			++currentDecal;
 			break;
 		case 5:
-			SceneManager::getSceneManager().switchToScene("Menu", this);
+			SceneManager::getSceneManager()->switchToScene("Menu", this);
 			break;
 		case 6:
 			// Purchase plane
@@ -359,7 +359,7 @@ void ScenePSelect::Render()
 void ScenePSelect::Exit()
 {
 	// As we exit the scene, write the new data to the txt file
-	SceneManager::getSceneManager().writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
+	SceneManager::getSceneManager()->writeMonies(SceneManager::money, SceneManager::planeUnlock[1], SceneManager::planeUnlock[2]);
 
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)

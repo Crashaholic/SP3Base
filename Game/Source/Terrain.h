@@ -1,7 +1,7 @@
 #pragma once
 #include "zcustompch.h"
 
-#define TERRAIN_SIZE 160
+#define TERRAIN_SIZE 16
 #define TERRAIN_UP 5
 #define TERRAIN_DN -5
 

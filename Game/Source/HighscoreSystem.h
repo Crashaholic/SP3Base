@@ -51,12 +51,12 @@ public:
 	HighScoreSystem();
 	~HighScoreSystem();
 
-	void SubmitHighscoreP(unsigned int score, std::string name);
-	void SubmitHighscoreT(unsigned int score, std::string name);
+	bool GetEligible(bool tank, unsigned int score);
+	void SubmitHighscore(bool tank, unsigned int score, std::string name);
 
-	std::string GetHighscoreP();
-	std::string GetHighscoreT();
+	std::string GetHighscore(bool tank);
 
+	void ParseFile(bool tank, std::vector<Score>* s);
 };
 
 #endif

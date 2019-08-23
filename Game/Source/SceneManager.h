@@ -2,27 +2,23 @@
 #pragma once
 #include "Scene.h"
 #include <unordered_map>
-#include <fstream>
+#include "zcustompch.h"
 
 using namespace std;
 
-class SceneManager
+class SceneManager : public Singleton<SceneManager>
 {
 private:
 	unordered_map<string, Scene*>sceneList;
 	Scene* activeScene;
 
-	SceneManager();											// prevent multiple
-	SceneManager(const SceneManager& manager);				// prevent copy
-	SceneManager& operator=(const SceneManager& manager);	// prevent assign
-
 public:
+	SceneManager();
 	~SceneManager();
 
 	void firstScene(string name);
 	void switchToScene(string name, Scene* curr);
 	void addScene(string name, Scene* scene);
-	static SceneManager& getSceneManager();
 	Scene* getActiveScene();
 	unordered_map<string, Scene*>& getList();
 
@@ -40,5 +36,6 @@ public:
 	static int planeCost[3];
 	void readMonies();
 	void writeMonies(int money, bool warthog, bool harrier);
+	static SceneManager* (*getSceneManager)(void);
 };
 
