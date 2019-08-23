@@ -37,21 +37,24 @@ void SceneMenu::Init()
 	addButton(bArray[3]);
 	addButton(bArray[4]);
 
-	bArray[0]->init(Vector3(center.x - 69.0f, center.y + 1.6f, 1.0f),						Vector3(20.0f, 3.5f, 1.0f));	
+	bArray[0]->init(Vector3(center.x - 69.0f, center.y - 5.4f, 1.0f),						Vector3(20.0f, 3.5f, 1.0f));	
 	bArray[1]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f, 1.0f),			Vector3(20.0f, 3.5f, 1.0f));
 	bArray[2]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 2.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
-	bArray[3]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
-	bArray[4]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[3]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f)); // not in use
+	bArray[4]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
 
 	// Text init
 	sArray[0] = "Play as Plane";
 	sArray[1] = "Play as Tank";
 	sArray[2] = "2 Player";
-	sArray[3] = "Highscores";
+	sArray[3] = "Highscores"; // not in use
 	sArray[4] = "Mute";
 
 	//sound = true;
 	choice = 0;
+
+	HighScoreSystem::GetInstance()->ParseFile(0, &scoresPlane);
+	HighScoreSystem::GetInstance()->ParseFile(1, &scoresTank);
 }
 
 void SceneMenu::Update(double dt)
@@ -105,7 +108,7 @@ void SceneMenu::Update(double dt)
 			SceneManager::getSceneManager()->switchToScene("2Select", this);
 			break;
 		case 3:
-			SceneManager::getSceneManager()->switchToScene("Score", this);
+			//SceneManager::getSceneManager()->switchToScene("Score", this);
 			break;
 		case 4:
 			if (GOManager::GetInstance()->muted == false)
@@ -194,7 +197,7 @@ void SceneMenu::Render()
 		"Matthew Chan \n"
 		"Yan Quan \n"
 		"Hui Ling", 
-		Color(1, 1, 1), 2.5f, 68, 12);
+		Color(1, 1, 1), 2.0f, 2, 28);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], 
 		"Instructions: \n"
@@ -206,7 +209,7 @@ void SceneMenu::Render()
 		"C   - Primary Fire    (Planes only) \n"
 		"V   - Secondary Fire  (Planes only) \n"
 		"N   - Turret Fire     (Tank only) \n", 
-		Color(0.3f, 1.0f, 0.3f), 2.0f, 2, 46);
+		Color(0.3f, 1.0f, 0.3f), 2.0f, 2, 48);
 
 	for (int i = 0; i < 5; ++i)
 	{
@@ -229,8 +232,62 @@ void SceneMenu::Render()
 		modelStack.PopMatrix();
 		*/
 
-		RGButtonRender(bArray[i], sArray[i]);
+		// Disable highscore button
+		if (i != 3)
+		{
+			RGButtonRender(bArray[i], sArray[i]);
+		}
 	}
+
+	// Highscore render
+	static float X = 146.5f;
+	static float Y = 87.0f;
+	RenderTextOnScreen(meshList[GEO_TEXT], "HIGH SCORES", Color(0.3f, 0.8f, 1.0f), 3.0f, 65, 55.5f);
+	modelStack.PushMatrix();
+	modelStack.Translate(X, Y, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderText(meshList[GEO_TEXT], "PLANE", { 1, 1, 0 });
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	for (size_t i = 0; i < scoresPlane.size(); ++i)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(X, Y - 6.0f - i * 5, 0);
+		modelStack.Scale(4, 4, 4);
+		RenderText(meshList[GEO_TEXT], scoresPlane[i].name, { 1, 1, 1 });
+		modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(X + 10.0f, Y - 6.0f - i * 5, 0);
+		modelStack.Scale(4, 4, 4);
+		std::string scoreamount = std::to_string(scoresPlane[i].score);
+		RenderText(meshList[GEO_TEXT], scoreamount, { 1, 1, 1 });
+		modelStack.PopMatrix();
+	}
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(X, Y - 34.0f, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderText(meshList[GEO_TEXT], "TANK", { 1, 1, 0 });
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	for (size_t i = 0; i < scoresTank.size(); ++i)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(X, Y - 40.0f - i * 5, 0);
+		modelStack.Scale(4, 4, 4);
+		RenderText(meshList[GEO_TEXT], scoresTank[i].name, { 1, 1, 1 });
+		modelStack.PopMatrix();
+		modelStack.PushMatrix();
+		modelStack.Translate(X + 10.0f, Y - 40.0f - i * 5, 0);
+		modelStack.Scale(4, 4, 4);
+		std::string scoreamount = std::to_string(scoresTank[i].score);
+		RenderText(meshList[GEO_TEXT], scoreamount, { 1, 1, 1 });
+		modelStack.PopMatrix();
+	}
+	modelStack.PopMatrix();
 }
 
 void SceneMenu::Exit()
@@ -238,6 +295,17 @@ void SceneMenu::Exit()
 	modelStack.Clear();
 	viewStack.Clear();
 	projectionStack.Clear();
+
+	// Cleanup highscores
+	for (size_t i = scoresPlane.size(); i > 0; --i)
+	{
+		scoresPlane.pop_back();
+	}
+	for (size_t i = scoresTank.size(); i > 0; --i)
+	{
+		scoresTank.pop_back();
+	}
+
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{

@@ -4,6 +4,7 @@
 
 #include "Scene.h"
 #include <string>
+#include "HighscoreSystem.h"
 
 using namespace std;
 
@@ -29,6 +30,9 @@ private:
 	// Text
 	string sArray[5];
 	int choice;
+
+	std::vector<Score> scoresPlane;
+	std::vector<Score> scoresTank;
 };
 
 #endif
