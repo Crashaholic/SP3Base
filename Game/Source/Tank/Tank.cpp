@@ -41,6 +41,7 @@ void Tank::Fire()
 		object->hasGravity = false;
 		bulletCooldown = (double)Math::Max(2.0f - (GOManager::GetInstance()->upgrade_1 * 0.2f), 0.6f);
 		GOManager::GetInstance()->playSound("TShoot");
+		GOManager::GetInstance()->totalShots += 1;
 	}
 }
 
