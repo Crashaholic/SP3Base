@@ -183,11 +183,30 @@ void SceneMenu::Render()
 	// renderButton();
 
 	//On screen text
-	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(1.0f, 1.0f, 1.0f), 2.5f, 2, 56);
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 53);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2.5f, 2, 53);
+
+	RenderTextOnScreen(meshList[GEO_TEXT], "Credits: \n"
+		"Ryan Chan \n"
+		"Matthew Chan \n"
+		"Yan Quan \n"
+		"Hui Ling", 
+		Color(1, 1, 1), 2.5f, 68, 12);
+
+	RenderTextOnScreen(meshList[GEO_TEXT], 
+		"Instructions: \n"
+		"A/D - Plane Movement \n"
+		"I/K - Tank Movement \n"
+		"J/L - Turret Rotation (Tank only) \n"
+		"R   - Toggle VTOL     (Harrier only) \n"
+		"W/S - Vertical Thrust (Harrier only) \n"
+		"C   - Primary Fire    (Planes only) \n"
+		"V   - Secondary Fire  (Planes only) \n"
+		"N   - Turret Fire     (Tank only) \n", 
+		Color(0.3f, 1.0f, 0.3f), 2.0f, 2, 46);
 
 	for (int i = 0; i < 5; ++i)
 	{

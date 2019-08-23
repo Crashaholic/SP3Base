@@ -206,7 +206,7 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Scale(size, size, size);
+	modelStack.Scale(size - 0.7f, size, size);
 	defaultShader.SetBool("textEnabled", true);
 	defaultShader.SetBool("lightEnabled", false);
 	defaultShader.SetBool("colorTextureEnabled[0]", true);
@@ -214,15 +214,23 @@ void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh->textureID[0]);
 	defaultShader.SetInt("colorTexture[0]", 0);
+	float xVal = 0.5f;
+	float yVal = 0.5f;
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
+		// if \n is detected, modify the xy values
+		if (text[i] == '\n')
+		{
+			xVal = 0.0f;
+			yVal -= 1.0f;
+		}
 		Mtx44 characterSpacing;
 		//1.0f is the spacing of each character, you may change this value
-		characterSpacing.SetToTranslation(i * 0.5f + 0.5f, 0.5f, 0);
+		characterSpacing.SetToTranslation(xVal, yVal, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		defaultShader.SetMat4("model", MVP);
-
 		mesh->Render((unsigned)text[i] * 6, 6);
+		xVal += 0.5f;
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
 	defaultShader.SetBool("textEnabled", false);
