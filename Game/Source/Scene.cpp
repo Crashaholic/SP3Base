@@ -80,21 +80,23 @@ void Scene::Init()
 	meshList[GEO_PLAYER_PROJECTILE_BOMB] = MeshBuilder::GenerateQuad("PLAYER_PROJECTILE_BOMB", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[0] = LoadTGA("Image//Bomb1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_BOMB]->textureID[1] = LoadTGA("Image//Bomb1decal.tga");
-	meshList[GEO_ENEMY_TANK_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_PASSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
-	meshList[GEO_ENEMY_TANK_PASSIVE]->textureID[0] = LoadTGA("Image//Tank1.tga");
-	meshList[GEO_ENEMY_TANK_AGGRESSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_AGGRESSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
-	meshList[GEO_ENEMY_TANK_AGGRESSIVE]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANK] = MeshBuilder::GenerateQuad("PLAYER_TANK_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANK]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
 	meshList[GEO_PLAYER_TANKGUN] = MeshBuilder::GenerateQuad("PLAYER_TANKGUN_GENERIC", Color(0.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_PLAYER_TANKGUN]->textureID[0] = LoadTGA("Image//Turret1.tga");
+	meshList[GEO_ENEMY_TANK_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_PASSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_TANK_PASSIVE]->textureID[0] = LoadTGA("Image//Tank1.tga");
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE] = MeshBuilder::GenerateQuad("ENEMY_TANK_AGGRESSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE]->textureID[0] = LoadTGA("Image//TurretTank1.tga");
+	meshList[GEO_ENEMY_PLANE_AGGRESSIVE] = MeshBuilder::GenerateQuad("ENEMY_PLANE_AGGRESSIVE", Color(0.0f, 1.0f, 1.0f), 2.0f);
+	meshList[GEO_ENEMY_PLANE_AGGRESSIVE]->textureID[0] = LoadTGA("Image//EnemyAggressive1.tga");
+	meshList[GEO_ENEMY_PLANE_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_PLANE_PASSIVE", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_ENEMY_PLANE_PASSIVE]->textureID[0] = LoadTGA("Image//Antonov.tga");
+	meshList[GEO_ENEMY_BUILDING] = MeshBuilder::GenerateQuad("ENEMY_BUILDING", Color(1.f, 0.f, 0.f), 2.0f);
+	meshList[GEO_ENEMY_BUILDING]->textureID[0] = LoadTGA("Image//Enemybuilding1.tga");
 	meshList[GEO_PLAYER_PROJECTILE_SHELL] = MeshBuilder::GenerateSphere("PLAYER_PROJECTILE_SHELL", Color(1.0f, 0.0f, 1.0f), 10, 10, 1.f);
 	meshList[GEO_EXPLOSION] = MeshBuilder::GenerateQuad("EXPLOSION", Color(1.0f, 1.0f, 1.0f), 2.0f);
 	meshList[GEO_EXPLOSION]->textureID[0] = LoadTGA("Image//Explosion.tga");
-	meshList[GEO_ENEMY_BUILDING] = MeshBuilder::GenerateQuad("ENEMY_BUILDING", Color(1.f, 0.f, 0.f), 2.0f);
-	meshList[GEO_ENEMY_BUILDING]->textureID[0] = LoadTGA("Image//Enemybuilding1.tga");
-	meshList[GEO_ENEMY_PLANE_PASSIVE] = MeshBuilder::GenerateQuad("ENEMY_PLANE_PASSIVE", Color(1.f, 0.f, 0.f), 2.0f);
-	meshList[GEO_ENEMY_PLANE_PASSIVE]->textureID[0] = LoadTGA("Image//Antonov.tga");
 	meshList[GEO_DEBUG] = MeshBuilder::GenerateSphere("DEBUG", Color(1.0f, 0.5f, 0.5f), 10, 10, 1.f);
 
 	meshList[GEO_UPGRADE_1] = MeshBuilder::GenerateQuad("upgrade1", Color(0.5f, 0.f, 0.5f), 2.0f);
@@ -332,6 +334,7 @@ void Scene::RenderGO(GameObject *go)
 			RenderMesh(meshList[GEO_ENEMY_PLANE_PASSIVE], false);
 			break;
 		case GameObject::ENEMY_PLANE_AGGRESSIVE:
+			RenderMesh(meshList[GEO_ENEMY_PLANE_AGGRESSIVE], false);
 		case GameObject::PLAYER_PLANE_KOMET:
 			RenderMesh(meshList[GEO_PLAYER_PLANE_KOMET], false);
 			break;
