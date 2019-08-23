@@ -102,9 +102,13 @@ void Scene2Select::Init()
 	decals[0][1] = LoadTGA("Image//Kometdecal1.tga");
 	decals[0][2] = LoadTGA("Image//Kometdecal2.tga");
 
-
 	tanks[0] = GEO_PLAYER_TANK;
-	decals[2][0] = 0;//Decals option 0 is... No decals
+	decals2[0][0] = 0;//Decals option 0 is... No decals
+	decals2[0][1] = LoadTGA("Image//Turrettankdecal1.tga");
+	decals2[0][2] = LoadTGA("Image//Turrettankdecal2.tga");
+
+
+	//decals[2][0] = 0;//Decals option 0 is... No decals
 	//decals[0][1] = LoadTGA("Image//Kometdecal1.tga");
 	//decals[0][2] = LoadTGA("Image//Kometdecal2.tga");
 
@@ -219,21 +223,21 @@ void Scene2Select::Update(double dt)
 			SceneManager::planeDecalChoice = "Image//" + planename + "decal" + std::to_string(currentDecal1) + ".tga";
 			SceneManager::planeColor[0] = planeColor[0];
 			SceneManager::planeColor[1] = planeColor[1];
+			SceneManager::decalChoiceP = currentDecal1;
 			meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal1];
 			// Set tank vars
 			SceneManager::tankChoice = tanks[currentTank];
 			switch (currentTank)
 			{
 			case 0:
-				tankname = "";
-				break;
-			case 1:
-				tankname = "";
+				tankname = "Turrettank";
 				break;
 			}
 			SceneManager::tankDecalChoice = "Image//" + tankname + "decal" + std::to_string(currentDecal2) + ".tga";
 			SceneManager::tankColor[0] = tankColor[0];
 			SceneManager::tankColor[1] = tankColor[1];
+			SceneManager::decalChoiceT = currentDecal2;
+
 			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal2];
 			// Switch to scene
 			SceneManager::getSceneManager()->switchToScene("2P", this);
@@ -300,6 +304,7 @@ void Scene2Select::Update(double dt)
 	currentDecal2 = Math::Wrap(currentDecal2, 0, MAX_2TDECALS);
 
 	meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal1];
+	meshList[tanks[currentTank]]->textureID[1] = decals2[currentTank][currentDecal2];
 
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))

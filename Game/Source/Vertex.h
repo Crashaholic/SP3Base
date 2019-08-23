@@ -16,6 +16,41 @@ struct Color
 	float r, g, b;
 	Color(float r = 1, float g = 1, float b = 1) {Set(r, g, b);}
 	void Set(float r, float g, float b) {this->r = r; this->g = g; this->b = b;}
+	void Set(std::string color) {
+		std::string temp;
+		int mode = 0;
+		for (int i = 0; i < color.length(); ++i)
+		{
+			if (color[i] == ',')
+			{
+				switch (mode) {
+				case 0:
+					r = stof(temp);
+					break;
+				case 1:
+					g = stof(temp);
+					break;
+				case 2:
+					b = stof(temp);
+					break;
+				}
+				++i;
+				temp = "";
+				++mode;
+			} 
+			temp += color[i];
+		} switch (mode) {
+		case 0:
+			r = stof(temp);
+			break;
+		case 1:
+			g = stof(temp);
+			break;
+		case 2:
+			b = stof(temp);
+			break;
+		}
+	}
 	operator Vector3() { return Vector3(r, g, b); };
 };
 

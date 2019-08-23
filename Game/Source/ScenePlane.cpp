@@ -84,6 +84,7 @@ void ScenePlane::Init()
 	// ID for sceneEnd
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_PLANE;
 	cleanVar();
+	meshList[GEO_ENEMY_TANK_AGGRESSIVE]->textureID[1] = LoadTGA(("Image//Turrettankdecal" + std::to_string(SceneManager::decalChoiceT) + ".tga").c_str());
 }
 
 void ScenePlane::Update(double dt)
@@ -325,14 +326,14 @@ bool ScenePlane::SpawnEnemy()
 			if (enemyList[i]->isDead)
 			{
 				delete enemyList[i];
-				enemyList[i] = new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth);
+				enemyList[i] = new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth, SceneManager::tankColor[0], SceneManager::tankColor[1]);
 				//enemyList[i] = new TankEnemy({ temp.x, Math::RandFloatMinMax(50.f, 70.f), temp.z }, plane->GOref, m_worldWidth);
 				spawned = true;
 				break;
 			}
 		}
 		if (!spawned)
-			enemyList.push_back(new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth));
+			enemyList.push_back(new TankEnemy({ temp.x, temp.y, temp.z }, plane->GOref, m_worldWidth, SceneManager::tankColor[0], SceneManager::tankColor[1]));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

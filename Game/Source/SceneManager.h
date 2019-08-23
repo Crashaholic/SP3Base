@@ -24,10 +24,12 @@ public:
 
 	static int planeChoice;
 	static std::string planeDecalChoice;
+	static int decalChoiceP;
 	static Color planeColor[2];
 
 	static int tankChoice;
 	static std::string tankDecalChoice;
+	static int decalChoiceT;
 	static Color tankColor[2];
 
 	// Money unlock system

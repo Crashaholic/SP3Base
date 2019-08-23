@@ -6,16 +6,16 @@ TankEnemy::TankEnemy()
 
 }
 
-TankEnemy::TankEnemy(vec3 pos, GameObject* ref, float m_worldWidth)
+TankEnemy::TankEnemy(vec3 pos, GameObject* ref, float m_worldWidth, Color color1, Color color2)
 {
-	SpawnNewTankEnemy(pos, ref, m_worldWidth);
+	SpawnNewTankEnemy(pos, ref, m_worldWidth, color1, color2);
 }
 
 TankEnemy::~TankEnemy()
 {
 }
 
-void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth)
+void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth, Color color1, Color color2)
 {
 	targetMov = { m_worldWidth, 0, 0 };
 	targetPos = ref->pos;
@@ -31,6 +31,8 @@ void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth
 	{
 		GOref->scale.Set(4.0f, 2.2f, 1.0f);
 	}
+	GOref->color[0].Set(color1.r, color1.g, color1.b);
+	GOref->color[1].Set(color2.r, color2.g, color2.b);
 	GOref->angle -= Math::DegreeToRadian(0);
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f);
 	GOref->norm = GOref->dir;
@@ -40,7 +42,6 @@ void TankEnemy::SpawnNewTankEnemy(vec3 pos, GameObject * ref, float m_worldWidth
 	GOref->active = true;
 	GOref->hasGravity = false;
 	GOref->vel.Set(0, 0, 0);
-	GOref->color->Set(241.0f / 255.0f, 227.0f / 255.0f, 204.0f / 255.0f);
 	heightOffset = GOref->scale.y + 0.5f;
 	GOref->scale *= 1.5f;
 	this->m_worldWidth = m_worldWidth;

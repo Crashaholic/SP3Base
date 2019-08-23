@@ -2,6 +2,7 @@
 #include "SceneTSelect.h"
 #include "Application.h"
 #include "SceneManager.h"
+#include <fstream>
 
 SceneTSelect::SceneTSelect()
 {
@@ -167,6 +168,7 @@ void SceneTSelect::Update(double dt)
 			SceneManager::tankDecalChoice = "Image//" + tankname + "decal" + std::to_string(currentDecal) + ".tga";
 			SceneManager::tankColor[0] = tankColor[0];
 			SceneManager::tankColor[1] = tankColor[1];
+			SceneManager::decalChoiceT = currentDecal;
 			meshList[tanks[currentTank]]->textureID[1] = decals[currentTank][currentDecal];
 			SceneManager::getSceneManager()->switchToScene("Tank", this);
 			break;

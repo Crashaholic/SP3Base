@@ -159,6 +159,7 @@ void ScenePSelect::Update(double dt)
 			SceneManager::planeDecalChoice = "Image//" + planename + "decal" + std::to_string(currentDecal) + ".tga";
 			SceneManager::planeColor[0] = planeColor[0];
 			SceneManager::planeColor[1] = planeColor[1];
+			SceneManager::decalChoiceP = currentDecal;
 			meshList[planes[currentPlane]]->textureID[1] = decals[currentPlane][currentDecal];
 
 			if (SceneManager::planeUnlock[currentPlane] == true)

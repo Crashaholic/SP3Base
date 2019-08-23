@@ -6,7 +6,7 @@
 #define NUM_2PSLIDER 6
 #define NUM_2TBUTTON 4
 #define NUM_2TSLIDER 6
-#define MAX_2TDECALS 0
+#define MAX_2TDECALS 2
 #define MAX_2TANKS 1
 
 #include "Scene.h"
@@ -49,7 +49,8 @@ private:
 	int currentTank;
 	int currentDecal2;
 
-	unsigned int decals[3][MAX_2PDECALS + 1];
+	unsigned int decals[1][MAX_2PDECALS + 1];
+	unsigned int decals2[1][MAX_2PDECALS + 1];
 	int planes[MAX_2PLANES];
 	int tanks[MAX_2TANKS];
 };

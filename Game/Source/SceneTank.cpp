@@ -39,8 +39,8 @@ void SceneTank::Init()
 	Math::InitRNG();
 
 
-	SpawnPos1 = vec3(-300.f, 0, 0);
-	SpawnPos2 = vec3(m_worldWidth + 300.f, 0, 0);
+	SpawnPos1 = vec3(-300.f, m_worldHeight *3/4, 0);
+	SpawnPos2 = vec3(m_worldWidth + 300.f, m_worldHeight * 3 / 4, 0);
 	spawnTimer = (float)SPAWNTIMER;
 
 	startCount = STARTINGCOUNT;
@@ -49,6 +49,7 @@ void SceneTank::Init()
 	GOManager::GetInstance()->sceneID = GOManager::STYPE::FROM_TANK;
 
 	cleanVar();
+	meshList[GEO_ENEMY_PLANE_AGGRESSIVE]->textureID[1] = LoadTGA(("Image//Kometdecal" + std::to_string(SceneManager::decalChoiceP) + ".tga").c_str());
 }
 
 void SceneTank::Update(double dt)
@@ -248,7 +249,7 @@ bool SceneTank::SpawnEnemy()
 	{
 		bool spawner = rand() % 2;
 		vec3 temp = (spawner ? SpawnPos1 : SpawnPos2);
-		enemyList.push_back(new PlaneEnemy({ temp.x, Math::RandFloatMinMax(m_worldHeight/2, m_worldHeight), temp.z }, player->GOref, m_worldWidth));
+		enemyList.push_back(new PlaneEnemy({ temp.x, temp.y, temp.z }, player->GOref, m_worldWidth, SceneManager::planeColor[0], SceneManager::planeColor[1]));
 		LOG_NONE("SPAWNED %/% AT: %", enemyCount + 1, tempcount + 1, (int)spawner + 1);
 		++enemyCount;
 		spawnTimer = (float)SPAWNTIMER;

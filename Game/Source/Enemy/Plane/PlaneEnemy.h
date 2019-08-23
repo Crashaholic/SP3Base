@@ -12,7 +12,7 @@ public:
 	const static int HEIGHT_RANGE = 20;
 
 	PlaneEnemy();
-	PlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth);
+	PlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth, Color color1, Color color2);
 	~PlaneEnemy();
 
 	float cooldown;
@@ -21,7 +21,7 @@ public:
 	float originalHeight;
 
 	// ref is Player's GO reference
-	void SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth);
+	void SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth, Color color1, Color color2);
 	void Update(double dt) override;
 
 	virtual void Primary() override;

@@ -58,6 +58,9 @@ private:
 	bool tUpgrade;
 
 	std::vector<TankEnemy*> enemyList;
+
+
+	Color tankColor[2];
 };
 
 #endif

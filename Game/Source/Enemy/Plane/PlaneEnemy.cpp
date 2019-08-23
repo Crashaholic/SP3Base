@@ -9,9 +9,9 @@ PlaneEnemy::PlaneEnemy()
 {
 }
 
-PlaneEnemy::PlaneEnemy(vec3 pos, GameObject * ref, float m_worldWidth)
+PlaneEnemy::PlaneEnemy(vec3 pos, GameObject * ref, float m_worldWidth, Color color1, Color color2)
 {
-	SpawnNewPlaneEnemy(pos, ref, m_worldWidth);
+	SpawnNewPlaneEnemy(pos, ref, m_worldWidth, color1, color2);
 }
 
 
@@ -20,7 +20,7 @@ PlaneEnemy::~PlaneEnemy()
 }
 
 
-void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth) // ref is Player's GO reference
+void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidth, Color color1, Color color2) // ref is Player's GO reference
 {
 	targetMov = {0, pos.y, 0 };
 	targetPos = ref->pos;
@@ -37,6 +37,8 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 		GOref->scale.Set(4.4f, 1.8f, 1.0f);
 		break;
 	}
+	GOref->color[0].Set(color1.r, color1.g, color1.b);
+	GOref->color[1].Set(color2.r, color2.g, color2.b);
 	GOref->angle -= Math::DegreeToRadian(0);
 	GOref->dir.Set(cos(GOref->angle), sin(GOref->angle), 0.0f); 
 	GOref->norm = GOref->dir;
@@ -47,8 +49,6 @@ void PlaneEnemy::SpawnNewPlaneEnemy(vec3 pos, GameObject* ref, float m_worldWidt
 	GOref->hasGravity = false;
 	directionleft = false;
 	GOref->vel.Set(1, 0, 0);
-	GOref->color[0].Set(0.6f, 0.4f, 0.2f);
-	GOref->color[1].Set(0.5f, 0.3f, 0.1f);
 	this->m_worldWidth = m_worldWidth;
 	topSpeed = 20;
 	priAmmo = 0;
