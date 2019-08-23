@@ -157,7 +157,7 @@ void main()
 			{
 				if(colorTextureEnabled[i] == true)
 				{
-					if(texture2D( colorTexture[i], texCoord ).a > 0.1)
+					if(texture2D( colorTexture[i], texCoord ).a > 0.99)
 					{
 						color.rgb = texture2D( colorTexture[i], texCoord ).rgb*coloredTexture[i];
 						//color.a = 1.0;
