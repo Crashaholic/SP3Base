@@ -351,17 +351,17 @@ void ScenePSelect::Render()
 		defaultShader.SetVec3("coloredTexture[" + std::to_string(i) + "]", vec3{ 1.f,1.f,1.f });
 	}
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Monies:", Color(0, 0, 0), 3, 66, 54);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Monies:", Color(1, 1, 1), 3, 66, 54);
 	std::ostringstream monies;
 	monies << "$" << SceneManager::money;
-	RenderTextOnScreen(meshList[GEO_TEXT], monies.str(), Color(0, 0, 0), 3, 66, 51);
+	RenderTextOnScreen(meshList[GEO_TEXT], monies.str(), Color(1, 1, 1), 3, 66, 51);
 
 	// Render cost of plane
 	if (SceneManager::planeUnlock[currentPlane] == false)
 	{
 		std::ostringstream cost;
 		cost << "$" << SceneManager::planeCost[currentPlane];
-		RenderTextOnScreen(meshList[GEO_TEXT], cost.str(), Color(0.3f, 0, 0), 3, 36, 40);
+		RenderTextOnScreen(meshList[GEO_TEXT], cost.str(), Color(0.3f, 1.0f, 0.3f), 3, 36, 40);
 	}
 
 	//RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);

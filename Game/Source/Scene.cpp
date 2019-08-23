@@ -445,7 +445,7 @@ void Scene::checkSwitch()
 	}
 	if (Application::IsKeyPressed('0'))
 	{
-		SceneManager::getSceneManager()->switchToScene("Score", this);
+		//SceneManager::getSceneManager()->switchToScene("Score", this);
 	}
 	if (Application::IsKeyPressed(VK_OEM_MINUS))
 	{

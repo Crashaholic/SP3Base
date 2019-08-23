@@ -39,6 +39,8 @@ void Scene2PEnd::Init()
 	sBack = "Back";
 	onButton = false;
 
+	uil.init(Vector3(center.x - 69.f, m_worldHeight - 10.5f, 1.0f), Vector3(20.f, 3.5f, 1.0f));
+
 	// Add high score to money
 	switch (GOManager::GetInstance()->sceneID)
 	{
@@ -103,6 +105,8 @@ void Scene2PEnd::Update(double dt)
 
 		if (bBack->checkMouse())
 			SceneManager::getSceneManager()->switchToScene("Menu", this);
+		if (uil.checkMouse())
+			SceneManager::getSceneManager()->switchToScene("2P", this);
 	}
 	static bool bRButtonState = false;
 	if (!bRButtonState && Application::IsMousePressed(1))
@@ -161,6 +165,7 @@ void Scene2PEnd::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], s2.str(), Color(1, 1, 1), 3, 0, 9);
 
 	RGButtonRender(bBack, sBack);
+	RGButtonRender(&uil, "Play Again");
 }
 
 void Scene2PEnd::Exit()
