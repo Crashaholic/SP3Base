@@ -148,7 +148,6 @@ void PlaneEnemy::Primary()
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 				bomb->color[i] = GOref->color[i];
 			priProjectiles[i] = bomb;
-			++GOManager::GetInstance()->totalShots;
 			break;
 		}
 	}

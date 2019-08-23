@@ -37,11 +37,11 @@ void SceneMenu::Init()
 	addButton(bArray[3]);
 	addButton(bArray[4]);
 
-	bArray[0]->init(Vector3(center.x - 69.0f, center.y, 1.0f),					Vector3(20.0f, 3.5f, 1.0f));
-	bArray[1]->init(Vector3(center.x - 69.0f, center.y - 7.0f, 1.0f),			Vector3(20.0f, 3.5f, 1.0f));
-	bArray[2]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 2.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
-	bArray[3]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
-	bArray[4]->init(Vector3(center.x - 69.0f, center.y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[0]->init(Vector3(center.x - 69.0f, center.y + 1.6f, 1.0f),						Vector3(20.0f, 3.5f, 1.0f));	
+	bArray[1]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f, 1.0f),			Vector3(20.0f, 3.5f, 1.0f));
+	bArray[2]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 2.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[3]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 3.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
+	bArray[4]->init(Vector3(center.x - 69.0f, bArray[0]->getPos().y - 7.0f * 4.0f, 1.0f),	Vector3(20.0f, 3.5f, 1.0f));
 
 	// Text init
 	sArray[0] = "Play as Plane";
@@ -183,14 +183,35 @@ void SceneMenu::Render()
 	// renderButton();
 
 	//On screen text
-	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(0.1f, 1.0f, 0.1f), 3, 0, 57);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(1.0f, 1.0f, 1.0f), 2.5f, 2, 56);
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 0, 53);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 2.5f, 2, 53);
+
+	RenderTextOnScreen(meshList[GEO_TEXT], "Credits: \n"
+		"Ryan Chan \n"
+		"Matthew Chan \n"
+		"Yan Quan \n"
+		"Hui Ling", 
+		Color(1, 1, 1), 2.5f, 68, 12);
+
+	RenderTextOnScreen(meshList[GEO_TEXT], 
+		"Instructions: \n"
+		"A/D - Plane Movement \n"
+		"I/K - Tank Movement \n"
+		"J/L - Turret Rotation (Tank only) \n"
+		"R   - Toggle VTOL     (Harrier only) \n"
+		"W/S - Vertical Thrust (Harrier only) \n"
+		"C   - Primary Fire    (Planes only) \n"
+		"V   - Secondary Fire  (Planes only) \n"
+		"N   - Turret Fire     (Tank only) \n", 
+		Color(0.3f, 1.0f, 0.3f), 2.0f, 2, 46);
 
 	for (int i = 0; i < 5; ++i)
 	{
+		// Legacy
+		/*
 		modelStack.PushMatrix();
 		modelStack.Translate(bArray[i]->getPos().x, bArray[i]->getPos().y, bArray[i]->getPos().z);
 		modelStack.PushMatrix();
@@ -206,6 +227,9 @@ void SceneMenu::Render()
 		modelStack.Translate(-(float)sArray[i].length() / 4, 0, 0);
 		RenderText(meshList[GEO_TEXT], sArray[i], Color(1, 1, 1));
 		modelStack.PopMatrix();
+		*/
+
+		RGButtonRender(bArray[i], sArray[i]);
 	}
 }
 
