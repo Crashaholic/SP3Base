@@ -19,7 +19,7 @@ struct Color
 	void Set(std::string color) {
 		std::string temp;
 		int mode = 0;
-		for (int i = 0; i < color.length(); ++i)
+		for (unsigned int i = 0; i < color.length(); ++i)
 		{
 			if (color[i] == ',')
 			{

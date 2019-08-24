@@ -79,7 +79,7 @@ public:
 	const float WIND_TIMER = 10.0f;
 	const float WIND_RANGE = 90.0f;			// range of wind randomisation
 
-	const float UPGRADE_CHANCE = 10.0f;		// chance of upgrade dropping from enemies
+	const float UPGRADE_CHANCE = 20.0f;		// chance of upgrade dropping from enemies
 
 	bool rain;
 	const float RAIN_CHANCE = 50.0f;		// chance of rain occuring

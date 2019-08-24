@@ -855,20 +855,16 @@ void GOManager::enemyDeath(GameObject * go)
 		float i = Math::RandFloatMinMax(0.0f, 100.0f);
 		if (i <= UPGRADE_CHANCE)
 		{
-			int j = Math::RandIntMinMax(0, 2);
+			float j = Math::RandFloatMinMax(0.0f, 100.0f);
 			GameObject *up = GOManager::GetInstance()->fetchGO();
-			switch (j)
-			{
-			case 0:
+
+			if (j <= 40.0f)
 				up->type = GameObject::UPGRADE_1;
-				break;
-			case 1:
+			else if (j <= 80.0f)
 				up->type = GameObject::UPGRADE_2;
-				break;
-			case 2:
+			else
 				up->type = GameObject::UPGRADE_3;
-				break;
-			}
+			
 			up->active = true;
 			up->scale.Set(3.f, 3.f, 1.f);
 			up->wrapMode = up->SW_CLAMP;

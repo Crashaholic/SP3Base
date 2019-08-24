@@ -361,7 +361,7 @@ void ScenePSelect::Render()
 	{
 		std::ostringstream cost;
 		cost << "$" << SceneManager::planeCost[currentPlane];
-		RenderTextOnScreen(meshList[GEO_TEXT], cost.str(), Color(0.3f, 1.0f, 0.3f), 3, 36, 40);
+		RenderTextOnScreen(meshList[GEO_TEXT], cost.str(), Color(0.3f, 1.0f, 0.3f), 3, 37.5f, 40);
 	}
 
 	//RenderTextOnScreen(meshList[GEO_TEXT], "Kinematics", Color(0, 1, 0), 3, 0, 0);

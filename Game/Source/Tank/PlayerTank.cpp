@@ -40,7 +40,7 @@ void PlayerTank::Update(double dt)
 	if (GOref->active)
 	{
 		// Tank Movement
-		tankSpeed = Math::Max(15.f + (GOManager::GetInstance()->upgrade_2 * 1.f), 15.f);
+		tankSpeed = Math::Clamp(15.f + (GOManager::GetInstance()->upgrade_2 * 5.f), 15.f, 60.0f);
 		Terrain* terreference = GOManager::GetInstance()->terreference;
 		Vector3 frontCheck = GOref->pos + Vector3(GOref->scale.x / 2, 0, 0);
 		Vector3 rearCheck = GOref->pos - Vector3(GOref->scale.x / 2, 0, 0);
