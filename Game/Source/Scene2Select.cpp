@@ -281,8 +281,8 @@ void Scene2Select::Update(double dt)
 		switch (choice1)
 		{
 		case 0:
-		case 1:
-		case 2:
+		//case 1:
+		//case 2:
 		case 3:
 		case 4:
 		case 5:
@@ -290,8 +290,8 @@ void Scene2Select::Update(double dt)
 		}
 		switch (choice2)
 		{
-		case 0:
-		case 1:
+		//case 0:
+		//case 1:
 		case 2:
 		case 3:
 			GOManager::GetInstance()->playSound("Select");
