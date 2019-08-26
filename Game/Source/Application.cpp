@@ -156,8 +156,17 @@ void Application::Run()
 	//Check if the ESC key had been pressed or if the window had been closed
 	while (!glfwWindowShouldClose(m_window))
 	{
-		scene->Update(m_timer.getElapsedTime());
+		double dt = m_timer.getElapsedTime();
+		if (scene->hasRendered == false)
+		{
+			dt = 0.0;
+		}
+		scene->Update(dt);
 		scene->Render();
+		if (scene->hasRendered == false)
+		{
+			scene->hasRendered = true;
+		}
 		
 		glfwSwapBuffers(m_window);		//Swap buffers
 		glfwPollEvents();				//Get and organize events, like keyboard and mouse input, window resizing, etc
@@ -172,6 +181,7 @@ void Application::Run()
 			scene = manager->getActiveScene();
 			GOManager::GetInstance()->init();
 			scene->Init();
+			scene->hasRendered = false;
 		}
 	}
 	scene->Exit();

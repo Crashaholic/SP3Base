@@ -87,6 +87,7 @@ public:
 	virtual void Exit() = 0;
 
 	bool readyExit = false;
+	bool hasRendered = false;
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
