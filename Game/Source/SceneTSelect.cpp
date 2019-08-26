@@ -193,8 +193,8 @@ void SceneTSelect::Update(double dt)
 		switch (choice)
 		{
 		case 0:
-		case 1:
-		case 2:
+		//case 1:
+		//case 2:
 		case 3:
 		case 4:
 		case 5:
@@ -276,7 +276,10 @@ void SceneTSelect::Render()
 
 	for (int i = 0; i < NUM_TBUTTON; ++i)
 	{
-		RGButtonRender(bArray[i], sArray[i]);
+		if (i < 1 || i > 2)
+		{
+			RGButtonRender(bArray[i], sArray[i]);
+		}	
 	}
 	for (int i = 0; i < NUM_TSLIDER; ++i)
 	{

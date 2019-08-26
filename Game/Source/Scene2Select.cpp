@@ -281,8 +281,8 @@ void Scene2Select::Update(double dt)
 		switch (choice1)
 		{
 		case 0:
-		case 1:
-		case 2:
+		//case 1:
+		//case 2:
 		case 3:
 		case 4:
 		case 5:
@@ -290,8 +290,8 @@ void Scene2Select::Update(double dt)
 		}
 		switch (choice2)
 		{
-		case 0:
-		case 1:
+		//case 0:
+		//case 1:
 		case 2:
 		case 3:
 			GOManager::GetInstance()->playSound("Select");
@@ -413,7 +413,11 @@ void Scene2Select::Render()
 
 	for (int i = 0; i < NUM_2PBUTTON; ++i)
 	{
-		RGButtonRender(bPArray[i], sPArray[i]);
+		// Disable selection buttons
+		if (i < 1 || i > 2)
+		{
+			RGButtonRender(bPArray[i], sPArray[i]);
+		}
 	}
 	for (int i = 0; i < NUM_2PSLIDER; ++i)
 	{
@@ -447,7 +451,11 @@ void Scene2Select::Render()
 
 	for (int i = 0; i < NUM_2TBUTTON; ++i)
 	{
-		RGButtonRender(bTArray[i], sTArray[i]);
+		// Disable selection buttons
+		if (i > 1)
+		{
+			RGButtonRender(bTArray[i], sTArray[i]);
+		}
 	}
 	for (int i = 0; i < NUM_2TSLIDER; ++i)
 	{

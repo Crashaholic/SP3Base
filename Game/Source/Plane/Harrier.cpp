@@ -175,7 +175,7 @@ void Harrier::Update(double dt)
 				bulletangle += Math::RandFloatMinMax(-Math::DegreeToRadian(inaccuracy), Math::DegreeToRadian(inaccuracy));
 				bullet->vel = Vector3(cos(bulletangle), sin(bulletangle), 0) * 100;
 				bullet->pos = GOref->pos;
-				bullet->scale.Set(0.3f, 0.3f, 1);
+				bullet->scale.Set(0.5f, 0.5f, 1);
 				bullet->color[0] = GOref->color[0];
 				//bullet->scale.Set(0.1f, 0.1f, 1);
 				bullet->hasGravity = true;
