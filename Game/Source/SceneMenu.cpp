@@ -185,7 +185,11 @@ void SceneMenu::Render()
 
 	// renderButton();
 
-	RenderMesh(meshList[GEO_LOGO], false);
+	modelStack.PushMatrix();
+		modelStack.Translate(100, 50, -2);
+		modelStack.Scale(30, 30, 30);
+		RenderMesh(meshList[GEO_LOGO], false);
+	modelStack.PopMatrix();
 
 	//On screen text
 	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(1.0f, 1.0f, 1.0f), 2.5f, 2, 56);
