@@ -197,7 +197,7 @@ void SceneMenu::Render()
 		"Matthew Chan \n"
 		"Yan Quan \n"
 		"Hui Ling", 
-		Color(1, 1, 1), 2.0f, 2, 28);
+		Color(1, 1, 1), 2.0f, 2, 27);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], 
 		"Instructions: \n"
@@ -205,11 +205,12 @@ void SceneMenu::Render()
 		"I/K - Tank Movement \n"
 		"J/L - Turret Rotation (Tank only) \n"
 		"R   - Toggle VTOL     (Harrier only) \n"
-		"W/S - Vertical Thrust (Harrier only) \n"
+		"W/S - Vertical Thrust (Harrier only + VTOL) \n"
+		"T   - Flip horizontal (Harrier only + VTOL) \n"
 		"C   - Primary Fire    (Planes only) \n"
 		"V   - Secondary Fire  (Planes only) \n"
 		"N   - Turret Fire     (Tank only) \n", 
-		Color(0.3f, 1.0f, 0.3f), 2.0f, 2, 48);
+		Color(0.3f, 1.0f, 0.3f), 2.0f, 2, 49);
 
 	for (int i = 0; i < 5; ++i)
 	{
