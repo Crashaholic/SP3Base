@@ -99,7 +99,6 @@ void Terrain::Update(double dt)
 
 void Terrain::GenerateRandomHeight(float worldWidth)
 {
-	std::srand(80);
 	float lastY = 0;
 	for (int i = 0; i < TERRAIN_SIZE; ++i)
 	{

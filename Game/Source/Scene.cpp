@@ -129,6 +129,9 @@ void Scene::Init()
 
 	meshList[GEO_RAIN] = MeshBuilder::GenerateCube("rain", Color(0.5f, 0.5f, 1.0f), 2.f);
 
+	meshList[GEO_LOGO] = MeshBuilder::GenerateQuad("Logo", {1,1,1}, 1);
+	meshList[GEO_LOGO]->textureID[0] = LoadTGA("Image//logo.tga");
+
 	m_worldHeight = 100.f;
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / (float)Application::GetWindowHeight();
 

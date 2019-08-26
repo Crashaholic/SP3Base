@@ -185,6 +185,8 @@ void SceneMenu::Render()
 
 	// renderButton();
 
+	RenderMesh(meshList[GEO_LOGO], false);
+
 	//On screen text
 	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v1.89", Color(1.0f, 1.0f, 1.0f), 2.5f, 2, 56);
 	std::ostringstream ss;

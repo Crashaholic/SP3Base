@@ -71,6 +71,8 @@ protected:
 
 		GEO_RAIN,
 
+		GEO_LOGO,
+
 		NUM_GEOMETRY,
 	};	
 	Mesh* meshList[NUM_GEOMETRY];
