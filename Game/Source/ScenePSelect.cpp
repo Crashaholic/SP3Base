@@ -275,7 +275,7 @@ void ScenePSelect::Render()
 	RenderMesh(meshList[GEO_GARAGEBG], false);
 	modelStack.PopMatrix();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	//On screen text
 	std::ostringstream ss;

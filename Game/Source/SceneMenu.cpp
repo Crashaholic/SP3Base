@@ -181,7 +181,7 @@ void SceneMenu::Render()
 	);
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	// renderButton();
 

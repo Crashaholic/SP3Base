@@ -164,7 +164,7 @@ void SceneTank::Render()
 	);
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0.0f);

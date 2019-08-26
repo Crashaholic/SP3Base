@@ -136,7 +136,7 @@ void Scene2PEnd::Render()
 	);
 	modelStack.LoadIdentity();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	//On screen text
 	std::ostringstream ss;

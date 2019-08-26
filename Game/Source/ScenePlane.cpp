@@ -210,7 +210,7 @@ void ScenePlane::Render()
 	RenderMesh(meshList[GEO_SKYBG], false);
 	modelStack.PopMatrix();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	std::vector<GameObject*> m_goList = GOManager::GetInstance()->getlist();
 	for(std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)

@@ -272,7 +272,7 @@ void SceneTSelect::Render()
 	RenderMesh(meshList[GEO_GARAGEBG], false);
 	modelStack.PopMatrix();
 
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	for (int i = 0; i < NUM_TBUTTON; ++i)
 	{
