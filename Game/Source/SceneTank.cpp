@@ -194,6 +194,9 @@ void SceneTank::Render()
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 3, 0, 0);
+	std::ostringstream ss1;
+	ss1 << "Wave: " << waveNo + 1;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss1.str(), Color(1, 1, 1), 3, 67, 0);
 
 	// HUD
 	render1PHUD();
