@@ -200,5 +200,6 @@ void Application::Exit()
 {
 	glfwDestroyWindow(m_window);	//Close OpenGL window and terminate GLFW
 	glfwTerminate();				//Finalize and clean up GLFW
+	HighScoreSystem::GetInstance()->Destroy();
 	delete this;
 }

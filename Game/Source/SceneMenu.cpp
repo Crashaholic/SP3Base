@@ -192,7 +192,7 @@ void SceneMenu::Render()
 	modelStack.PopMatrix();
 
 	//On screen text
-	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v2.92", Color(1.0f, 1.0f, 1.0f), 2.5f, 2, 56);
+	RenderTextOnScreen(meshList[GEO_TEXT], "PhysBomber v2.96", Color(1.0f, 1.0f, 1.0f), 2.5f, 2, 56);
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
@@ -312,6 +312,8 @@ void SceneMenu::Exit()
 	{
 		scoresTank.pop_back();
 	}
+	scoresPlane.shrink_to_fit();
+	scoresTank.shrink_to_fit();
 
 	// Cleanup VBO
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
